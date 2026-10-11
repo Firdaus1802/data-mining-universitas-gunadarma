@@ -16,6 +16,44 @@ class AprioriRuleSummary {
   });
 }
 
+class TeamMember {
+  final String name;
+  final String npm;
+  final String role;
+  final String? imagePath;
+  final String? developerUrl;
+  final String developerType;
+
+  const TeamMember({
+    required this.name,
+    required this.npm,
+    required this.role,
+    this.imagePath,
+    this.developerUrl,
+    this.developerType = "GitHub",
+  });
+
+  TeamMember copyWith({
+    String? name,
+    String? npm,
+    String? role,
+    String? imagePath,
+    String? developerUrl,
+    String? developerType,
+    bool clearImage = false,
+    bool clearDeveloperUrl = false,
+  }) {
+    return TeamMember(
+      name: name ?? this.name,
+      npm: npm ?? this.npm,
+      role: role ?? this.role,
+      imagePath: clearImage ? null : (imagePath ?? this.imagePath),
+      developerUrl: clearDeveloperUrl ? null : (developerUrl ?? this.developerUrl),
+      developerType: developerType ?? this.developerType,
+    );
+  }
+}
+
 class AprioriStateManager extends ChangeNotifier {
   static final AprioriStateManager instance = AprioriStateManager._internal();
   AprioriStateManager._internal();
@@ -25,8 +63,40 @@ class AprioriStateManager extends ChangeNotifier {
   final List<List<String>> _transactions = [];
   final List<AprioriRuleSummary> _rules = [];
   int _totalRulesCount = 0;
-  String _userName = "";
+  String _userName = "Firdaus Dhuha Prabowo";
   final Map<String, String> _userAccounts = {};
+  final List<TeamMember> _teamMembers = [
+    const TeamMember(
+      name: "Firdaus Dhuha Prabowo",
+      npm: "10124497",
+      role: "Ketua Kelompok & Lead Researcher",
+    ),
+    const TeamMember(
+      name: "Bagas Sena Dwi Jatmika",
+      npm: "10124237",
+      role: "Algoritma Apriori & Data Engine",
+    ),
+    const TeamMember(
+      name: "Fabio Arvin Aeneas",
+      npm: "10124402",
+      role: "Frontend UI/UX & Mobile Developer",
+    ),
+    const TeamMember(
+      name: "Farid Hilmy Cordova",
+      npm: "10124442",
+      role: "Data Mining Analyst & Preprocessing",
+    ),
+    const TeamMember(
+      name: "Hesti Setiana",
+      npm: "10124563",
+      role: "Business Intelligence & Evaluation",
+    ),
+    const TeamMember(
+      name: "Nur Bian'Aziza",
+      npm: "11124490",
+      role: "Dokumentasi Riset & Presentasi",
+    ),
+  ];
 
   double get minSupport => _minSupport;
   double get minConfidence => _minConfidence;
@@ -36,10 +106,47 @@ class AprioriStateManager extends ChangeNotifier {
   int get totalRules => _totalRulesCount;
   bool get isDataLoaded => _transactions.isNotEmpty;
   String get userName => _userName;
+  List<TeamMember> get teamMembers => List.unmodifiable(_teamMembers);
+
+  TeamMember? get activeMember {
+    for (final member in _teamMembers) {
+      if (member.name.toLowerCase() == _userName.toLowerCase()) {
+        return member;
+      }
+    }
+    if (_teamMembers.isNotEmpty) {
+      return _teamMembers.first;
+    }
+    return null;
+  }
 
   void setUserName(String name) {
     _userName = name.trim();
     notifyListeners();
+  }
+
+  void addTeamMember(String name, String npm, String role, {String? imagePath}) {}
+
+  void updateTeamMember(
+    int index, {
+    String? name,
+    String? npm,
+    String? role,
+    String? imagePath,
+    String? developerUrl,
+    String? developerType,
+    bool clearImage = false,
+    bool clearDeveloperUrl = false,
+  }) {}
+
+  void updateMemberPhoto(int index, String? newImagePath) {}
+
+  void updateActiveProfilePhoto(String? newImagePath) {}
+
+  void removeTeamMember(int index) {}
+
+  void setActiveProfile(String name) {
+    setUserName(name);
   }
 
   void registerUser(String email, String name) {

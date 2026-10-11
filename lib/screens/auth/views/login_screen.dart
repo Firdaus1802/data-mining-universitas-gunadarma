@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shop/constants.dart';
@@ -128,41 +130,40 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF1F5F9),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: const Color(0xFFE2E8F0)),
-                              ),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.info_outline, size: 16, color: Color(0xFF64748B)),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      "Mode Demo Aktif: Tekan Sign in untuk langsung masuk ke dashboard.",
-                                      style: TextStyle(fontSize: 11.5, color: Color(0xFF475569)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                             const Spacer(),
-                            ElevatedButton(
-                              onPressed: () {
-                                final enteredEmail = _emailController.text.trim();
-                                final detectedName = enteredEmail.isNotEmpty
-                                    ? AprioriStateManager.instance.detectUserName(enteredEmail)
-                                    : "Member";
-                                AprioriStateManager.instance.setUserName(detectedName);
-                                Navigator.pushNamedAndRemoveUntil(
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: CupertinoButton(
+                                color: const Color(0xFF1C1C1E),
+                                borderRadius: BorderRadius.circular(12),
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  final enteredEmail = _emailController.text.trim().isNotEmpty
+                                      ? _emailController.text.trim()
+                                      : "firdaus@gmail.com";
+                                  final detectedName = AprioriStateManager.instance.detectUserName(enteredEmail);
+                                  final otp = (100000 + Random().nextInt(900000)).toString();
+
+                                  Navigator.pushNamed(
                                     context,
-                                    entryPointScreenRoute,
-                                    (route) => false);
-                              },
-                              child: const Text("Sign In / Masuk"),
+                                    otpScreenRoute,
+                                    arguments: {
+                                      'email': enteredEmail,
+                                      'expectedOtp': otp,
+                                      'userName': detectedName,
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  "Log in",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

@@ -209,7 +209,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 140),
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 95),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

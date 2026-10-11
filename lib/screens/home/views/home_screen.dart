@@ -46,7 +46,7 @@ class HomeScreen extends StatelessWidget {
             bottom: false,
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 140),
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 95),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,16 +95,16 @@ class HomeScreen extends StatelessWidget {
   Widget _buildWorkflowGuideCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: borderLine, width: 0.8),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -113,18 +113,20 @@ class HomeScreen extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Row(
                 children: [
-                  Icon(CupertinoIcons.list_number, color: Color(0xFF334155), size: 16),
+                  Icon(CupertinoIcons.list_number, color: darkText, size: 16),
                   SizedBox(width: 8),
                   Text(
                     'ALUR PENGGUNAAN SISTEM',
                     style: TextStyle(
+                      fontFamily: "Plus Jakarta",
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: darkText,
-                      letterSpacing: 0.3,
+                      letterSpacing: 0.4,
                     ),
                   ),
                 ],
@@ -132,16 +134,16 @@ class HomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                  color: const Color(0xFFF2F2F7),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
-                  '4 Langkah',
+                  '4 Tahap',
                   style: TextStyle(
+                    fontFamily: "Plus Jakarta",
                     fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF475569),
+                    fontWeight: FontWeight.w600,
+                    color: textMuted,
                   ),
                 ),
               ),
@@ -149,8 +151,9 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           const Text(
-            'Panduan alur Market Basket Analysis untuk anggota tim & pengguna:',
+            'Tahapan operasional analisis transaksi menggunakan Algoritma Apriori:',
             style: TextStyle(
+              fontFamily: "Plus Jakarta",
               fontSize: 12,
               color: textMuted,
               height: 1.35,
@@ -159,33 +162,33 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 14),
           _buildWorkflowStepRow(
             stepNumber: '1',
-            title: 'Unggah / Muat Dataset',
-            desc: 'Buka tab Dataset. Pilih berkas Excel/CSV atau tekan "Muat Dataset Contoh" untuk memuat transaksi belanja.',
-            actionLabel: 'Tab Dataset →',
+            title: 'Unggah Dataset Transaksi',
+            desc: 'Impor berkas transaksi (.csv / .tsv / .txt) atau gunakan dataset pengujian bawaan pada tab Dataset.',
+            actionLabel: 'Tab Dataset',
             onTap: onNavigateToDataset,
           ),
-          const Divider(height: 16, thickness: 0.5, indent: 38, color: borderLine),
+          const Divider(height: 18, thickness: 0.5, indent: 36, color: borderLine),
           _buildWorkflowStepRow(
             stepNumber: '2',
-            title: 'Atur Ambang Batas (Support & Conf)',
-            desc: 'Tentukan persentase Minimum Support & Minimum Confidence menggunakan slider yang tersedia.',
+            title: 'Konfigurasi Parameter Apriori',
+            desc: 'Tentukan ambang batas Minimum Support (frekuensi kemunculan) dan Minimum Confidence (kepastian aturan).',
             actionLabel: null,
             onTap: null,
           ),
-          const Divider(height: 16, thickness: 0.5, indent: 38, color: borderLine),
+          const Divider(height: 18, thickness: 0.5, indent: 36, color: borderLine),
           _buildWorkflowStepRow(
             stepNumber: '3',
-            title: 'Mining & Analisis Aturan Asosiasi',
-            desc: 'Tekan "Jalankan Mining Apriori". Amati pembentukan L1, L2, L3 dan aturan asosiasi dengan Lift Ratio > 1.',
+            title: 'Ekstraksi Itemset & Aturan Asosiasi',
+            desc: 'Jalankan kalkulasi algoritma Apriori untuk menghasilkan kandidat L1, L2, L3 dan aturan dengan Lift Ratio > 1.0.',
             actionLabel: null,
             onTap: null,
           ),
-          const Divider(height: 16, thickness: 0.5, indent: 38, color: borderLine),
+          const Divider(height: 18, thickness: 0.5, indent: 36, color: borderLine),
           _buildWorkflowStepRow(
             stepNumber: '4',
-            title: 'Uji Simulasi Rekomendasi Kasir',
-            desc: 'Buka tab Discover. Pilih produk yang dibeli konsumen untuk melihat rekomendasi bundling otomatis.',
-            actionLabel: 'Tab Discover →',
+            title: 'Simulasi Rekomendasi Kasir',
+            desc: 'Uji aturan asosiasi pada simulasi kasir di tab Discover untuk memvalidasi rekomendasi bundling produk secara langsung.',
+            actionLabel: 'Tab Discover',
             onTap: onNavigateToDiscover,
           ),
         ],
@@ -204,20 +207,20 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 26,
-          height: 26,
+          width: 24,
+          height: 24,
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(7),
-            border: Border.all(color: const Color(0xFFCBD5E1), width: 0.8),
+            color: const Color(0xFFF2F2F7),
+            borderRadius: BorderRadius.circular(6),
           ),
           alignment: Alignment.center,
           child: Text(
             stepNumber,
             style: const TextStyle(
-              fontSize: 12.5,
+              fontFamily: "Plus Jakarta",
+              fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF1E293B),
+              color: darkText,
             ),
           ),
         ),
@@ -228,11 +231,13 @@ class HomeScreen extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Flexible(
+                  Expanded(
                     child: Text(
                       title,
                       style: const TextStyle(
+                        fontFamily: "Plus Jakarta",
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: darkText,
@@ -240,27 +245,52 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (actionLabel != null && onTap != null)
-                    GestureDetector(
-                      onTap: onTap,
-                      child: Text(
-                        actionLabel,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: gunadarmaPurple,
+                  if (actionLabel != null && onTap != null) ...[
+                    const SizedBox(width: 8),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      onPressed: onTap,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF2F2F7),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: borderLine, width: 0.5),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              actionLabel,
+                              style: const TextStyle(
+                                fontFamily: "Plus Jakarta",
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w600,
+                                color: darkText,
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            const Icon(
+                              CupertinoIcons.chevron_right,
+                              size: 10,
+                              color: textMuted,
+                            ),
+                          ],
                         ),
                       ),
                     ),
+                  ],
                 ],
               ),
               const SizedBox(height: 3),
               Text(
                 desc,
                 style: const TextStyle(
+                  fontFamily: "Plus Jakarta",
                   fontSize: 11.5,
                   color: textBody,
-                  height: 1.35,
+                  height: 1.4,
                 ),
               ),
             ],
@@ -270,9 +300,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGrandHeroBanner(BuildContext context, String currentName) {
-    final displayName = currentName.isNotEmpty ? currentName : 'Admin';
-
+  Widget _buildGrandHeroBanner(BuildContext context, [String? currentName]) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -280,196 +308,170 @@ class HomeScreen extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
+            Color(0xFF1E0A38),
             Color(0xFF2E1065),
-            Color(0xFF4A148C),
-            Color(0xFF581C87),
+            Color(0xFF3B0764),
           ],
         ),
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.12),
+          width: 0.8,
+        ),
         boxShadow: [
           BoxShadow(
-            color: gunadarmaPurple.withValues(alpha: 0.18),
+            color: const Color(0xFF1E0A38).withValues(alpha: 0.25),
             blurRadius: 18,
-            offset: const Offset(0, 8),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(22),
-        child: Stack(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Positioned(
-              right: -30,
-              top: -30,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.05),
-                ),
-              ),
-            ),
-            Positioned(
-              right: 40,
-              bottom: -40,
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.03),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.20),
-                            width: 0.8,
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'UNIVERSITAS GUNADARMA',
-                              style: TextStyle(
-                                fontSize: 9.5,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                letterSpacing: 1.1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size.zero,
-                        onPressed: () => _showSystemInfoModal(context),
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.14),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.20),
-                              width: 0.8,
-                            ),
-                          ),
-                          child: const Icon(
-                            CupertinoIcons.info,
-                            size: 15,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.18),
+                      width: 0.8,
+                    ),
                   ),
-                  const SizedBox(height: 14),
-                  Text(
-                    'Selamat Datang, $displayName',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
+                  child: const Text(
+                    'UNIVERSITAS GUNADARMA',
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 9.5,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
-                      height: 1.2,
+                      color: Colors.white,
+                      letterSpacing: 1.0,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Mau analisis pola data apa hari ini?',
-                    style: TextStyle(
-                      color: Color(0xFFE9D5FF),
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.2,
+                ),
+                CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  onPressed: () => _showSystemInfoModal(context),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.20),
+                        width: 0.8,
+                      ),
+                    ),
+                    child: const Icon(
+                      CupertinoIcons.info,
+                      size: 14,
+                      color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Eksplorasi aturan asosiasi belanja, temukan kombinasi produk tersembunyi, atau uji rekomendasi cerdas berbasis Apriori.',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.78),
-                      fontSize: 12,
-                      height: 1.4,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      if (onNavigateToDataset != null)
-                        Expanded(
-                          child: CupertinoButton(
-                            padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
-                            color: Colors.white.withValues(alpha: 0.16),
-                            borderRadius: BorderRadius.circular(10),
-                            onPressed: onNavigateToDataset,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(CupertinoIcons.tray_arrow_up_fill, size: 13, color: Colors.white),
-                                SizedBox(width: 6),
-                                Text(
-                                  'Tambang Data',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                    letterSpacing: -0.1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      if (onNavigateToDataset != null && onNavigateToDiscover != null)
-                        const SizedBox(width: 8),
-                      if (onNavigateToDiscover != null)
-                        Expanded(
-                          child: CupertinoButton(
-                            padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 12),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            onPressed: onNavigateToDiscover,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(CupertinoIcons.sparkles, size: 13, color: gunadarmaPurple),
-                                SizedBox(width: 6),
-                                Text(
-                                  'Rekomendasi',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: gunadarmaPurple,
-                                    letterSpacing: -0.1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            const Text(
+              'Hai, Selamat Datang!',
+              style: TextStyle(
+                fontFamily: "Plus Jakarta",
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.4,
+                height: 1.2,
               ),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Apa yang ingin Anda lakukan hari ini?',
+              style: TextStyle(
+                fontFamily: "Plus Jakarta",
+                color: Color(0xFFE9D5FF),
+                fontSize: 13.5,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -0.1,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Pilih menu di bawah untuk mengelola dataset transaksi belanja atau mencoba simulasi rekomendasi kasir berbasis Algoritma Apriori.',
+              style: TextStyle(
+                fontFamily: "Plus Jakarta",
+                color: Colors.white.withValues(alpha: 0.82),
+                fontSize: 12,
+                height: 1.45,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                if (onNavigateToDataset != null)
+                  Expanded(
+                    child: CupertinoButton(
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                      color: Colors.white.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(10),
+                      onPressed: onNavigateToDataset,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.doc_text_fill, size: 14, color: Colors.white),
+                          SizedBox(width: 6),
+                          Text(
+                            'Dataset Transaksi',
+                            style: TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              letterSpacing: -0.1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (onNavigateToDataset != null && onNavigateToDiscover != null)
+                  const SizedBox(width: 8),
+                if (onNavigateToDiscover != null)
+                  Expanded(
+                    child: CupertinoButton(
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      onPressed: onNavigateToDiscover,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.cart_fill, size: 14, color: Color(0xFF2E1065)),
+                          SizedBox(width: 6),
+                          Text(
+                            'Simulasi Kasir',
+                            style: TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF2E1065),
+                              letterSpacing: -0.1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
@@ -979,34 +981,24 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildAcademicCreditsFooter() {
-    return const Center(
+    return Center(
       child: Column(
         children: [
-          Text(
+          const Text(
             'UNIVERSITAS GUNADARMA',
             style: TextStyle(
-              fontSize: 11.5,
+              fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: darkText,
+              color: textMuted,
               letterSpacing: 0.8,
             ),
           ),
-          SizedBox(height: 3),
+          const SizedBox(height: 3),
           Text(
-            'Fakultas Ilmu Komputer & TI • Sistem Informasi',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: textMuted,
-            ),
-          ),
-          SizedBox(height: 3),
-          Text(
-            'Kelompok 4 — Data Mining E-Commerce © 2025',
+            'S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4 © 2026',
             style: TextStyle(
               fontSize: 10,
-              fontWeight: FontWeight.w400,
-              color: textSubtle,
+              color: textMuted.withValues(alpha: 0.8),
             ),
           ),
         ],
@@ -1085,7 +1077,7 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 2),
                                 Text(
-                                  "Fakultas Ilmu Komputer & TI • Kelompok 4",
+                                  "S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4",
                                   style: TextStyle(
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.w600,

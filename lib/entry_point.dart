@@ -173,10 +173,10 @@ class _EntryPointState extends State<EntryPoint> {
             );
           }),
           Positioned(
-            bottom: 24,
-            left: 20,
-            right: 20,
-            child: _buildFloatingNavigationBar(),
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _buildDockedNavigationBar(),
           ),
         ],
       ),
@@ -208,50 +208,42 @@ class _EntryPointState extends State<EntryPoint> {
     );
   }
 
-  Widget _buildFloatingNavigationBar() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(28),
+  Widget _buildDockedNavigationBar() {
+    return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
         child: Container(
-          height: 68,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.95),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: const Color(0xFFE2E8F0),
-              width: 1.2,
+            color: Colors.white.withValues(alpha: 0.94),
+            border: const Border(
+              top: BorderSide(
+                color: Color(0xFFD1D1D6),
+                width: 0.8,
+              ),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: primaryPurple.withValues(alpha: 0.10),
-                blurRadius: 20,
-                offset: const Offset(0, 6),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, "Home",
-                  activeIcon: CupertinoIcons.house_fill,
-                  inactiveIcon: CupertinoIcons.house),
-              _buildNavItem(1, "Discover",
-                  activeIcon: CupertinoIcons.compass_fill,
-                  inactiveIcon: CupertinoIcons.compass),
-              _buildNavItem(2, "Dataset",
-                  activeIcon: CupertinoIcons.square_stack_3d_up_fill,
-                  inactiveIcon: CupertinoIcons.square_stack_3d_up),
-              _buildNavItem(3, "Settings",
-                  activeIcon: CupertinoIcons.gear_alt_fill,
-                  inactiveIcon: CupertinoIcons.gear_alt),
-            ],
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              height: 56,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(0, "Home",
+                      activeIcon: CupertinoIcons.house_fill,
+                      inactiveIcon: CupertinoIcons.house),
+                  _buildNavItem(1, "Discover",
+                      activeIcon: CupertinoIcons.compass_fill,
+                      inactiveIcon: CupertinoIcons.compass),
+                  _buildNavItem(2, "Dataset",
+                      activeIcon: CupertinoIcons.square_stack_3d_up_fill,
+                      inactiveIcon: CupertinoIcons.square_stack_3d_up),
+                  _buildNavItem(3, "Settings",
+                      activeIcon: CupertinoIcons.gear_alt_fill,
+                      inactiveIcon: CupertinoIcons.gear_alt),
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -1,6 +1,6 @@
+import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shop/models/apriori_state_manager.dart';
 import 'package:shop/screens/auth/views/components/sign_up_form.dart';
 import 'package:shop/route/route_constants.dart';
 
@@ -112,8 +112,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ElevatedButton(
                               onPressed: () {
                                 String enteredName = _nameController.text.trim();
-                                final enteredEmail = _emailController.text.trim();
-                                if (enteredName.isEmpty && enteredEmail.isNotEmpty) {
+                                final enteredEmail = _emailController.text.trim().isNotEmpty
+                                    ? _emailController.text.trim()
+                                    : "firdaus@gmail.com";
+                                if (enteredName.isEmpty) {
                                   final parts = enteredEmail.split('@');
                                   if (parts.isNotEmpty && parts[0].isNotEmpty) {
                                     final raw = parts[0].replaceAll('.', ' ').replaceAll('_', ' ');
@@ -128,13 +130,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 if (enteredName.isEmpty) {
                                   enteredName = "Dosen / Pengguna";
                                 }
-                                AprioriStateManager.instance.registerUser(enteredEmail, enteredName);
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    entryPointScreenRoute,
-                                    (route) => false);
+                                final otp = (100000 + Random().nextInt(900000)).toString();
+                                Navigator.pushNamed(
+                                  context,
+                                  otpScreenRoute,
+                                  arguments: {
+                                    'email': enteredEmail,
+                                    'expectedOtp': otp,
+                                    'userName': enteredName,
+                                  },
+                                );
                               },
-                              child: const Text("Continue"),
+                              child: const Text("Verifikasi Email & Lanjutkan"),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

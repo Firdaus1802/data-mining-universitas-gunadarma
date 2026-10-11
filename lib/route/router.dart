@@ -13,7 +13,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case logInScreenRoute:
       return CupertinoPageRoute(
         settings: settings,
-        builder: (context) => const LoginScreen(),
+        builder: (context) => const EntryPoint(),
       );
     case signUpScreenRoute:
       return CupertinoPageRoute(
@@ -24,6 +24,19 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return CupertinoPageRoute(
         settings: settings,
         builder: (context) => const PasswordRecoveryScreen(),
+      );
+    case otpScreenRoute:
+    case signUpVerificationScreenRoute:
+      return CupertinoPageRoute(
+        settings: settings,
+        builder: (context) {
+          final args = settings.arguments as Map<String, dynamic>? ?? {};
+          return EmailVerificationScreen(
+            email: args['email'] as String? ?? 'user@gunadarma.ac.id',
+            expectedOtp: args['expectedOtp'] as String? ?? '',
+            userName: args['userName'] as String?,
+          );
+        },
       );
     case productDetailsScreenRoute:
       return CupertinoPageRoute(
