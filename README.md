@@ -1,216 +1,126 @@
-# Flutter E-Commerce App Template
+# Market Basket Analysis E-Commerce — Algoritma Apriori
+### Universitas Gunadarma • Fakultas Ilmu Komputer & Teknologi Informasi
+**Program Studi S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4 (2026)**
 
-<p align="center">
-  <img src="readme%20image/Build%20you%20shop%20app%20in%20days.png" alt="Build you shop app in days" style="width: 500px; height: auto;">
-</p>
+---
 
-<p align="center">
-  The FlutterShop template makes it easier to develop an e-commerce app using Flutter. It includes all the necessary pages to build a shopping app for both Android and iOS using flutter.
-</p>
+## 📌 Ringkasan Proyek
 
-<!-- Buttons -->
-<p align="center">
-  <a href="https://cutt.ly/fefxdqE9" style="text-decoration: none;" target="_blank">
-    <img src="readme image/buy_now_btn.png" alt="Full template" style="margin-right: 32px; width: 170px; height: 50px;">
-  </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://cutt.ly/1efxdynN" style="text-decoration: none;" target="_blank">
-    <img src="readme image/preview_btn.png" alt="Preview" style="width: 136px; height: 50px;">
-  </a>
-</p>
+Aplikasi **Market Basket Analysis** ini dibangun untuk menganalisis pola transaksi belanja konsumen pada platform e-commerce menggunakan **Algoritma Apriori**. Sistem ini mengekstraksi kombinasi produk yang sering dibeli bersamaan (*Frequent Itemsets*) dan menghasilkan aturan asosiasi (*Association Rules*) yang valid berdasarkan metrik **Support**, **Confidence**, dan **Lift Ratio**.
 
-<!-- Device image -->
-</br >
-</br >
-<p align="center">
-  <img src="readme image/Device_frame.png" alt="Ecommerce app Home, product details page" style="width: 1100px; height: auto;">
-</p>
-</br >
-</br >
+Hasil analisis diintegrasikan secara langsung ke dalam fitur **Simulasi Kasir Cerdas (*Smart Checkout*)** untuk memberikan rekomendasi produk pelengkap secara otomatis dan *real-time*.
 
-This shop app template comes with 100+ screens. Some of these pages are Splash, Login, Signup, Home, Product, Search, Cart, Profile, Payment, Wallet, Order Tracking, and Order History. Additionally, all pages support both light and dark themes.You just need to connect the UI to your preferred backend, such as Firebase, WordPress, or your custom API. You can do anything you want with it.
+---
 
-<!-- Gif preview -->
-</br >
-</br >
-<p align="center">
-  <img src="readme image/FlutterShop_Intro.gif" alt="Build you shop app in days" style="width: 643px; height: auto;">
-</p>
-</br >
-</br >
+## 🏛️ Informasi Akademik
 
-### Well organized project very easy to customize
+* **Perguruan Tinggi:** Universitas Gunadarma
+* **Fakultas:** Fakultas Ilmu Komputer dan Teknologi Informasi (FIKTI)
+* **Program Studi:** S1 Sistem Informasi
+* **Kelas:** 3KA31
+* **Mata Kuliah:** Konsep Data Mining
+* **Dosen Pengampu:** Dr. Dina Anggraini, S.Kom., M.M.S.I.
 
-![FlutterShop E-commerce Template Project Structure](https://public-files.gumroad.com/v1kbfvdugf3urvw03qrqgmc5pl1c)
+### 👥 Anggota Kelompok 4
 
-<!-- Full preview -->
-</br >
-</br >
-<p align="center">
-  <img src="https://public-files.gumroad.com/m3v3lyyipbzczcws5gcuhpbkmczk" alt="Build you shop app in days" style="width: 100%; height: auto;">
-</p>
+| No | Nama Anggota | NPM | Peran / Kontribusi |
+|:---:|:---|:---:|:---|
+| 1 | **Firdaus Dhuha Prabowo** | 10124497 | Ketua Kelompok & Lead Researcher |
+| 2 | **Bagas Sena Dwi Jatmika** | 10124237 | Algoritma Apriori & Data Engine |
+| 3 | **Fabio Arvin Aeneas** | 10124402 | Frontend UI/UX & Mobile Developer |
+| 4 | **Farid Hilmy Cordova** | 10124442 | Data Mining Analyst & Preprocessing |
+| 5 | **Hesti Setiana** | 10124563 | Business Intelligence & Evaluation |
+| 6 | **Nur Bian'Aziza** | 11124490 | Dokumentasi Riset & Presentasi |
 
-### Loading is no longer boring [New update V1.1] [Doc](https://abu-anwar.gitbook.io/fluttershop-doc/custom-loading)
+---
 
-The progress indicator that comes with Flutter, by default is okay in most places, but not in every place. Especially when you build an ecommerce app. This is why we have created a custom loading effect that boosts your user engagement even during the loading process. This kind of loading is common in popular apps like YouTube and LinkedIn. It's a small detail, but it makes a big difference.
-![FlutterShop Custom loading](https://public-files.gumroad.com/qqnmt9nu5677thkq1961tlwj405u)
+## ⚡ Arsitektur & Teknologi
 
-## Screens on the FlutterShop E-commerce Template
+* **Frontend:** **Flutter SDK (Dart)**
+  * Antarmuka responsif untuk Mobile (Android & iOS) dan Web.
+  * Desain mengadopsi prinsip **Apple iOS Human Interface Guidelines (HIG)** dengan komponen *Cupertino Inset Grouped*, tipografi *Plus Jakarta Display*, dan deteksi platform dinamis.
+* **Backend / Computation Engine:** **Client-Side Edge Computing**
+  * Seluruh kalkulasi Algoritma Apriori dijalankan langsung pada memori perangkat pengguna (*In-Memory Client-Side Engine*), menjamin kecepatan komputasi instan tanpa ketergantungan server terpusat.
+* **Database & Storage:** **In-Memory (Client-Side RAM)**
+  * Dataset transaksi diunggah via file picker (`.csv` / `.json`) dan diolah langsung di memori aplikasi (`AprioriStateManager`).
+  * Data tiap pengguna bersifat terisolasi dan aman di perangkat masing-masing.
+* **Layanan Cloud (Microservice):** **EmailJS REST API**
+  * Layanan pengiriman kode OTP / verifikasi pendaftaran akun pengguna.
+* **Infrastruktur & Hosting:** **GitHub & Netlify**
+  * Repository terpusat di GitHub dengan otomatisasi publikasi web via Netlify.
 
-As mentioned, this kit contains 100+ nicely crafted minimal screens that cover everything you need!👇
+---
 
-### Onboarding
+## 🚀 Fitur Utama
 
-- Onboarding Choose item
-- Onboarding Add to cart
-- Onboarding Pay online
-- Onboarding Track order
-- Onboarding Find store
-- Notification permission
-- Select language
+1. **Dashboard Aturan Asosiasi (Apriori Analytics):**
+   * Visualisasi tabel aturan asosiasi ($Antecedent \rightarrow Consequent$).
+   * Pengaturan parameter interaktif: slider **Minimum Support** dan **Minimum Confidence**.
+   * Indikator validitas berbasis **Lift Ratio** ($Lift > 1.0$).
+2. **Simulasi Rekomendasi Kasir (Smart Checkout):**
+   * Simulasi katalog belanja kasir interaktif.
+   * Rekomendasi produk komplementer muncul otomatis seketika produk dimasukkan ke keranjang belanja.
+3. **Manajemen Dataset Transaksi:**
+   * Fitur import file dataset mandiri (format CSV / JSON).
+   * Opsi *Muat Dataset Contoh* (10 transaksi retail e-commerce) untuk keperluan demonstrasi.
+   * Fitur pembersihan dataset (*Clear Memory*).
+4. **Navigasi & Tata Letak iOS:**
+   * Struktur navigasi elegan dengan bottom navigation bar.
+   * Modal informasi sistem dan profil akademik terpadu.
 
-### Authentication
+---
 
-- Log in
-- Forgot password
-  - Choose verification method
-  - Verification code
-- Set new password
-- Done reset password
-- Sign up
-  - Setup profile
-  - Verification code
-- Successfully sign up
-- Terms and conditions
-- Enable fingerprint
-- Enable face ID
+## 📊 Metrik Data Mining
 
-### Product
+Sistem mengevaluasi aturan asosiasi dengan 3 metrik utama:
 
-- Product page
-  - Notify when available (Out of stock)
-  - Buy Now
-  - Product details
-  - Product reviews
-  - Add review
-  - Shipping methods
-  - Product return policy
-  - Product size guide
-  - Store Pickup Availability
-  - Added to cart message
-  - Product gallery (Will be added soon)
+1. **Support:**
+   $$\text{Support}(A \cup B) = \frac{\text{Jumlah transaksi berisi } A \text{ dan } B}{\text{Total seluruh transaksi}}$$
 
-### Main Page
+2. **Confidence:**
+   $$\text{Confidence}(A \rightarrow B) = \frac{\text{Support}(A \cup B)}{\text{Support}(A)}$$
 
-- Home page
-- On sales page
-- Kids product page
-- Brand page
-- Discover Page (Categories)
-  - Style 1
-  - Style 2 (Will be added soon)
-  - Style 3 (Will be added soon)
-- Bookmark products page
+3. **Lift Ratio:**
+   $$\text{Lift}(A \rightarrow B) = \frac{\text{Confidence}(A \rightarrow B)}{\text{Support}(B)}$$
+   * Nilai **Lift > 1.0** menandakan adanya hubungan asosiasi yang positif dan kuat antar produk.
 
-### Search
+---
 
-- Recent search (Search history)
-- Search suggestions
-- Search filters
-  - Size filter
-  - Color filter
-  - Brand filter
-  - Price filter
-  - Sort by
-- Search results
-  - Product not found
+## 🛠️ Panduan Instalasi & Menjalankan Aplikasi
 
-### Cart
+### Prasyarat
+* [Flutter SDK](https://flutter.dev) (versi $\ge$ 3.2.0)
+* [Git](https://git-scm.com)
+* Web Browser (Chrome / Edge / Safari) atau Android Device / Emulator
 
-- Products on Cart
-- Empty cart
-- Choose address
-- Review & payment
-- Checkout / Payment method
-  - Select card
-  - Pay with cash
-  - Use credit
-- Thanks for order
-- Add new card
-- Scan card (Will be added soon)
+### Langkah-langkah
+1. **Clone repositori:**
+   ```bash
+   git clone https://github.com/Firdaus1802/data-mining-universitas-gunadarma.git
+   cd data-mining-universitas-gunadarma
+   ```
 
-### Profile
+2. **Unduh dependensi pustaka:**
+   ```bash
+   flutter pub get
+   ```
 
-- Account
-  - Normal version
-  - Pro version
-  - Profile
-    - Edit profile
-  - Notifications
-    - Empty notification
-    - Enable notification
-    - Notification options
-  - Select Language
-  - Addresses
-    - Empty address
-    - Add new address
-  - Add number
-    - Verification code
-  - Selected location
-  - Payment
-    - Cards
-    - Empty payment
-  - Wallet
-    - Empty Wallet
-    - Wallet history
-  - Help & Chat (Support)
-    - Chat
-  - Preferences
+3. **Jalankan aplikasi (Mode Debug):**
+   ```bash
+   # Menjalankan di Chrome (Web)
+   flutter run -d chrome
 
-### Order
+   # Menjalankan di perangkat Android
+   flutter run -d android
+   ```
 
-- Account Orders
-  - Processing orders
-    - Cancel order
-  - Canceled orders
-  - Delivered orders
-  - Return orders (Will be added soon)
-  - More screens added in that sector soon
+4. **Kompilasi versi Web Release (untuk Netlify):**
+   ```bash
+   flutter build web --release
+   ```
 
-### Return & Request (Will be added soon)
+---
 
-- Return order list
-- Empty return order
-- Return order
-- Return detail
+## 📜 Hak Cipta & Lisensi
 
-### Error & Permission
-
-- Notification permission
-- No notification
-- Select language
-- No internet
-- Server error
-- Location permissions
-- No search result
-- Empty order list
-- No Address found
-- Empty payment
-- Empty wallet
-
-and MORE!!!! 🤩
-
-If you want to learn how to build ecommerce template on Flutter [watch the playlist on YouTube](https://youtube.com/playlist?list=PLxUBb2A_UUy8OlaNZpS2mfL8xpHcnd_Af), In the first video, we start by making a neat onboarding screen for our shopping app. This works on both Android and iOS because it's made with Flutter. In the next video, we tackle the 'Sign In' and 'Forgot Password' screens, adding some unique error messages. The third video covers the 'Sign Up' and OTP processes. The fourth one is fun – we create the main homepage. In the fifth, we dive into the product page, and in the sixth, we craft an order page with cool features like 'swipe to delete.' Finally, in the seventh video, we design the user profile page.
-
-Visit FlutterLibrary.com to Download the [Flutter e-commerce app template](https://www.flutterlibrary.com/templates/e-commerce-app) & other templates, and components.
-
-
-
-</br >
-</br >
-<!-- Buttons -->
-<p align="center">
-  <a href="https://app.gumroad.com/checkout?product=uxznc&option=B3wWhE6QH46cfm31C7jEmQ%3D%3D&quantity=1&referrer=https://github.com" style="text-decoration: none;" target="_blank">
-    <img src="readme image/buy_now_btn.png" alt="Full template" style="margin-right: 32px; width: 170px; height: 50px;">
-  </a>
-</p>
+Proyek ini dikembangkan untuk keperluan akademik tugas besar mata kuliah **Konsep Data Mining**, Program Studi S1 Sistem Informasi, Fakultas Ilmu Komputer dan Teknologi Informasi, **Universitas Gunadarma** © 2026.
