@@ -7,10 +7,12 @@ class OnbordingContent extends StatelessWidget {
     required this.description,
     required this.image,
     required this.isActive,
+    this.customWidget,
   });
 
   final String title, description, image;
   final bool isActive;
+  final Widget? customWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -20,34 +22,40 @@ class OnbordingContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(flex: 1),
-          image.contains('gunadarma')
-              ? Image.asset(
+          if (customWidget != null)
+            SizedBox(
+              height: 220,
+              child: Center(child: customWidget!),
+            )
+          else if (image.contains('gunadarma'))
+            Image.asset(
+              image,
+              height: 220,
+              fit: BoxFit.contain,
+            )
+          else
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: image.endsWith('.jpg')
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.06),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(image.endsWith('.jpg') ? 20 : 0),
+                child: Image.asset(
                   image,
                   height: 220,
                   fit: BoxFit.contain,
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: image.endsWith('.jpg')
-                        ? [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.06),
-                              blurRadius: 20,
-                              offset: const Offset(0, 8),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(image.endsWith('.jpg') ? 20 : 0),
-                    child: Image.asset(
-                      image,
-                      height: 220,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
                 ),
+              ),
+            ),
           const Spacer(flex: 1),
           Text(
             title,
