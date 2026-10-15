@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AprioriRuleSummary {
   final String antecedent;
@@ -58,8 +61,8 @@ class AprioriStateManager extends ChangeNotifier {
   static final AprioriStateManager instance = AprioriStateManager._internal();
   AprioriStateManager._internal();
 
-  double _minSupport = 10.0;
-  double _minConfidence = 50.0;
+  double _minSupport = 1.0;
+  double _minConfidence = 16.0;
   final List<List<String>> _transactions = [];
   final List<AprioriRuleSummary> _rules = [];
   int _totalRulesCount = 0;
@@ -118,6 +121,139 @@ class AprioriStateManager extends ChangeNotifier {
       return _teamMembers.first;
     }
     return null;
+  }
+
+  Future<void> init() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedJson = prefs.getString('saved_transactions_v1');
+      final savedMinSup = prefs.getDouble('saved_min_support');
+      final savedMinConf = prefs.getDouble('saved_min_confidence');
+
+      if (savedMinSup != null) _minSupport = savedMinSup;
+      if (savedMinConf != null) _minConfidence = savedMinConf;
+
+      if (savedJson != null && savedJson.isNotEmpty) {
+        final List<dynamic> decoded = jsonDecode(savedJson);
+        _transactions.clear();
+        for (final item in decoded) {
+          if (item is List) {
+            final row = item.map((e) => e.toString().trim()).where((e) => e.isNotEmpty).toList();
+            if (row.isNotEmpty) {
+              _transactions.add(row);
+            }
+          }
+        }
+      }
+
+      if (_transactions.isEmpty) {
+        final csvString = await rootBundle.loadString('assets/data/dataset_groceries_1000.csv');
+        final lines = csvString.split(RegExp(r'\r?\n'));
+        for (final line in lines) {
+          final clean = line.trim();
+          if (clean.isEmpty) continue;
+          final parts = clean.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+          if (parts.isNotEmpty) {
+            _transactions.add(parts);
+          }
+        }
+        if (savedMinSup == null) _minSupport = 1.0;
+        if (savedMinConf == null) _minConfidence = 16.0;
+      }
+
+      _computeRulesInternal();
+      notifyListeners();
+    } catch (_) {
+      _computeRulesInternal();
+      notifyListeners();
+    }
+  }
+
+  void _computeRulesInternal() {
+    final int totalTrans = _transactions.length;
+    if (totalTrans == 0) {
+      _rules.clear();
+      _totalRulesCount = 0;
+      return;
+    }
+
+    final Map<String, int> itemCounts = {};
+    for (final trans in _transactions) {
+      for (final item in trans.toSet()) {
+        itemCounts[item] = (itemCounts[item] ?? 0) + 1;
+      }
+    }
+
+    final Map<String, int> pairCounts = {};
+    for (final trans in _transactions) {
+      final list = trans.toSet().toList();
+      for (int i = 0; i < list.length; i++) {
+        for (int j = i + 1; j < list.length; j++) {
+          final a = list[i];
+          final b = list[j];
+          final key = a.compareTo(b) < 0 ? '$a|||$b' : '$b|||$a';
+          pairCounts[key] = (pairCounts[key] ?? 0) + 1;
+        }
+      }
+    }
+
+    final List<AprioriRuleSummary> newRules = [];
+    pairCounts.forEach((key, countBoth) {
+      final parts = key.split('|||');
+      final itemA = parts[0];
+      final itemB = parts[1];
+
+      final countA = itemCounts[itemA] ?? 1;
+      final countB = itemCounts[itemB] ?? 1;
+
+      final double supportBoth = (countBoth / totalTrans) * 100.0;
+      final double confAtoB = (countBoth / countA) * 100.0;
+      final double suppB = (countB / totalTrans) * 100.0;
+      final double liftAtoB = suppB > 0 ? (confAtoB / suppB) : 0.0;
+
+      if (supportBoth >= _minSupport && confAtoB >= _minConfidence) {
+        newRules.add(AprioriRuleSummary(
+          antecedent: itemA,
+          consequent: itemB,
+          confidence: confAtoB,
+          support: supportBoth,
+          lift: liftAtoB,
+        ));
+      }
+
+      final double confBtoA = (countBoth / countB) * 100.0;
+      final double suppA = (countA / totalTrans) * 100.0;
+      final double liftBtoA = suppA > 0 ? (confBtoA / suppA) : 0.0;
+
+      if (supportBoth >= _minSupport && confBtoA >= _minConfidence) {
+        newRules.add(AprioriRuleSummary(
+          antecedent: itemB,
+          consequent: itemA,
+          confidence: confBtoA,
+          support: supportBoth,
+          lift: liftBtoA,
+        ));
+      }
+    });
+
+    newRules.sort((a, b) {
+      final cmp = b.confidence.compareTo(a.confidence);
+      if (cmp != 0) return cmp;
+      return b.lift.compareTo(a.lift);
+    });
+
+    _rules.clear();
+    _rules.addAll(newRules);
+    _totalRulesCount = newRules.length;
+  }
+
+  Future<void> _saveToPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('saved_transactions_v1', jsonEncode(_transactions));
+      await prefs.setDouble('saved_min_support', _minSupport);
+      await prefs.setDouble('saved_min_confidence', _minConfidence);
+    } catch (_) {}
   }
 
   void setUserName(String name) {
@@ -195,13 +331,18 @@ class AprioriStateManager extends ChangeNotifier {
     _rules.clear();
     if (rules != null) {
       _rules.addAll(rules);
+    } else {
+      _computeRulesInternal();
     }
+    _saveToPrefs();
     notifyListeners();
   }
 
   void updateParameters(double minSup, double minConf) {
     _minSupport = minSup;
     _minConfidence = minConf;
+    _computeRulesInternal();
+    _saveToPrefs();
     notifyListeners();
   }
 
@@ -215,17 +356,23 @@ class AprioriStateManager extends ChangeNotifier {
   void setTransactions(List<List<String>> newTransactions) {
     _transactions.clear();
     _transactions.addAll(newTransactions);
+    _computeRulesInternal();
+    _saveToPrefs();
     notifyListeners();
   }
 
   void addTransaction(List<String> items) {
     _transactions.add(List<String>.from(items));
+    _computeRulesInternal();
+    _saveToPrefs();
     notifyListeners();
   }
 
   void removeTransaction(int index) {
     if (index >= 0 && index < _transactions.length) {
       _transactions.removeAt(index);
+      _computeRulesInternal();
+      _saveToPrefs();
       notifyListeners();
     }
   }
@@ -234,7 +381,18 @@ class AprioriStateManager extends ChangeNotifier {
     _transactions.clear();
     _totalRulesCount = 0;
     _rules.clear();
+    _saveToPrefs();
     notifyListeners();
   }
-}
 
+  Future<void> resetToDefaultDataset() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('saved_transactions_v1');
+      await prefs.remove('saved_min_support');
+      await prefs.remove('saved_min_confidence');
+      _transactions.clear();
+      await init();
+    } catch (_) {}
+  }
+}

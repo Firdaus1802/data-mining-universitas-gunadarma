@@ -21,6 +21,7 @@ dependencies:
   animations: ^2.0.11
   url_launcher: ^6.3.0
   file_picker: ^13.1.0
+  shared_preferences: ^2.5.6
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,7 @@ flutter:
     - assets/flags/
     - assets/logo/
     - assets/screens/
+    - assets/data/
 
   fonts:
     - family: Plus Jakarta

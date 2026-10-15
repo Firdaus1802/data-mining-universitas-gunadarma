@@ -46,6 +46,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       _minSupport = AprioriStateManager.instance.minSupport;
       _minConfidence = AprioriStateManager.instance.minConfidence;
     }
+    AprioriStateManager.instance.addListener(_onStateManagerUpdated);
     _animCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -54,8 +55,23 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     _animCtrl.forward();
   }
 
+  void _onStateManagerUpdated() {
+    if (!mounted) return;
+    if (AprioriStateManager.instance.transactions.length != _transactions.length ||
+        AprioriStateManager.instance.minSupport != _minSupport ||
+        AprioriStateManager.instance.minConfidence != _minConfidence) {
+      setState(() {
+        _transactions.clear();
+        _transactions.addAll(AprioriStateManager.instance.transactions);
+        _minSupport = AprioriStateManager.instance.minSupport;
+        _minConfidence = AprioriStateManager.instance.minConfidence;
+      });
+    }
+  }
+
   @override
   void dispose() {
+    AprioriStateManager.instance.removeListener(_onStateManagerUpdated);
     _animCtrl.dispose();
     _customItemCtrl.dispose();
     _csvImportCtrl.dispose();
@@ -161,13 +177,21 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Reset Dataset'),
-        content: const Text('Apakah Anda yakin ingin mengosongkan seluruh dataset transaksi yang tersimpan?'),
+        title: const Text('Kelola Dataset'),
+        content: const Text('Pilih aksi untuk mereset dataset transaksi Anda:'),
         actions: [
           CupertinoDialogAction(
             isDefaultAction: true,
             onPressed: () => Navigator.pop(ctx),
             child: const Text('Batal'),
+          ),
+          CupertinoDialogAction(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await AprioriStateManager.instance.resetToDefaultDataset();
+              _showIOSNotification('Dataset 1.000 data bawaan berhasil dimuat.');
+            },
+            child: const Text('Muat Ulang 1.000 Data'),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
