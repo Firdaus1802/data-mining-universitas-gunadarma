@@ -62,7 +62,6 @@ class BannerSStyle5 extends StatelessWidget {
                         height: 1,
                       ),
                     ),
-                    // const SizedBox(height: defaultPadding / 4),
                     if (bottomText != null)
                       Text(
                         bottomText!,

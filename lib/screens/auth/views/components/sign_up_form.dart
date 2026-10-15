@@ -25,7 +25,6 @@ class SignUpForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          // Nama Lengkap (Dosen / Pengguna)
           TextFormField(
             controller: nameController,
             onSaved: (val) {

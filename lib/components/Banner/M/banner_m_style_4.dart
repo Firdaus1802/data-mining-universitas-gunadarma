@@ -63,7 +63,6 @@ class BannerMStyle4 extends StatelessWidget {
                         height: 1,
                       ),
                     ),
-                    // const SizedBox(height: defaultPadding / 4),
                     Text(
                       "UP TO $discountParcent% OFF",
                       style: const TextStyle(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-// Just for demo
 const productDemoImg1 = "https://i.imgur.com/CGCyp1d.png";
 const productDemoImg2 = "https://i.imgur.com/AkzWQuJ.png";
 const productDemoImg3 = "https://i.imgur.com/J7mGZ12.png";
@@ -9,11 +8,7 @@ const productDemoImg4 = "https://i.imgur.com/q9oF9Yq.png";
 const productDemoImg5 = "https://i.imgur.com/MsppAcx.png";
 const productDemoImg6 = "https://i.imgur.com/JfyZlnO.png";
 
-// End For demo
-
 const grandisExtendedFont = "Plus Jakarta";
-
-// On color 80, 60.... those means opacity
 
 const Color primaryColor = Color(0xFF7E22CE);
 
@@ -50,12 +45,6 @@ const Color whileColor5 = Color(0xFF0D0D0D);
 const Color greyColor = Color(0xFFB8B5C3);
 const Color lightGreyColor = Color(0xFFF8F8F9);
 const Color darkGreyColor = Color(0xFF1C1C25);
-// const Color greyColor80 = Color(0xFFC6C4CF);
-// const Color greyColor60 = Color(0xFFD4D3DB);
-// const Color greyColor40 = Color(0xFFE3E1E7);
-// const Color greyColor20 = Color(0xFFF1F0F3);
-// const Color greyColor10 = Color(0xFFF8F8F9);
-// const Color greyColor5 = Color(0xFFFBFBFC);
 
 const Color purpleColor = Color(0xFF7B61FF);
 const Color successColor = Color(0xFF2ED573);

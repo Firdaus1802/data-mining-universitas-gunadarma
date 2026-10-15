@@ -1,4 +1,3 @@
-// For demo only
 import 'package:shop/constants.dart';
 
 class ProductModel {

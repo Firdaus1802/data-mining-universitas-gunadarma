@@ -45,7 +45,6 @@ class BannerLStyle1 extends StatelessWidget {
                   children: [
                     Stack(
                       children: <Widget>[
-                        // Stroked text as border.
                         Text(
                           discountPercent.toString(),
                           style: TextStyle(
