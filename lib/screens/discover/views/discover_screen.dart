@@ -21,12 +21,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   static const Color primaryPurple = Color(0xFF4A148C);
   static const Color deepPurple = Color(0xFF2E1065);
-  static const Color darkText = Color(0xFF0F172A);
-  static const Color slateMuted = Color(0xFF64748B);
-  static const Color slateSubtle = Color(0xFF94A3B8);
-  static const Color bgLight = Color(0xFFF8FAFC);
-  static const Color cardBg = Colors.white;
-  static const Color borderSubtle = Color(0xFFE2E8F0);
+  static const Color iosBg = Color(0xFFF2F2F7);
+  static const Color iosCardBg = Colors.white;
+  static const Color iosBorder = Color(0xFFE5E5EA);
+  static const Color iosPillBg = Color(0xFFE9E9EB);
+  static const Color iosTextPrimary = Color(0xFF000000);
+  static const Color iosTextSecondary = Color(0xFF6C6C70);
+  static const Color iosTextTertiary = Color(0xFF8E8E93);
 
   static const List<String> _fallbackItems = [
     'Roti',
@@ -244,7 +245,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgLight,
+      backgroundColor: iosBg,
       body: SafeArea(
         bottom: false,
         child: ListenableBuilder(
@@ -270,15 +271,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
                 return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 95),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 95),
                   child: Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1200),
+                      constraints: const BoxConstraints(maxWidth: 1140),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildHeroBanner(isFromDataset, availableProducts.length, activeRules.length),
-                          const SizedBox(height: 18),
+                          _buildIosHeaderBanner(isFromDataset, availableProducts.length, activeRules.length),
+                          const SizedBox(height: 14),
                           if (isDesktop)
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,9 +289,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      _buildCartSection(),
-                                      const SizedBox(height: 16),
-                                      _buildCatalogCard(
+                                      _buildIosCartCard(),
+                                      const SizedBox(height: 14),
+                                      _buildIosCatalogCard(
                                         availableProducts: availableProducts,
                                         filteredProducts: filteredProducts,
                                         popularProducts: popularProducts,
@@ -300,15 +301,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 16),
                                 Expanded(
                                   flex: 5,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      _buildRecommendationsSection(recommendations, ruleTriggers),
-                                      const SizedBox(height: 12),
-                                      _buildFootnote(isFromDataset),
+                                      _buildIosRecommendationsCard(recommendations, ruleTriggers),
+                                      const SizedBox(height: 10),
+                                      _buildIosFootnote(isFromDataset),
                                     ],
                                   ),
                                 ),
@@ -318,19 +319,19 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildCartSection(),
-                                const SizedBox(height: 16),
-                                _buildCatalogCard(
+                                _buildIosCartCard(),
+                                const SizedBox(height: 14),
+                                _buildIosCatalogCard(
                                   availableProducts: availableProducts,
                                   filteredProducts: filteredProducts,
                                   popularProducts: popularProducts,
                                   ruleTriggers: ruleTriggers,
                                   isFromDataset: isFromDataset,
                                 ),
-                                const SizedBox(height: 20),
-                                _buildRecommendationsSection(recommendations, ruleTriggers),
-                                const SizedBox(height: 12),
-                                _buildFootnote(isFromDataset),
+                                const SizedBox(height: 16),
+                                _buildIosRecommendationsCard(recommendations, ruleTriggers),
+                                const SizedBox(height: 10),
+                                _buildIosFootnote(isFromDataset),
                               ],
                             ),
                         ],
@@ -346,163 +347,95 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     );
   }
 
-  Widget _buildHeroBanner(bool isFromDataset, int totalProducts, int totalRules) {
+  Widget _buildIosHeaderBanner(bool isFromDataset, int totalProducts, int totalRules) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            deepPurple,
-            primaryPurple,
-            Color(0xFF581C87),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: primaryPurple.withValues(alpha: 0.16),
-            blurRadius: 16,
-            offset: const Offset(0, 5),
+        color: deepPurple,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'UNIVERSITAS GUNADARMA • 3KA31',
+                  style: TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withValues(alpha: 0.72),
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Simulasi Rekomendasi Kasir',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: -0.4,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'Eksplorasi rekomendasi bundling belanja otomatis berdasarkan aturan asosiasi Apriori secara realtime.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white.withValues(alpha: 0.82),
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '$totalRules Aturan Valid',
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  '$totalProducts Produk',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white.withValues(alpha: 0.82),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            Positioned(
-              right: -25,
-              top: -25,
-              child: Container(
-                width: 130,
-                height: 130,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.05),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Text(
-                                'SIMULASI KASIR POS',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'UNIVERSITAS GUNADARMA',
-                              style: TextStyle(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white.withValues(alpha: 0.75),
-                                letterSpacing: 0.8,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Rekomendasi Bundling Otomatis',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            letterSpacing: -0.3,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Uji coba kombinasi produk belanja untuk melihat rekomendasi cross-selling berbasis aturan asosiasi Apriori secara realtime.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white.withValues(alpha: 0.88),
-                            height: 1.35,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        width: 0.8,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '$totalRules Aturan Valid',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          '$totalProducts Produk Aktif',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white.withValues(alpha: 0.85),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
-  Widget _buildCartSection() {
+  Widget _buildIosCartCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderSubtle, width: 0.8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: iosCardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: iosBorder, width: 0.8),
       ),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -511,42 +444,34 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: primaryPurple.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      CupertinoIcons.cart_fill,
-                      size: 15,
-                      color: primaryPurple,
-                    ),
+                  const Icon(
+                    CupertinoIcons.cart,
+                    size: 16,
+                    color: primaryPurple,
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'Keranjang Belanja Aktif',
+                    'Keranjang Belanja',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: darkText,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: iosTextPrimary,
+                      letterSpacing: -0.3,
                     ),
                   ),
                   const SizedBox(width: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: _cartItems.isEmpty
-                          ? const Color(0xFFF1F5F9)
-                          : primaryPurple.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
+                      color: iosPillBg,
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      '${_cartItems.length} Item',
-                      style: TextStyle(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w700,
-                        color: _cartItems.isEmpty ? slateMuted : primaryPurple,
+                      '${_cartItems.length}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: iosTextSecondary,
                       ),
                     ),
                   ),
@@ -557,19 +482,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   padding: EdgeInsets.zero,
                   minimumSize: Size.zero,
                   onPressed: _clearCart,
-                  child: const Row(
-                    children: [
-                      Icon(CupertinoIcons.trash, size: 13, color: Color(0xFFDC2626)),
-                      SizedBox(width: 4),
-                      Text(
-                        'Kosongkan',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFDC2626),
-                        ),
-                      ),
-                    ],
+                  child: const Text(
+                    'Atur Ulang',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: CupertinoColors.destructiveRed,
+                    ),
                   ),
                 ),
             ],
@@ -578,38 +497,30 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           if (_cartItems.isEmpty)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFE2E8F0), width: 0.6),
+                color: iosBg,
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: const Row(
-                children: [
-                  Icon(CupertinoIcons.info_circle, size: 16, color: slateMuted),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Keranjang masih kosong. Pilih produk di katalog bawah untuk menguji rekomendasi bundling kasir.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: slateMuted,
-                      ),
-                    ),
-                  ),
-                ],
+              child: const Text(
+                'Keranjang masih kosong. Pilih produk pada daftar di bawah untuk menguji rekomendasi.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: iosTextSecondary,
+                  height: 1.35,
+                ),
               ),
             )
           else
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: 6,
+              runSpacing: 6,
               children: _cartItems.map((item) {
                 return Container(
-                  padding: const EdgeInsets.fromLTRB(10, 5, 6, 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: primaryPurple,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -617,25 +528,18 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       Text(
                         item,
                         style: const TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
                       const SizedBox(width: 4),
                       GestureDetector(
                         onTap: () => _removeProduct(item),
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            CupertinoIcons.clear,
-                            size: 10,
-                            color: Colors.white,
-                          ),
+                        child: const Icon(
+                          CupertinoIcons.xmark_circle_fill,
+                          size: 14,
+                          color: Colors.white70,
                         ),
                       ),
                     ],
@@ -648,7 +552,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     );
   }
 
-  Widget _buildCatalogCard({
+  Widget _buildIosCatalogCard({
     required List<String> availableProducts,
     required List<String> filteredProducts,
     required List<String> popularProducts,
@@ -657,19 +561,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderSubtle, width: 0.8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: iosCardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: iosBorder, width: 0.8),
       ),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -679,88 +576,47 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               const Text(
                 'Katalog Produk',
                 style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: darkText,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: iosTextPrimary,
+                  letterSpacing: -0.3,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFFE2E8F0), width: 0.7),
-                ),
-                child: Text(
-                  isFromDataset ? '${availableProducts.length} Produk Dataset' : 'Data Sampel',
-                  style: const TextStyle(
-                    fontSize: 9.5,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF334155),
-                  ),
+              Text(
+                isFromDataset ? '${availableProducts.length} Produk Dataset' : 'Data Sampel',
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: iosTextTertiary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Container(
-            height: 38,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                const Icon(CupertinoIcons.search, size: 16, color: slateMuted),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (val) {
-                      setState(() {
-                        _searchQuery = val;
-                      });
-                    },
-                    style: const TextStyle(fontSize: 12.5, color: darkText),
-                    decoration: const InputDecoration(
-                      hintText: 'Cari produk (misal: milk, sausage, beer)...',
-                      hintStyle: TextStyle(fontSize: 12, color: slateSubtle),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-                if (_searchQuery.isNotEmpty)
-                  GestureDetector(
-                    onTap: () {
-                      _searchController.clear();
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                    },
-                    child: const Icon(CupertinoIcons.clear_circled_solid, size: 15, color: slateSubtle),
-                  ),
-              ],
-            ),
+          const SizedBox(height: 10),
+          CupertinoSearchTextField(
+            controller: _searchController,
+            onChanged: (val) {
+              setState(() {
+                _searchQuery = val;
+              });
+            },
+            placeholder: 'Cari produk...',
+            style: const TextStyle(fontSize: 13, color: iosTextPrimary),
+            placeholderStyle: const TextStyle(fontSize: 13, color: iosTextTertiary),
+            backgroundColor: iosBg,
+            borderRadius: BorderRadius.circular(10),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
           if (_searchQuery.isEmpty && popularProducts.isNotEmpty) ...[
-            const Row(
-              children: [
-                Icon(CupertinoIcons.bolt_fill, size: 13, color: Color(0xFFD97706)),
-                SizedBox(width: 5),
-                Text(
-                  'Pilihan Cepat (Produk Populer & Pemicu Rekomendasi):',
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF475569),
-                  ),
-                ),
-              ],
+            const Text(
+              'Pilihan Populer',
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: iosTextSecondary,
+                letterSpacing: -0.1,
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -774,20 +630,16 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   padding: EdgeInsets.zero,
                   minimumSize: Size.zero,
                   onPressed: () => _toggleProduct(item),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 160),
+                  child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? primaryPurple
-                          : (isTrigger ? const Color(0xFFFAF5FF) : const Color(0xFFF1F5F9)),
+                          : (isTrigger ? const Color(0xFFF3E8FF) : iosPillBg),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected
-                            ? primaryPurple
-                            : (isTrigger ? const Color(0xFFD8B4FE) : const Color(0xFFE2E8F0)),
-                        width: 0.8,
-                      ),
+                      border: isTrigger && !isSelected
+                          ? Border.all(color: const Color(0xFFD8B4FE), width: 0.8)
+                          : null,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -795,16 +647,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         if (isSelected) ...[
                           const Icon(CupertinoIcons.checkmark, size: 11, color: Colors.white),
                           const SizedBox(width: 4),
-                        ] else if (isTrigger) ...[
-                          const Icon(CupertinoIcons.sparkles, size: 11, color: primaryPurple),
-                          const SizedBox(width: 4),
                         ],
                         Text(
                           item,
                           style: TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: isSelected ? FontWeight.w700 : (isTrigger ? FontWeight.w700 : FontWeight.w600),
-                            color: isSelected ? Colors.white : (isTrigger ? primaryPurple : darkText),
+                            fontSize: 12,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                            color: isSelected
+                                ? Colors.white
+                                : (isTrigger ? primaryPurple : iosTextPrimary),
                           ),
                         ),
                       ],
@@ -813,97 +664,86 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 14),
-            const Divider(height: 1, color: Color(0xFFF1F5F9)),
             const SizedBox(height: 12),
+            const Divider(height: 1, color: iosBorder),
+            const SizedBox(height: 10),
           ],
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                _searchQuery.isEmpty
-                    ? 'Semua Produk (${availableProducts.length})'
-                    : 'Hasil Pencarian (${filteredProducts.length})',
-                style: const TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w700,
-                  color: slateMuted,
-                  letterSpacing: 0.3,
-                ),
-              ),
-              if (_searchQuery.isNotEmpty)
-                Text(
-                  'Menampilkan "$_searchQuery"',
-                  style: const TextStyle(
-                    fontSize: 10.5,
-                    color: slateSubtle,
-                  ),
-                ),
-            ],
+          Text(
+            _searchQuery.isEmpty
+                ? 'Semua Produk (${availableProducts.length})'
+                : 'Hasil Pencarian (${filteredProducts.length})',
+            style: const TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: iosTextSecondary,
+              letterSpacing: -0.1,
+            ),
           ),
           const SizedBox(height: 8),
           Container(
-            height: 220,
+            height: 200,
             width: double.infinity,
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE2E8F0), width: 0.7),
+              color: iosBg,
+              borderRadius: BorderRadius.circular(10),
             ),
             child: filteredProducts.isEmpty
                 ? const Center(
                     child: Text(
                       'Produk tidak ditemukan.',
-                      style: TextStyle(fontSize: 12, color: slateMuted),
+                      style: TextStyle(fontSize: 12, color: iosTextTertiary),
                     ),
                   )
-                : SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: filteredProducts.map((item) {
-                        final isSelected = _cartItems.contains(item);
-                        final isTrigger = ruleTriggers.contains(item);
+                : CupertinoScrollbar(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: filteredProducts.map((item) {
+                          final isSelected = _cartItems.contains(item);
+                          final isTrigger = ruleTriggers.contains(item);
 
-                        return CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          onPressed: () => _toggleProduct(item),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 150),
-                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: isSelected ? primaryPurple : Colors.white,
-                              borderRadius: BorderRadius.circular(7),
-                              border: Border.all(
-                                color: isSelected
-                                    ? primaryPurple
-                                    : (isTrigger ? const Color(0xFFD8B4FE) : const Color(0xFFE2E8F0)),
-                                width: 0.7,
+                          return CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            onPressed: () => _toggleProduct(item),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: isSelected ? primaryPurple : iosCardBg,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? primaryPurple
+                                      : (isTrigger ? const Color(0xFFD8B4FE) : iosBorder),
+                                  width: 0.6,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (isSelected) ...[
+                                    const Icon(CupertinoIcons.checkmark, size: 10, color: Colors.white),
+                                    const SizedBox(width: 4),
+                                  ],
+                                  Text(
+                                    item,
+                                    style: TextStyle(
+                                      fontSize: 11.5,
+                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : (isTrigger ? primaryPurple : iosTextPrimary),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (isSelected) ...[
-                                  const Icon(CupertinoIcons.checkmark, size: 10, color: Colors.white),
-                                  const SizedBox(width: 4),
-                                ],
-                                Text(
-                                  item,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                    color: isSelected ? Colors.white : (isTrigger ? primaryPurple : darkText),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
           ),
@@ -912,115 +752,77 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     );
   }
 
-  Widget _buildRecommendationsSection(
+  Widget _buildIosRecommendationsCard(
     List<_RecommendationItem> recommendations,
     Set<String> ruleTriggers,
   ) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderSubtle, width: 0.8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: iosCardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: iosBorder, width: 0.8),
       ),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: primaryPurple.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      CupertinoIcons.sparkles,
-                      size: 15,
-                      color: primaryPurple,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Hasil Rekomendasi Bundling',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: darkText,
-                    ),
-                  ),
-                ],
+              const Text(
+                'Rekomendasi Bundling',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: iosTextPrimary,
+                  letterSpacing: -0.3,
+                ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                 decoration: BoxDecoration(
                   color: recommendations.isNotEmpty
                       ? const Color(0xFFDCFCE7)
-                      : const Color(0xFFF1F5F9),
+                      : iosPillBg,
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: recommendations.isNotEmpty
-                        ? const Color(0xFF86EFAC)
-                        : const Color(0xFFE2E8F0),
-                    width: 0.7,
-                  ),
                 ),
                 child: Text(
                   '${recommendations.length} Rekomendasi',
                   style: TextStyle(
                     fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: recommendations.isNotEmpty
                         ? const Color(0xFF166534)
-                        : slateMuted,
+                        : iosTextSecondary,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 12),
           if (_cartItems.isEmpty) ...[
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                color: iosBg,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: primaryPurple.withValues(alpha: 0.08),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      CupertinoIcons.chart_pie,
-                      size: 24,
-                      color: primaryPurple,
-                    ),
+                  const Icon(
+                    CupertinoIcons.cube_box,
+                    size: 30,
+                    color: iosTextTertiary,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   const Text(
                     'Menunggu Input Keranjang',
                     style: TextStyle(
                       fontSize: 13.5,
-                      fontWeight: FontWeight.w700,
-                      color: darkText,
+                      fontWeight: FontWeight.w600,
+                      color: iosTextPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -1029,18 +831,18 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 11.5,
-                      color: slateMuted,
+                      color: iosTextSecondary,
                       height: 1.35,
                     ),
                   ),
                   if (ruleTriggers.isNotEmpty) ...[
                     const SizedBox(height: 14),
                     const Text(
-                      'Coba klik salah satu pemicu aturan ini:',
+                      'Pilihan pemicu aturan yang tersedia:',
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF475569),
+                        fontWeight: FontWeight.w500,
+                        color: iosTextSecondary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -1054,26 +856,19 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           minimumSize: Size.zero,
                           onPressed: () => _addProduct(trigger),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFAF5FF),
+                              color: iosCardBg,
                               borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: const Color(0xFFD8B4FE), width: 0.8),
+                              border: Border.all(color: iosBorder, width: 0.8),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(CupertinoIcons.add, size: 10, color: primaryPurple),
-                                const SizedBox(width: 4),
-                                Text(
-                                  trigger,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    color: primaryPurple,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              trigger,
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w600,
+                                color: primaryPurple,
+                              ),
                             ),
                           ),
                         );
@@ -1086,41 +881,26 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           ] else if (recommendations.isEmpty) ...[
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                color: iosBg,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: const Row(
                 children: [
                   Icon(
-                    CupertinoIcons.checkmark_seal_fill,
-                    size: 20,
-                    color: Color(0xFF334155),
+                    CupertinoIcons.checkmark_circle,
+                    size: 18,
+                    color: primaryPurple,
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 8),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Keranjang Belanja Optimal',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: darkText,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Semua produk rekomendasi asosiasi telah dimasukkan atau tidak ada aturan baru untuk kombinasi ini.',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: slateMuted,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'Tidak ada aturan rekomendasi baru untuk kombinasi keranjang saat ini.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: iosTextSecondary,
+                      ),
                     ),
                   ),
                 ],
@@ -1131,19 +911,16 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: recommendations.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final rec = recommendations[index];
 
                 return Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFAF5FF),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: const Color(0xFFE9D5FF),
-                      width: 0.9,
-                    ),
+                    color: iosBg,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: iosBorder, width: 0.8),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1152,47 +929,25 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 34,
-                                  height: 34,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: const Color(0xFFD8B4FE),
-                                      width: 0.8,
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                    CupertinoIcons.sparkles,
-                                    size: 16,
-                                    color: primaryPurple,
+                                Text(
+                                  rec.targetProduct,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: iosTextPrimary,
+                                    letterSpacing: -0.3,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        rec.targetProduct,
-                                        style: const TextStyle(
-                                          fontSize: 14.5,
-                                          fontWeight: FontWeight.w800,
-                                          color: darkText,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Dipicu oleh: ${rec.triggerProduct}',
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: primaryPurple,
-                                        ),
-                                      ),
-                                    ],
+                                const SizedBox(height: 1),
+                                Text(
+                                  'Dipicu oleh: ${rec.triggerProduct}',
+                                  style: const TextStyle(
+                                    fontSize: 11.5,
+                                    fontWeight: FontWeight.w500,
+                                    color: primaryPurple,
                                   ),
                                 ),
                               ],
@@ -1204,20 +959,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                             color: primaryPurple,
                             borderRadius: BorderRadius.circular(8),
                             onPressed: () => _addProduct(rec.targetProduct),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(CupertinoIcons.add, size: 12, color: Colors.white),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Tambah',
-                                  style: TextStyle(
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
+                            child: const Text(
+                              '+ Tambah',
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
@@ -1226,40 +974,36 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFE9D5FF), width: 0.7),
+                          color: iosCardBg,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: iosBorder, width: 0.6),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildMetricItem(
+                            _buildIosMetricItem(
                               label: 'Confidence',
                               value: '${rec.rule.confidence.toStringAsFixed(1)}%',
-                              color: const Color(0xFF7C3AED),
                             ),
-                            Container(width: 1, height: 20, color: const Color(0xFFE2E8F0)),
-                            _buildMetricItem(
+                            Container(width: 1, height: 18, color: iosBorder),
+                            _buildIosMetricItem(
                               label: 'Support',
                               value: '${rec.rule.support.toStringAsFixed(1)}%',
-                              color: const Color(0xFF0284C7),
                             ),
-                            Container(width: 1, height: 20, color: const Color(0xFFE2E8F0)),
-                            _buildMetricItem(
-                              label: 'Lift Ratio',
+                            Container(width: 1, height: 18, color: iosBorder),
+                            _buildIosMetricItem(
+                              label: 'Lift',
                               value: '${rec.rule.lift.toStringAsFixed(2)}x',
-                              color: const Color(0xFF16A34A),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Text(
-                        'Peluang cross-selling: Pembeli ${rec.triggerProduct} berpeluang tinggi membeli ${rec.targetProduct} bersamaan.',
+                        'Pola transaksi: Pembeli ${rec.triggerProduct} berkemungkinan membeli ${rec.targetProduct}.',
                         style: const TextStyle(
                           fontSize: 10.5,
-                          fontStyle: FontStyle.italic,
-                          color: slateMuted,
+                          color: iosTextSecondary,
                         ),
                       ),
                     ],
@@ -1273,19 +1017,19 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     );
   }
 
-  Widget _buildMetricItem({
+  Widget _buildIosMetricItem({
     required String label,
     required String value,
-    required Color color,
   }) {
     return Column(
       children: [
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12.5,
-            fontWeight: FontWeight.w800,
-            color: color,
+            fontWeight: FontWeight.w700,
+            color: iosTextPrimary,
+            letterSpacing: -0.2,
           ),
         ),
         const SizedBox(height: 1),
@@ -1293,25 +1037,25 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           label,
           style: const TextStyle(
             fontSize: 9.5,
-            fontWeight: FontWeight.w600,
-            color: slateSubtle,
+            fontWeight: FontWeight.w500,
+            color: iosTextTertiary,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildFootnote(bool isFromDataset) {
+  Widget _buildIosFootnote(bool isFromDataset) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       child: Text(
         isFromDataset
-            ? '• Rekomendasi dihitung otomatis menggunakan algoritma Apriori berdasarkan dataset transaksi yang Anda unggah.'
-            : '• Rekomendasi dihitung otomatis menggunakan parameter algoritma Apriori Universitas Gunadarma.',
+            ? 'Rekomendasi dihitung otomatis menggunakan algoritma Apriori berdasarkan dataset transaksi yang diunggah.'
+            : 'Rekomendasi dihitung otomatis menggunakan parameter algoritma Apriori Universitas Gunadarma.',
         style: const TextStyle(
-          fontSize: 11,
+          fontSize: 10.5,
           fontWeight: FontWeight.w400,
-          color: slateSubtle,
+          color: iosTextTertiary,
           height: 1.3,
         ),
       ),
