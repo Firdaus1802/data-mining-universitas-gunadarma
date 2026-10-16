@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   int _selectedSegment = 0;
   double _minSupport = 10.0;
   double _minConfidence = 50.0;
+  bool _showOnlyL1 = false;
 
   final List<List<String>> _transactions = [];
   final List<String> _currentBasket = [];
@@ -1285,7 +1287,13 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   }
 
   Widget _buildItemFrequencyDistribution(_AprioriResult res) {
-    final topItems = res.itemFrequencies.take(6).toList();
+    final allTopItems = res.itemFrequencies.take(6).toList();
+    final frequentItems = res.itemFrequencies.where((i) => i.percent >= _minSupport).toList();
+    final itemsToDisplay = _showOnlyL1 ? frequentItems.take(6).toList() : allTopItems;
+
+    final double maxItemPercent = res.itemFrequencies.isNotEmpty ? res.itemFrequencies.first.percent : 20.0;
+    final double displayMax = math.max(25.0, math.max(maxItemPercent * 1.15, _minSupport * 1.1));
+    final double thresholdFraction = (_minSupport / displayMax).clamp(0.0, 1.0);
 
     return Container(
       width: double.infinity,
@@ -1298,60 +1306,287 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Distribusi Frekuensi Item Teratas (L1)',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: darkText),
-          ),
-          const SizedBox(height: 12),
-          if (topItems.isEmpty)
-            const Text('Belum ada data item.', style: TextStyle(fontSize: 11, color: mutedText))
-          else
-            ...topItems.map((item) {
-              final isAbove = item.percent >= _minSupport;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 4,
-                      child: Text(
-                        item.name,
-                        style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: darkText),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    const Text(
+                      'Distribusi Frekuensi Item Teratas (L1)',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: darkText),
                     ),
-                    Expanded(
-                      flex: 5,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: LinearProgressIndicator(
-                          value: (item.percent / 100.0).clamp(0.0, 1.0),
-                          backgroundColor: iosBg,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            isAbove ? gunadarmaPurple : mutedText.withValues(alpha: 0.4),
-                          ),
-                          minHeight: 6,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      width: 44,
+                    const SizedBox(height: 3),
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: const TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
                       child: Text(
-                        '${item.percent.toStringAsFixed(1)}%',
-                        style: TextStyle(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w700,
-                          color: isAbove ? gunadarmaPurple : mutedText,
-                        ),
-                        textAlign: TextAlign.right,
+                        '${frequentItems.length} item lolos ambang batas (≥ ${_minSupport.toInt()}%)',
                       ),
                     ),
                   ],
                 ),
-              );
-            }),
+              ),
+              CupertinoSlidingSegmentedControl<bool>(
+                groupValue: _showOnlyL1,
+                children: const {
+                  false: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    child: Text('Semua', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600)),
+                  ),
+                  true: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    child: Text('Lolos L1', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600)),
+                  ),
+                },
+                onValueChanged: (val) {
+                  if (val != null) {
+                    setState(() => _showOnlyL1 = val);
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          if (itemsToDisplay.isEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              alignment: Alignment.center,
+              child: Column(
+                children: [
+                  const Icon(CupertinoIcons.slider_horizontal_below_rectangle, color: mutedText, size: 32),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Tidak ada item yang memenuhi ambang batas ≥ ${_minSupport.toInt()}%',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: darkText),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Geser slider Minimum Support ke kiri untuk menurunkan batas seleksi L1.',
+                    style: TextStyle(fontSize: 11, color: mutedText),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  const Expanded(
+                    flex: 4,
+                    child: SizedBox(),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    flex: 6,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final trackWidth = constraints.maxWidth;
+                        final double needleLeft = (thresholdFraction * trackWidth).clamp(0.0, math.max(0.0, trackWidth - 42.0)).toDouble();
+                        return SizedBox(
+                          height: 22,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('0%', style: TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('${(displayMax / 2).toStringAsFixed(0)}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('${displayMax.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                              ),
+                              AnimatedPositioned(
+                                duration: const Duration(milliseconds: 140),
+                                curve: Curves.easeOutCubic,
+                                left: needleLeft,
+                                top: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),
+                                  decoration: BoxDecoration(
+                                    color: gunadarmaPurple,
+                                    borderRadius: BorderRadius.circular(4),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: gunadarmaPurple.withValues(alpha: 0.25),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    'Ambang ${_minSupport.toInt()}%',
+                                    style: const TextStyle(fontSize: 8.5, color: Colors.white, fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const SizedBox(width: 52),
+                ],
+              ),
+            ),
+            TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 650),
+              curve: Curves.easeOutCubic,
+              builder: (context, animValue, child) {
+                return Column(
+                  children: itemsToDisplay.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
+                    final isAbove = item.percent >= _minSupport;
+                    final barWidthFactor = ((item.percent / displayMax) * animValue).clamp(0.0, 1.0);
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Row(
+                              children: [
+                                Text(
+                                  '#${index + 1} ',
+                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: mutedText),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    item.name,
+                                    style: TextStyle(
+                                      fontSize: 11.5,
+                                      fontWeight: isAbove ? FontWeight.w700 : FontWeight.w500,
+                                      color: isAbove ? darkText : mutedText,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            flex: 6,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final barAreaWidth = constraints.maxWidth;
+                                final double needlePosition = (thresholdFraction * barAreaWidth).clamp(0.0, barAreaWidth).toDouble();
+
+                                return SizedBox(
+                                  height: 18,
+                                  child: Stack(
+                                    alignment: Alignment.centerLeft,
+                                    children: [
+                                      Container(
+                                        height: 8,
+                                        width: barAreaWidth,
+                                        decoration: BoxDecoration(
+                                          color: iosBg,
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                      ),
+                                      AnimatedContainer(
+                                        duration: const Duration(milliseconds: 250),
+                                        curve: Curves.easeOutCubic,
+                                        height: 8,
+                                        width: barAreaWidth * barWidthFactor,
+                                        decoration: BoxDecoration(
+                                          gradient: isAbove
+                                              ? const LinearGradient(
+                                                  colors: [gunadarmaPurple, accentPurple],
+                                                )
+                                              : null,
+                                          color: isAbove ? null : const Color(0xFFD1D1D6),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                      ),
+                                      AnimatedPositioned(
+                                        duration: const Duration(milliseconds: 140),
+                                        curve: Curves.easeOutCubic,
+                                        left: math.max(0.0, needlePosition - 1.25).toDouble(),
+                                        top: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          width: 2.5,
+                                          decoration: BoxDecoration(
+                                            color: gunadarmaPurple,
+                                            borderRadius: BorderRadius.circular(2),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: gunadarmaPurple.withValues(alpha: 0.35),
+                                                blurRadius: 3,
+                                                offset: const Offset(0, 0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          SizedBox(
+                            width: 52,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${item.percent.toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: isAbove ? gunadarmaPurple : mutedText,
+                                  ),
+                                ),
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: isAbove
+                                        ? gunadarmaPurple.withValues(alpha: 0.1)
+                                        : const Color(0xFFE5E5EA),
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  child: Text(
+                                    isAbove ? 'L1' : 'Gugur',
+                                    style: TextStyle(
+                                      fontSize: 8.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: isAbove ? gunadarmaPurple : mutedText,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          ],
         ],
       ),
     );
