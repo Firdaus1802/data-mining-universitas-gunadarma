@@ -100796,7 +100796,7 @@ this.aB()},
 E(a){return A.fa(null,null,A.agF(new A.aGb(this)),null)}}
 A.aGb.prototype={
 $2(a,b){var s,r,q,p,o,n=null,m=A.bm(a,n,t.w).w
-m=A.a7(B.u,A.rF("assets/logo/gunadarma.jpg",B.cW,n,n),B.j,B.h,n,n,n,m.a.b*0.32,n,B.an,n,n,1/0)
+m=A.a7(B.u,A.rF("assets/logo/gunadarma.png",B.cW,n,n),B.j,B.h,n,n,n,m.a.b*0.32,n,B.an,n,n,1/0)
 s=A.a_("Let\u2019s get started!",n,n,n,A.S(a).ok.f,n,n)
 r=this.a
 q=r.r

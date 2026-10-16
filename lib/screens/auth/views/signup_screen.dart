@@ -46,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(16),
                       child: Image.asset(
-                        "assets/logo/gunadarma.jpg",
+                        "assets/logo/gunadarma.png",
                         fit: BoxFit.contain,
                       ),
                     ),
