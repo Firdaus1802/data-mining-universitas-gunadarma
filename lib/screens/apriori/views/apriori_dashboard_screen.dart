@@ -1618,8 +1618,13 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     final frequentItems = res.itemFrequencies.where((i) => i.percent >= _minSupport).toList();
     final itemsToDisplay = _showOnlyL1 ? frequentItems.take(6).toList() : allTopItems;
 
-    final double maxItemPercent = res.itemFrequencies.isNotEmpty ? res.itemFrequencies.first.percent : 20.0;
-    final double displayMax = math.max(25.0, math.max(maxItemPercent * 1.15, _minSupport * 1.1));
+    double displayMax = 30.0;
+    if (_minSupport > 50.0) {
+      displayMax = 100.0;
+    } else if (_minSupport > 25.0) {
+      displayMax = 50.0;
+    }
+
     final double thresholdFraction = (_minSupport / displayMax).clamp(0.0, 1.0);
 
     return Container(
@@ -1714,7 +1719,10 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         final trackWidth = constraints.maxWidth;
-                        final double needleLeft = (thresholdFraction * trackWidth).clamp(0.0, math.max(0.0, trackWidth - 42.0)).toDouble();
+                        final double badgeLeft = (thresholdFraction * trackWidth - 30.0)
+                            .clamp(0.0, math.max(0.0, trackWidth - 62.0))
+                            .toDouble();
+
                         return SizedBox(
                           height: 22,
                           child: Stack(
@@ -1728,18 +1736,18 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text('0%', style: TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
-                                    Text('${(displayMax / 2).toStringAsFixed(0)}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
-                                    Text('${displayMax.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('${(displayMax / 2).toInt()}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('${displayMax.toInt()}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
                                   ],
                                 ),
                               ),
                               AnimatedPositioned(
-                                duration: const Duration(milliseconds: 140),
+                                duration: const Duration(milliseconds: 100),
                                 curve: Curves.easeOutCubic,
-                                left: needleLeft,
+                                left: badgeLeft,
                                 top: 0,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1.5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
                                   decoration: BoxDecoration(
                                     color: gunadarmaPurple,
                                     borderRadius: BorderRadius.circular(4),
@@ -1770,146 +1778,183 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             ),
             TweenAnimationBuilder<double>(
               tween: Tween<double>(begin: 0.0, end: 1.0),
-              duration: const Duration(milliseconds: 650),
+              duration: const Duration(milliseconds: 550),
               curve: Curves.easeOutCubic,
-              builder: (context, animValue, child) {
-                return Column(
-                  children: itemsToDisplay.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final item = entry.value;
-                    final isAbove = item.percent >= _minSupport;
-                    final barWidthFactor = ((item.percent / displayMax) * animValue).clamp(0.0, 1.0);
+              builder: (context, animValue, _) {
+                return LayoutBuilder(
+                  builder: (context, chartConstraints) {
+                    return Stack(
+                      children: [
+                        Column(
+                          children: itemsToDisplay.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final item = entry.value;
+                            final isAbove = item.percent >= _minSupport;
+                            final barWidthFactor = ((item.percent / displayMax) * animValue).clamp(0.0, 1.0);
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Row(
-                              children: [
-                                Text(
-                                  '#${index + 1} ',
-                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: mutedText),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    item.name,
-                                    style: TextStyle(
-                                      fontSize: 11.5,
-                                      fontWeight: isAbove ? FontWeight.w700 : FontWeight.w500,
-                                      color: isAbove ? darkText : mutedText,
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 4,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '#${index + 1} ',
+                                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: mutedText),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            item.name,
+                                            style: TextStyle(
+                                              fontSize: 11.5,
+                                              fontWeight: isAbove ? FontWeight.w700 : FontWeight.w500,
+                                              color: isAbove ? darkText : mutedText,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            flex: 6,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                final barAreaWidth = constraints.maxWidth;
-                                final double needlePosition = (thresholdFraction * barAreaWidth).clamp(0.0, barAreaWidth).toDouble();
-
-                                return SizedBox(
-                                  height: 18,
-                                  child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      Container(
-                                        height: 8,
-                                        width: barAreaWidth,
-                                        decoration: BoxDecoration(
-                                          color: iosBg,
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                      AnimatedContainer(
-                                        duration: const Duration(milliseconds: 250),
-                                        curve: Curves.easeOutCubic,
-                                        height: 8,
-                                        width: barAreaWidth * barWidthFactor,
-                                        decoration: BoxDecoration(
-                                          gradient: isAbove
-                                              ? const LinearGradient(
-                                                  colors: [gunadarmaPurple, accentPurple],
-                                                )
-                                              : null,
-                                          color: isAbove ? null : const Color(0xFFD1D1D6),
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                      AnimatedPositioned(
-                                        duration: const Duration(milliseconds: 140),
-                                        curve: Curves.easeOutCubic,
-                                        left: math.max(0.0, needlePosition - 1.25).toDouble(),
-                                        top: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          width: 2.5,
-                                          decoration: BoxDecoration(
-                                            color: gunadarmaPurple,
-                                            borderRadius: BorderRadius.circular(2),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: gunadarmaPurple.withValues(alpha: 0.35),
-                                                blurRadius: 3,
-                                                offset: const Offset(0, 0),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 6,
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        final barAreaWidth = constraints.maxWidth;
+                                        return SizedBox(
+                                          height: 18,
+                                          child: Stack(
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              Container(
+                                                height: 8,
+                                                width: barAreaWidth,
+                                                decoration: BoxDecoration(
+                                                  color: iosBg,
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                              ),
+                                              AnimatedContainer(
+                                                duration: const Duration(milliseconds: 180),
+                                                curve: Curves.easeOutCubic,
+                                                height: 8,
+                                                width: barAreaWidth * barWidthFactor,
+                                                decoration: BoxDecoration(
+                                                  gradient: isAbove
+                                                      ? const LinearGradient(
+                                                          colors: [gunadarmaPurple, accentPurple],
+                                                        )
+                                                      : null,
+                                                  color: isAbove ? null : const Color(0xFFD1D1D6),
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          SizedBox(
-                            width: 52,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '${item.percent.toStringAsFixed(1)}%',
-                                  style: TextStyle(
-                                    fontSize: 10.5,
-                                    fontWeight: FontWeight.w800,
-                                    color: isAbove ? gunadarmaPurple : mutedText,
-                                  ),
-                                ),
-                                AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                                  decoration: BoxDecoration(
-                                    color: isAbove
-                                        ? gunadarmaPurple.withValues(alpha: 0.1)
-                                        : const Color(0xFFE5E5EA),
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                  child: Text(
-                                    isAbove ? 'L1' : 'Gugur',
-                                    style: TextStyle(
-                                      fontSize: 8.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: isAbove ? gunadarmaPurple : mutedText,
+                                        );
+                                      },
                                     ),
                                   ),
+                                  const SizedBox(width: 8),
+                                  SizedBox(
+                                    width: 52,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          '${item.percent.toStringAsFixed(1)}%',
+                                          style: TextStyle(
+                                            fontSize: 10.5,
+                                            fontWeight: FontWeight.w800,
+                                            color: isAbove ? gunadarmaPurple : mutedText,
+                                          ),
+                                        ),
+                                        AnimatedContainer(
+                                          duration: const Duration(milliseconds: 200),
+                                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                          decoration: BoxDecoration(
+                                            color: isAbove
+                                                ? gunadarmaPurple.withValues(alpha: 0.1)
+                                                : const Color(0xFFE5E5EA),
+                                            borderRadius: BorderRadius.circular(3),
+                                          ),
+                                          child: Text(
+                                            isAbove ? 'L1' : 'Gugur',
+                                            style: TextStyle(
+                                              fontSize: 8.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: isAbove ? gunadarmaPurple : mutedText,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                  flex: 4,
+                                  child: SizedBox(),
                                 ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  flex: 6,
+                                  child: LayoutBuilder(
+                                    builder: (context, trackConstraints) {
+                                      final double needlePosition = (thresholdFraction * trackConstraints.maxWidth)
+                                          .clamp(0.0, trackConstraints.maxWidth)
+                                          .toDouble();
+
+                                      return Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          AnimatedPositioned(
+                                            duration: const Duration(milliseconds: 100),
+                                            curve: Curves.easeOutCubic,
+                                            left: math.max(0.0, needlePosition - 1.0),
+                                            top: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              width: 2.0,
+                                              decoration: BoxDecoration(
+                                                color: gunadarmaPurple,
+                                                borderRadius: BorderRadius.circular(1),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: gunadarmaPurple.withValues(alpha: 0.35),
+                                                    blurRadius: 4,
+                                                    offset: const Offset(0, 0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const SizedBox(width: 52),
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
-                  }).toList(),
+                  },
                 );
               },
             ),
