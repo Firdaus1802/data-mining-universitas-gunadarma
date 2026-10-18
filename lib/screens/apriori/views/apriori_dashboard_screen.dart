@@ -740,43 +740,52 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Dataset & Algoritma Apriori',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: darkText,
-                            letterSpacing: -0.4,
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Dataset & Algoritma Apriori',
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: darkText,
+                              letterSpacing: -0.4,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Pusat Manajemen Transaksi & Aturan Asosiasi',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: mutedText,
-                            fontWeight: FontWeight.w500,
+                          SizedBox(height: 2),
+                          Text(
+                            'Pusat Manajemen Transaksi & Aturan Asosiasi',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              color: mutedText,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () => _showAcademicReferenceModal(context),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             decoration: BoxDecoration(
                               color: gunadarmaPurple.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(CupertinoIcons.book_fill, size: 12, color: gunadarmaPurple),
                                 SizedBox(width: 4),
@@ -793,12 +802,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                           ),
                         ),
                         if (_transactions.isNotEmpty) ...[
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: _resetAllData,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFF3B30).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
