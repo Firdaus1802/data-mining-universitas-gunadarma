@@ -158,7 +158,8 @@ class AprioriStateManager extends ChangeNotifier {
         }
       }
 
-      if (_masterTransactions.isEmpty) {
+      if (_masterTransactions.length <= 1) {
+        _masterTransactions.clear();
         final csvString = await rootBundle.loadString('assets/data/dataset_groceries_1000.csv');
         final lines = csvString.split(RegExp(r'\r?\n'));
         for (final line in lines) {

@@ -50,6 +50,18 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     _scenarioIndex = mgr.scenarioIndex;
     _masterTransactions.clear();
     _masterTransactions.addAll(mgr.masterTransactions.isNotEmpty ? mgr.masterTransactions : mgr.transactions);
+    if (_masterTransactions.length <= 1) {
+      AprioriStateManager.instance.resetToDefaultDataset().then((_) {
+        if (mounted) {
+          setState(() {
+            _masterTransactions.clear();
+            _masterTransactions.addAll(AprioriStateManager.instance.masterTransactions);
+            _applyScenarioSplitLocal();
+            _syncState();
+          });
+        }
+      });
+    }
     _transactions.clear();
     _transactions.addAll(mgr.transactions);
     _testTransactions.clear();
@@ -90,6 +102,10 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
 
   void _onScenarioChanged(int? newIndex) {
     if (newIndex == null || newIndex == _scenarioIndex) return;
+    if (_masterTransactions.length <= 1 && AprioriStateManager.instance.masterTransactions.length > 1) {
+      _masterTransactions.clear();
+      _masterTransactions.addAll(AprioriStateManager.instance.masterTransactions);
+    }
     setState(() {
       _scenarioIndex = newIndex;
       _viewingTestSet = false;
@@ -97,11 +113,11 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     });
     _syncState();
     final String scenarioName = newIndex == 1
-        ? 'Skenario 80:20 (800 Latih / 200 Uji)'
+        ? 'Rasio 80:20 aktif (800 latih, 200 uji)'
         : newIndex == 2
-            ? 'Skenario 70:30 (700 Latih / 300 Uji)'
-            : 'Semua Data (1.000 Transaksi)';
-    _showIOSNotification('$scenarioName berhasil diterapkan.');
+            ? 'Rasio 70:30 aktif (700 latih, 300 uji)'
+            : 'Data penuh (1.000 transaksi)';
+    _showIOSNotification(scenarioName);
   }
 
   void _applyScenarioSplitLocal() {
@@ -845,89 +861,48 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     final int testPct = totalMaster > 0 ? ((testCount / totalMaster) * 100).round() : 0;
 
     String badgeLabel;
-    String descText;
     if (_scenarioIndex == 1) {
-      badgeLabel = 'Skenario 80:20';
-      descText = '800 data latih digunakan untuk mencari frequent itemset dan aturan asosiasi. 200 data uji disiapkan untuk evaluasi validasi pola.';
+      badgeLabel = 'Rasio 80 : 20';
     } else if (_scenarioIndex == 2) {
-      badgeLabel = 'Skenario 70:30';
-      descText = '700 data latih digunakan untuk mencari frequent itemset dan aturan asosiasi. 300 data uji disiapkan untuk evaluasi validasi pola.';
+      badgeLabel = 'Rasio 70 : 30';
     } else {
-      badgeLabel = '100% Data Penuh';
-      descText = 'Seluruh 1.000 transaksi diproses sebagai baseline analisis asosiasi menyeluruh.';
+      badgeLabel = '$totalMaster Data Penuh';
     }
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: cardBorder, width: 1.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: gunadarmaPurple.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  CupertinoIcons.square_split_2x1,
-                  size: 18,
-                  color: gunadarmaPurple,
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Skenario Partisi Data (Train/Test)',
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w700,
-                        color: darkText,
-                        letterSpacing: -0.2,
-                      ),
-                    ),
-                    SizedBox(height: 1),
-                    Text(
-                      'Skenario Pembagian Data Sesuai Arahan Dosen',
-                      style: TextStyle(
-                        fontSize: 10.5,
-                        color: mutedText,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+              const Text(
+                'Partisi Dataset',
+                style: TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: darkText,
+                  letterSpacing: -0.2,
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEDE9FE),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFDDD6FE)),
+                  color: const Color(0xFFF3E8FF),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   badgeLabel,
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 10.5,
                     fontWeight: FontWeight.w700,
                     color: gunadarmaPurple,
                   ),
@@ -935,17 +910,17 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
             child: CupertinoSlidingSegmentedControl<int>(
               groupValue: _scenarioIndex,
               backgroundColor: const Color(0xFFE5E5EA),
               thumbColor: Colors.white,
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(3.5),
               children: {
                 0: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
                   child: Text(
                     'Semua ($totalMaster)',
                     style: TextStyle(
@@ -956,9 +931,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                   ),
                 ),
                 1: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
                   child: Text(
-                    '80:20 (${(totalMaster * 0.8).round()} Latih)',
+                    '80 : 20',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: _scenarioIndex == 1 ? FontWeight.w700 : FontWeight.w500,
@@ -967,9 +942,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                   ),
                 ),
                 2: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
                   child: Text(
-                    '70:30 (${(totalMaster * 0.7).round()} Latih)',
+                    '70 : 30',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: _scenarioIndex == 2 ? FontWeight.w700 : FontWeight.w500,
@@ -982,74 +957,85 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             ),
           ),
           const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: iosBg,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: cardBorder),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF34C759),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Data Latih: $trainCount ($trainPct%)',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: darkText,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (testCount > 0)
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: SizedBox(
+              height: 4.5,
+              width: double.infinity,
+              child: _scenarioIndex == 0
+                  ? Container(color: gunadarmaPurple)
+                  : Row(
                       children: [
-                        Container(
-                          width: 7,
-                          height: 7,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF007AFF),
-                            shape: BoxShape.circle,
-                          ),
+                        Expanded(
+                          flex: trainPct > 0 ? trainPct : 1,
+                          child: Container(color: gunadarmaPurple),
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Data Uji: $testCount ($testPct%)',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF007AFF),
-                          ),
+                        const SizedBox(width: 2),
+                        Expanded(
+                          flex: testPct > 0 ? testPct : 1,
+                          child: Container(color: const Color(0xFF007AFF)),
                         ),
                       ],
                     ),
-                  ),
-              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            descText,
-            style: const TextStyle(
-              fontSize: 11,
-              color: mutedText,
-              height: 1.35,
-            ),
+          const SizedBox(height: 7),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: gunadarmaPurple,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Data Latih: $trainCount ($trainPct%)',
+                    style: const TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w600,
+                      color: darkText,
+                    ),
+                  ),
+                ],
+              ),
+              if (testCount > 0)
+                Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF007AFF),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Data Uji: $testCount ($testPct%)',
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF007AFF),
+                      ),
+                    ),
+                  ],
+                )
+              else
+                const Text(
+                  '100% data untuk pemodelan',
+                  style: TextStyle(
+                    fontSize: 10.5,
+                    color: mutedText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+            ],
           ),
         ],
       ),

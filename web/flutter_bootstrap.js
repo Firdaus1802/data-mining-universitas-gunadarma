@@ -8,12 +8,12 @@ _flutter.loader.load({
     const splash = document.getElementById('ug-splash');
     if (splash) {
       splash.style.opacity = '0';
-      splash.style.transition = 'opacity 0.25s ease-out';
+      splash.style.transition = 'opacity 0.15s ease-out';
       setTimeout(function() {
         if (splash && splash.parentNode) {
           splash.parentNode.removeChild(splash);
         }
-      }, 300);
+      }, 160);
     }
   }
 });
