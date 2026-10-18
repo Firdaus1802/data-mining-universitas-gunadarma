@@ -77,7 +77,7 @@ class UserInfoScreen extends StatelessWidget {
                   const Divider(),
                   _buildItem(context, "Mata Kuliah", "Data Mining"),
                   const Divider(),
-                  _buildItem(context, "Dosen Pembimbing", "Dina Oktaviani"),
+                  _buildItem(context, "Dosen Pengampu", "Dr. Dina Anggraini, S.Kom., M.M.S.I."),
                   const Divider(),
                   _buildItem(context, "Tahun Akademik", "2026/2027"),
                 ],
