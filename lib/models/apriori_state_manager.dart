@@ -63,7 +63,10 @@ class AprioriStateManager extends ChangeNotifier {
 
   double _minSupport = 1.0;
   double _minConfidence = 16.0;
+  int _scenarioIndex = 0;
+  final List<List<String>> _masterTransactions = [];
   final List<List<String>> _transactions = [];
+  final List<List<String>> _testTransactions = [];
   final List<AprioriRuleSummary> _rules = [];
   int _totalRulesCount = 0;
   String _userName = "Firdaus Dhuha Prabowo";
@@ -103,11 +106,16 @@ class AprioriStateManager extends ChangeNotifier {
 
   double get minSupport => _minSupport;
   double get minConfidence => _minConfidence;
+  int get scenarioIndex => _scenarioIndex;
+  List<List<String>> get masterTransactions => List.unmodifiable(_masterTransactions);
   List<List<String>> get transactions => List.unmodifiable(_transactions);
+  List<List<String>> get testTransactions => List.unmodifiable(_testTransactions);
   List<AprioriRuleSummary> get rules => List.unmodifiable(_rules);
+  int get totalMasterTransactions => _masterTransactions.length;
   int get totalTransactions => _transactions.length;
+  int get totalTestTransactions => _testTransactions.length;
   int get totalRules => _totalRulesCount;
-  bool get isDataLoaded => _transactions.isNotEmpty;
+  bool get isDataLoaded => _masterTransactions.isNotEmpty || _transactions.isNotEmpty;
   String get userName => _userName;
   List<TeamMember> get teamMembers => List.unmodifiable(_teamMembers);
 
@@ -129,24 +137,28 @@ class AprioriStateManager extends ChangeNotifier {
       final savedJson = prefs.getString('saved_transactions_v1');
       final savedMinSup = prefs.getDouble('saved_min_support');
       final savedMinConf = prefs.getDouble('saved_min_confidence');
+      final savedScenario = prefs.getInt('saved_scenario_index');
 
+      if (savedScenario != null && savedScenario >= 0 && savedScenario <= 2) {
+        _scenarioIndex = savedScenario;
+      }
       if (savedMinSup != null) _minSupport = savedMinSup;
       if (savedMinConf != null) _minConfidence = savedMinConf;
 
       if (savedJson != null && savedJson.isNotEmpty) {
         final List<dynamic> decoded = jsonDecode(savedJson);
-        _transactions.clear();
+        _masterTransactions.clear();
         for (final item in decoded) {
           if (item is List) {
             final row = item.map((e) => e.toString().trim()).where((e) => e.isNotEmpty).toList();
             if (row.isNotEmpty) {
-              _transactions.add(row);
+              _masterTransactions.add(row);
             }
           }
         }
       }
 
-      if (_transactions.isEmpty) {
+      if (_masterTransactions.isEmpty) {
         final csvString = await rootBundle.loadString('assets/data/dataset_groceries_1000.csv');
         final lines = csvString.split(RegExp(r'\r?\n'));
         for (final line in lines) {
@@ -154,17 +166,49 @@ class AprioriStateManager extends ChangeNotifier {
           if (clean.isEmpty) continue;
           final parts = clean.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
           if (parts.isNotEmpty) {
-            _transactions.add(parts);
+            _masterTransactions.add(parts);
           }
         }
         if (savedMinSup == null) _minSupport = 1.0;
         if (savedMinConf == null) _minConfidence = 16.0;
       }
 
-      _computeRulesInternal();
+      _applyScenarioSplit();
       notifyListeners();
     } catch (_) {
+      _applyScenarioSplit();
+      notifyListeners();
+    }
+  }
+
+  void _applyScenarioSplit() {
+    _transactions.clear();
+    _testTransactions.clear();
+    final total = _masterTransactions.length;
+    if (total == 0) {
       _computeRulesInternal();
+      return;
+    }
+
+    if (_scenarioIndex == 1) {
+      final trainCount = (total * 0.8).round();
+      _transactions.addAll(_masterTransactions.sublist(0, trainCount));
+      _testTransactions.addAll(_masterTransactions.sublist(trainCount));
+    } else if (_scenarioIndex == 2) {
+      final trainCount = (total * 0.7).round();
+      _transactions.addAll(_masterTransactions.sublist(0, trainCount));
+      _testTransactions.addAll(_masterTransactions.sublist(trainCount));
+    } else {
+      _transactions.addAll(_masterTransactions);
+    }
+    _computeRulesInternal();
+  }
+
+  void setScenarioIndex(int index) {
+    if (_scenarioIndex != index && index >= 0 && index <= 2) {
+      _scenarioIndex = index;
+      _applyScenarioSplit();
+      _saveToPrefs();
       notifyListeners();
     }
   }
@@ -250,9 +294,10 @@ class AprioriStateManager extends ChangeNotifier {
   Future<void> _saveToPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('saved_transactions_v1', jsonEncode(_transactions));
+      await prefs.setString('saved_transactions_v1', jsonEncode(_masterTransactions));
       await prefs.setDouble('saved_min_support', _minSupport);
       await prefs.setDouble('saved_min_confidence', _minConfidence);
+      await prefs.setInt('saved_scenario_index', _scenarioIndex);
     } catch (_) {}
   }
 
@@ -322,7 +367,19 @@ class AprioriStateManager extends ChangeNotifier {
     required double minSupport,
     required double minConfidence,
     List<AprioriRuleSummary>? rules,
+    List<List<String>>? masterTransactions,
+    int? scenarioIndex,
   }) {
+    if (masterTransactions != null) {
+      _masterTransactions.clear();
+      _masterTransactions.addAll(masterTransactions);
+    } else if (_masterTransactions.isEmpty) {
+      _masterTransactions.clear();
+      _masterTransactions.addAll(transactions);
+    }
+    if (scenarioIndex != null && scenarioIndex >= 0 && scenarioIndex <= 2) {
+      _scenarioIndex = scenarioIndex;
+    }
     _transactions.clear();
     _transactions.addAll(transactions);
     _totalRulesCount = rulesCount;
@@ -354,31 +411,33 @@ class AprioriStateManager extends ChangeNotifier {
   }
 
   void setTransactions(List<List<String>> newTransactions) {
-    _transactions.clear();
-    _transactions.addAll(newTransactions);
-    _computeRulesInternal();
+    _masterTransactions.clear();
+    _masterTransactions.addAll(newTransactions);
+    _applyScenarioSplit();
     _saveToPrefs();
     notifyListeners();
   }
 
   void addTransaction(List<String> items) {
-    _transactions.add(List<String>.from(items));
-    _computeRulesInternal();
+    _masterTransactions.add(List<String>.from(items));
+    _applyScenarioSplit();
     _saveToPrefs();
     notifyListeners();
   }
 
   void removeTransaction(int index) {
-    if (index >= 0 && index < _transactions.length) {
-      _transactions.removeAt(index);
-      _computeRulesInternal();
+    if (index >= 0 && index < _masterTransactions.length) {
+      _masterTransactions.removeAt(index);
+      _applyScenarioSplit();
       _saveToPrefs();
       notifyListeners();
     }
   }
 
   void clearAll() {
+    _masterTransactions.clear();
     _transactions.clear();
+    _testTransactions.clear();
     _totalRulesCount = 0;
     _rules.clear();
     _saveToPrefs();
@@ -391,7 +450,11 @@ class AprioriStateManager extends ChangeNotifier {
       await prefs.remove('saved_transactions_v1');
       await prefs.remove('saved_min_support');
       await prefs.remove('saved_min_confidence');
+      await prefs.remove('saved_scenario_index');
+      _masterTransactions.clear();
       _transactions.clear();
+      _testTransactions.clear();
+      _scenarioIndex = 0;
       await init();
     } catch (_) {}
   }

@@ -23,8 +23,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   double _minSupport = 10.0;
   double _minConfidence = 50.0;
   bool _showOnlyL1 = false;
+  int _scenarioIndex = 0;
+  bool _viewingTestSet = false;
 
+  final List<List<String>> _masterTransactions = [];
   final List<List<String>> _transactions = [];
+  final List<List<String>> _testTransactions = [];
   final List<String> _currentBasket = [];
   final TextEditingController _customItemCtrl = TextEditingController();
   final TextEditingController _csvImportCtrl = TextEditingController();
@@ -42,12 +46,17 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   @override
   void initState() {
     super.initState();
-    if (AprioriStateManager.instance.transactions.isNotEmpty) {
-      _transactions.clear();
-      _transactions.addAll(AprioriStateManager.instance.transactions);
-      _minSupport = AprioriStateManager.instance.minSupport;
-      _minConfidence = AprioriStateManager.instance.minConfidence;
-    }
+    final mgr = AprioriStateManager.instance;
+    _scenarioIndex = mgr.scenarioIndex;
+    _masterTransactions.clear();
+    _masterTransactions.addAll(mgr.masterTransactions.isNotEmpty ? mgr.masterTransactions : mgr.transactions);
+    _transactions.clear();
+    _transactions.addAll(mgr.transactions);
+    _testTransactions.clear();
+    _testTransactions.addAll(mgr.testTransactions);
+    _minSupport = mgr.minSupport;
+    _minConfidence = mgr.minConfidence;
+
     AprioriStateManager.instance.addListener(_onStateManagerUpdated);
     _animCtrl = AnimationController(
       vsync: this,
@@ -59,15 +68,58 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
 
   void _onStateManagerUpdated() {
     if (!mounted) return;
-    if (AprioriStateManager.instance.transactions.length != _transactions.length ||
-        AprioriStateManager.instance.minSupport != _minSupport ||
-        AprioriStateManager.instance.minConfidence != _minConfidence) {
+    final mgr = AprioriStateManager.instance;
+    if (mgr.transactions.length != _transactions.length ||
+        mgr.masterTransactions.length != _masterTransactions.length ||
+        mgr.scenarioIndex != _scenarioIndex ||
+        mgr.minSupport != _minSupport ||
+        mgr.minConfidence != _minConfidence) {
       setState(() {
+        _scenarioIndex = mgr.scenarioIndex;
+        _masterTransactions.clear();
+        _masterTransactions.addAll(mgr.masterTransactions.isNotEmpty ? mgr.masterTransactions : mgr.transactions);
         _transactions.clear();
-        _transactions.addAll(AprioriStateManager.instance.transactions);
-        _minSupport = AprioriStateManager.instance.minSupport;
-        _minConfidence = AprioriStateManager.instance.minConfidence;
+        _transactions.addAll(mgr.transactions);
+        _testTransactions.clear();
+        _testTransactions.addAll(mgr.testTransactions);
+        _minSupport = mgr.minSupport;
+        _minConfidence = mgr.minConfidence;
       });
+    }
+  }
+
+  void _onScenarioChanged(int? newIndex) {
+    if (newIndex == null || newIndex == _scenarioIndex) return;
+    setState(() {
+      _scenarioIndex = newIndex;
+      _viewingTestSet = false;
+      _applyScenarioSplitLocal();
+    });
+    _syncState();
+    final String scenarioName = newIndex == 1
+        ? 'Skenario 80:20 (800 Latih / 200 Uji)'
+        : newIndex == 2
+            ? 'Skenario 70:30 (700 Latih / 300 Uji)'
+            : 'Semua Data (1.000 Transaksi)';
+    _showIOSNotification('$scenarioName berhasil diterapkan.');
+  }
+
+  void _applyScenarioSplitLocal() {
+    _transactions.clear();
+    _testTransactions.clear();
+    final total = _masterTransactions.length;
+    if (total == 0) return;
+
+    if (_scenarioIndex == 1) {
+      final trainCount = (total * 0.8).round();
+      _transactions.addAll(_masterTransactions.sublist(0, trainCount));
+      _testTransactions.addAll(_masterTransactions.sublist(trainCount));
+    } else if (_scenarioIndex == 2) {
+      final trainCount = (total * 0.7).round();
+      _transactions.addAll(_masterTransactions.sublist(0, trainCount));
+      _testTransactions.addAll(_masterTransactions.sublist(trainCount));
+    } else {
+      _transactions.addAll(_masterTransactions);
     }
   }
 
@@ -137,6 +189,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     final result = _calculateApriori();
     AprioriStateManager.instance.updateAll(
       transactions: _transactions,
+      masterTransactions: _masterTransactions,
+      scenarioIndex: _scenarioIndex,
       rulesCount: result.rules.length,
       minSupport: _minSupport,
       minConfidence: _minConfidence,
@@ -159,20 +213,32 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     }
 
     setState(() {
-      _transactions.add(List<String>.from(_currentBasket));
+      _masterTransactions.insert(0, List<String>.from(_currentBasket));
       _currentBasket.clear();
       _customItemCtrl.clear();
+      _applyScenarioSplitLocal();
     });
     _syncState();
-    _showIOSNotification('Struk #${_transactions.length} berhasil disimpan.');
+    _showIOSNotification('Struk berhasil disimpan ke dataset master.');
   }
 
   void _deleteTransaction(int index) {
     setState(() {
-      _transactions.removeAt(index);
+      if (_viewingTestSet) {
+        if (index >= 0 && index < _testTransactions.length) {
+          final target = _testTransactions[index];
+          _masterTransactions.remove(target);
+        }
+      } else {
+        if (index >= 0 && index < _transactions.length) {
+          final target = _transactions[index];
+          _masterTransactions.remove(target);
+        }
+      }
+      _applyScenarioSplitLocal();
     });
     _syncState();
-    _showIOSNotification('Struk #${index + 1} berhasil dihapus.');
+    _showIOSNotification('Struk berhasil dihapus.');
   }
 
   void _resetAllData() {
@@ -200,7 +266,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             onPressed: () {
               Navigator.pop(ctx);
               setState(() {
+                _masterTransactions.clear();
                 _transactions.clear();
+                _testTransactions.clear();
                 _currentBasket.clear();
                 _customItemCtrl.clear();
               });
@@ -505,10 +573,11 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
 
     setState(() {
       if (overwrite) {
-        _transactions.clear();
+        _masterTransactions.clear();
       }
-      _transactions.addAll(parsedTransactions);
+      _masterTransactions.addAll(parsedTransactions);
       _currentBasket.clear();
+      _applyScenarioSplitLocal();
     });
     _syncState();
 
@@ -740,7 +809,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
+              _buildScenarioSplitCard(),
+              const SizedBox(height: 14),
               if (_selectedSegment == 0) ...[
                 _buildImportActionCard(),
                 const SizedBox(height: 14),
@@ -764,6 +835,225 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       ),
     ),
   );
+  }
+
+  Widget _buildScenarioSplitCard() {
+    final totalMaster = _masterTransactions.length;
+    final trainCount = _transactions.length;
+    final testCount = _testTransactions.length;
+    final int trainPct = totalMaster > 0 ? ((trainCount / totalMaster) * 100).round() : 0;
+    final int testPct = totalMaster > 0 ? ((testCount / totalMaster) * 100).round() : 0;
+
+    String badgeLabel;
+    String descText;
+    if (_scenarioIndex == 1) {
+      badgeLabel = 'Skenario 80:20';
+      descText = '800 data latih digunakan untuk mencari frequent itemset dan aturan asosiasi. 200 data uji disiapkan untuk evaluasi validasi pola.';
+    } else if (_scenarioIndex == 2) {
+      badgeLabel = 'Skenario 70:30';
+      descText = '700 data latih digunakan untuk mencari frequent itemset dan aturan asosiasi. 300 data uji disiapkan untuk evaluasi validasi pola.';
+    } else {
+      badgeLabel = '100% Data Penuh';
+      descText = 'Seluruh 1.000 transaksi diproses sebagai baseline analisis asosiasi menyeluruh.';
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: cardBorder, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: gunadarmaPurple.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  CupertinoIcons.square_split_2x1,
+                  size: 18,
+                  color: gunadarmaPurple,
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Skenario Partisi Data (Train/Test)',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
+                        color: darkText,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    SizedBox(height: 1),
+                    Text(
+                      'Skenario Pembagian Data Sesuai Arahan Dosen',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        color: mutedText,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEDE9FE),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFDDD6FE)),
+                ),
+                child: Text(
+                  badgeLabel,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: gunadarmaPurple,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoSlidingSegmentedControl<int>(
+              groupValue: _scenarioIndex,
+              backgroundColor: const Color(0xFFE5E5EA),
+              thumbColor: Colors.white,
+              padding: const EdgeInsets.all(4),
+              children: {
+                0: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Text(
+                    'Semua ($totalMaster)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 0 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 0 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+                1: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Text(
+                    '80:20 (${(totalMaster * 0.8).round()} Latih)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 1 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 1 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+                2: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Text(
+                    '70:30 (${(totalMaster * 0.7).round()} Latih)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 2 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 2 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+              },
+              onValueChanged: _onScenarioChanged,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: iosBg,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: cardBorder),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 7,
+                        height: 7,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF34C759),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Data Latih: $trainCount ($trainPct%)',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: darkText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (testCount > 0)
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: 7,
+                          height: 7,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF007AFF),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Data Uji: $testCount ($testPct%)',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF007AFF),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            descText,
+            style: const TextStyle(
+              fontSize: 11,
+              color: mutedText,
+              height: 1.35,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildImportActionCard() {
@@ -888,7 +1178,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       children: [
         Expanded(
           child: _buildSimpleStatCard(
-            label: 'TOTAL STRUK',
+            label: _scenarioIndex == 0 ? 'TOTAL STRUK' : 'DATA LATIH',
             value: '${_transactions.length}',
           ),
         ),
@@ -902,8 +1192,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
         const SizedBox(width: 10),
         Expanded(
           child: _buildSimpleStatCard(
-            label: 'RATA-RATA/STRUK',
-            value: avgItems.toStringAsFixed(1),
+            label: _scenarioIndex == 0 ? 'RATA-RATA/STRUK' : 'DATA UJI',
+            value: _scenarioIndex == 0 ? avgItems.toStringAsFixed(1) : '${_testTransactions.length}',
           ),
         ),
       ],
@@ -948,6 +1238,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   }
 
   Widget _buildTransactionListSection() {
+    final activeList = _viewingTestSet ? _testTransactions : _transactions;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -963,14 +1255,18 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Daftar Struk Transaksi (${_transactions.length})',
+                _scenarioIndex == 0
+                    ? 'Daftar Struk Transaksi (${activeList.length})'
+                    : _viewingTestSet
+                        ? 'Daftar Struk Uji (${activeList.length})'
+                        : 'Daftar Struk Latih (${activeList.length})',
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   color: darkText,
                 ),
               ),
-              if (_transactions.isNotEmpty)
+              if (_masterTransactions.isNotEmpty)
                 GestureDetector(
                   onTap: _resetAllData,
                   child: const Text(
@@ -984,8 +1280,49 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 ),
             ],
           ),
+          if (_scenarioIndex > 0 && _testTransactions.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: CupertinoSlidingSegmentedControl<bool>(
+                groupValue: _viewingTestSet,
+                backgroundColor: const Color(0xFFE5E5EA),
+                thumbColor: Colors.white,
+                padding: const EdgeInsets.all(3),
+                children: {
+                  false: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Text(
+                      'Data Latih (${_transactions.length})',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: !_viewingTestSet ? FontWeight.w700 : FontWeight.w500,
+                        color: !_viewingTestSet ? gunadarmaPurple : mutedText,
+                      ),
+                    ),
+                  ),
+                  true: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Text(
+                      'Data Uji (${_testTransactions.length})',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: _viewingTestSet ? FontWeight.w700 : FontWeight.w500,
+                        color: _viewingTestSet ? const Color(0xFF007AFF) : mutedText,
+                      ),
+                    ),
+                  ),
+                },
+                onValueChanged: (val) {
+                  if (val != null) {
+                    setState(() => _viewingTestSet = val);
+                  }
+                },
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
-          if (_transactions.isEmpty)
+          if (activeList.isEmpty)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
@@ -1016,10 +1353,14 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: _transactions.length > 25 ? 25 : _transactions.length,
+              itemCount: activeList.length > 25 ? 25 : activeList.length,
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (ctx, idx) {
-                final trans = _transactions[idx];
+                final trans = activeList[idx];
+                final displayIdx = _viewingTestSet ? _transactions.length + idx + 1 : idx + 1;
+                final badgeColor = _viewingTestSet ? const Color(0xFF007AFF) : gunadarmaPurple;
+                final badgeBg = _viewingTestSet ? const Color(0xFFE0F2FE) : const Color(0xFFEDE9FE);
+
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
@@ -1033,15 +1374,15 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEDE9FE),
+                          color: badgeBg,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          '#${idx + 1}',
-                          style: const TextStyle(
+                          '#$displayIdx',
+                          style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
-                            color: gunadarmaPurple,
+                            color: badgeColor,
                           ),
                         ),
                       ),
@@ -1078,11 +1419,11 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 );
               },
             ),
-          if (_transactions.length > 25) ...[
+          if (activeList.length > 25) ...[
             const SizedBox(height: 8),
             Center(
               child: Text(
-                'Menampilkan 25 dari ${_transactions.length} transaksi total',
+                'Menampilkan 25 dari ${activeList.length} transaksi',
                 style: const TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
               ),
             ),
