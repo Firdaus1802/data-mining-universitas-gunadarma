@@ -46,8 +46,9 @@ Hasil analisis diintegrasikan secara langsung ke dalam fitur **Simulasi Kasir Ce
   * Data tiap pengguna bersifat terisolasi dan aman di perangkat masing-masing.
 * **Layanan Cloud (Microservice):** **EmailJS REST API**
   * Layanan pengiriman kode OTP / verifikasi pendaftaran akun pengguna.
-* **Infrastruktur & Hosting:** **GitHub & Netlify**
-  * Repository terpusat di GitHub dengan otomatisasi publikasi web via Netlify.
+* **Infrastruktur & Hosting:** **GitHub & Vercel**
+  * Repository terpusat di GitHub dengan deployment produksi otomatis di Vercel:
+  * 🌐 **Live Demo:** [https://data-mining-universitas-gunadarma.vercel.app](https://data-mining-universitas-gunadarma.vercel.app)
 
 ---
 
@@ -114,7 +115,7 @@ Sistem mengevaluasi aturan asosiasi dengan 3 metrik utama:
    flutter run -d android
    ```
 
-4. **Kompilasi versi Web Release (untuk Netlify):**
+4. **Kompilasi versi Web Release (untuk Vercel / Web):**
    ```bash
    flutter build web --release
    ```
