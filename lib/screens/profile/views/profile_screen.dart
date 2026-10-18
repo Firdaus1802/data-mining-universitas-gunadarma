@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shop/models/apriori_state_manager.dart';
 import 'package:shop/route/screen_export.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -98,6 +99,14 @@ class ProfileScreen extends StatelessWidget {
                           ? "${state.totalTransactions} Transaksi"
                           : "Kosong (0 Struk)",
                       showChevron: false,
+                    ),
+                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+                    _buildSettingsTile(
+                      icon: CupertinoIcons.book_circle_fill,
+                      iconColor: const Color(0xFF5856D6),
+                      title: "Referensi Jurnal & Dataset",
+                      trailing: "SINTA 3 • Kaggle",
+                      onTap: () => _showAcademicReferenceModal(context),
                     ),
                     const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
                     _buildSettingsTile(
@@ -826,6 +835,270 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAcademicReferenceModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: const BoxDecoration(
+            color: pageBg,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8, bottom: 8),
+                  width: 36,
+                  height: 4.5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1D1D6),
+                    borderRadius: BorderRadius.circular(2.5),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Referensi Riset & Dataset",
+                          style: TextStyle(
+                            fontFamily: "Plus Jakarta",
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: darkText,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          "Dasar Teori Ilmiah & Sumber Data Transaksi",
+                          style: TextStyle(
+                            fontFamily: "Plus Jakarta",
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w400,
+                            color: textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE5E5EA),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          CupertinoIcons.xmark,
+                          size: 13,
+                          color: Color(0xFF3C3C43),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 0.5, thickness: 0.5, color: borderLine),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionHeader("RUJUKAN JURNAL ILMIAH (SINTA 3)"),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: cardBg,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: borderLine, width: 0.8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF3E8FF),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    "Terakreditasi SINTA 3",
+                                    style: TextStyle(
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: gunadarmaPurple,
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  "ISSN 2614-5278",
+                                  style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Penerapan Algoritma Apriori Dalam Penentuan Pola Pembelian Konsumen",
+                              style: TextStyle(
+                                fontFamily: "Plus Jakarta",
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w700,
+                                color: darkText,
+                                height: 1.3,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              "Jurnal Media Informatika Budidarma (JMIB) • Vol. 7, No. 2\nPenerbit: STMIK Budi Darma Medan",
+                              style: TextStyle(fontSize: 11.5, color: textMuted, height: 1.35),
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CupertinoButton(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                color: const Color(0xFFF3E8FF),
+                                borderRadius: BorderRadius.circular(10),
+                                onPressed: () {
+                                  launchUrl(
+                                    Uri.parse("https://ejurnal.stmik-budidarma.ac.id/index.php/mib/article/view/6304"),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: gunadarmaPurple),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "Buka Halaman Jurnal",
+                                      style: TextStyle(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: gunadarmaPurple,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildSectionHeader("SUMBER DATASET KONSUMEN"),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: cardBg,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: borderLine, width: 0.8),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE0F2FE),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    "1.000 Transaksi Terpilih",
+                                    style: TextStyle(
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF007AFF),
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  "Kaggle Dataset",
+                                  style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Groceries Market Basket Dataset",
+                              style: TextStyle(
+                                fontFamily: "Plus Jakarta",
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w700,
+                                color: darkText,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              "Dataset riil transaksi pasar swalayan yang merekam kombinasi belanja konsumen untuk pengujian association rules mining.",
+                              style: TextStyle(fontSize: 11.5, color: textMuted, height: 1.35),
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CupertinoButton(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                color: const Color(0xFFE0F2FE),
+                                borderRadius: BorderRadius.circular(10),
+                                onPressed: () {
+                                  launchUrl(
+                                    Uri.parse("https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset"),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: Color(0xFF007AFF)),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "Buka Dataset di Kaggle",
+                                      style: TextStyle(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF007AFF),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

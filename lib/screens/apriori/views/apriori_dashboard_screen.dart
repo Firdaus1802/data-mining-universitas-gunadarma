@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shop/models/apriori_state_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AprioriDashboardScreen extends StatefulWidget {
   const AprioriDashboardScreen({super.key});
@@ -764,26 +765,57 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                         ),
                       ],
                     ),
-                    if (_transactions.isNotEmpty)
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: _resetAllData,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF3B30).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Text(
-                            'Kosongkan',
-                            style: TextStyle(
-                              color: Color(0xFFFF3B30),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                    Row(
+                      children: [
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _showAcademicReferenceModal(context),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: gunadarmaPurple.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(CupertinoIcons.book_fill, size: 12, color: gunadarmaPurple),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Jurnal',
+                                  style: TextStyle(
+                                    color: gunadarmaPurple,
+                                    fontSize: 11.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
+                        if (_transactions.isNotEmpty) ...[
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: _resetAllData,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFF3B30).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Text(
+                                'Reset',
+                                style: TextStyle(
+                                  color: Color(0xFFFF3B30),
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(height: 14),
@@ -1980,14 +2012,76 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Daftar Aturan Asosiasi (Apriori Rules)',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: darkText),
+              Row(
+                children: [
+                  const Text(
+                    'Aturan Asosiasi',
+                    style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: darkText),
+                  ),
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3E8FF),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '${rules.length}',
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: gunadarmaPurple),
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '${rules.length} Aturan',
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => _showFormulaExplanationModal(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: iosBg,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: cardBorder),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(CupertinoIcons.question_circle, size: 12, color: darkText),
+                          SizedBox(width: 4),
+                          Text(
+                            'Rumus',
+                            style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600, color: darkText),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (rules.isNotEmpty) ...[
+                    const SizedBox(width: 6),
+                    GestureDetector(
+                      onTap: () => _copyRulesToClipboard(rules),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF3E8FF),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: const Color(0xFFE9D5FF)),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(CupertinoIcons.doc_on_doc, size: 12, color: gunadarmaPurple),
+                            SizedBox(width: 4),
+                            Text(
+                              'Salin',
+                              style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
@@ -2087,6 +2181,445 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             ),
         ],
       ),
+    );
+  }
+
+  void _copyRulesToClipboard(List<_LiveRule> rules) {
+    if (rules.isEmpty) {
+      _showIOSNotification('Tidak ada aturan untuk disalin.');
+      return;
+    }
+    final buffer = StringBuffer();
+    buffer.writeln('No\tAntecedent (Jika)\tConsequent (Maka)\tSupport (%)\tConfidence (%)\tLift Ratio\tInterpretasi');
+    for (int i = 0; i < rules.length; i++) {
+      final r = rules[i];
+      final interp = r.lift > 1.0 ? 'Pola Sangat Kuat' : 'Pola Kurang Kuat';
+      buffer.writeln('${i + 1}\t${r.antecedent}\t${r.consequent}\t${r.support.toStringAsFixed(1)}%\t${r.confidence.toStringAsFixed(1)}%\t${r.lift.toStringAsFixed(2)}\t$interp');
+    }
+    Clipboard.setData(ClipboardData(text: buffer.toString()));
+    _showIOSNotification('${rules.length} aturan disalin ke clipboard');
+  }
+
+  void _showFormulaExplanationModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.76,
+          decoration: const BoxDecoration(
+            color: iosBg,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8, bottom: 8),
+                  width: 36,
+                  height: 4.5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1D1D6),
+                    borderRadius: BorderRadius.circular(2.5),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rumus & Metrik Evaluasi Apriori',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: darkText,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Dasar Perhitungan Algoritma Market Basket Analysis',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: mutedText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE5E5EA),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          CupertinoIcons.xmark,
+                          size: 13,
+                          color: Color(0xFF3C3C43),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 0.5, thickness: 0.5, color: cardBorder),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+                  child: Column(
+                    children: [
+                      _buildFormulaCard(
+                        title: '1. Support (Tingkat Dukungan)',
+                        badge: 'Frekuensi Kemunculan',
+                        badgeColor: gunadarmaPurple,
+                        formula: 'Support(A ∪ B) = n(A ∩ B) / N × 100%',
+                        description: 'Mengukur seberapa sering kombinasi produk A dan B dibeli bersamaan dari total seluruh transaksi belanja.',
+                        example: 'Contoh: 177 dari 1.000 transaksi membeli whole milk → Support = 17.7%.',
+                      ),
+                      const SizedBox(height: 12),
+                      _buildFormulaCard(
+                        title: '2. Confidence (Tingkat Kepastian)',
+                        badge: 'Kekuatan Hubungan',
+                        badgeColor: const Color(0xFF007AFF),
+                        formula: 'Confidence(A → B) = Support(A ∪ B) / Support(A) × 100%',
+                        description: 'Mengukur seberapa besar kepastian pelanggan membeli produk B apabila pelanggan tersebut telah membeli produk A.',
+                        example: 'Contoh: Jika membeli roti, berapa % kemungkinan membeli mentega.',
+                      ),
+                      const SizedBox(height: 12),
+                      _buildFormulaCard(
+                        title: '3. Lift Ratio (Validitas Asosiasi)',
+                        badge: 'Keabsahan Pola',
+                        badgeColor: const Color(0xFF34C759),
+                        formula: 'Lift(A → B) = Confidence(A → B) / Support(B)',
+                        description: 'Menguji apakah hubungan antar item merupakan pola riil atau sekadar kebetulan statistik.',
+                        example: 'Lift > 1.0 : Pola asosiasi sangat kuat (rekomendasi bernilai tinggi).\nLift = 1.0 : Kedua produk independen (tidak saling mempengaruhi).\nLift < 1.0 : Korelasi negatif (jarang dibeli bersamaan).',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFormulaCard({
+    required String title,
+    required String badge,
+    required Color badgeColor,
+    required String formula,
+    required String description,
+    required String example,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: darkText),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                decoration: BoxDecoration(
+                  color: badgeColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  badge,
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: badgeColor),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: iosBg,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: cardBorder),
+            ),
+            child: Text(
+              formula,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: gunadarmaPurple,
+                fontFamily: 'monospace',
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            description,
+            style: const TextStyle(fontSize: 11.5, color: darkText, height: 1.35),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            example,
+            style: const TextStyle(fontSize: 11, color: mutedText, height: 1.35),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAcademicReferenceModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: const BoxDecoration(
+            color: iosBg,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 8, bottom: 8),
+                  width: 36,
+                  height: 4.5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1D1D6),
+                    borderRadius: BorderRadius.circular(2.5),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Referensi Riset & Dataset',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: darkText,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Dasar Teori Ilmiah & Sumber Data Transaksi',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: mutedText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE5E5EA),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          CupertinoIcons.xmark,
+                          size: 13,
+                          color: Color(0xFF3C3C43),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 0.5, thickness: 0.5, color: cardBorder),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: cardBorder),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF3E8FF),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    'Terakreditasi SINTA 3',
+                                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                                  ),
+                                ),
+                                const Text(
+                                  'ISSN 2614-5278',
+                                  style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Penerapan Algoritma Apriori Dalam Penentuan Pola Pembelian Konsumen',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'Jurnal Media Informatika Budidarma (JMIB) • Vol. 7, No. 2\nPenerbit: STMIK Budi Darma Medan',
+                              style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CupertinoButton(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                color: const Color(0xFFF3E8FF),
+                                borderRadius: BorderRadius.circular(10),
+                                onPressed: () {
+                                  launchUrl(
+                                    Uri.parse('https://ejurnal.stmik-budidarma.ac.id/index.php/mib/article/view/6304'),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: gunadarmaPurple),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      'Buka Halaman Jurnal',
+                                      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: cardBorder),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE0F2FE),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    '1.000 Transaksi Terpilih',
+                                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
+                                  ),
+                                ),
+                                const Text(
+                                  'Kaggle Dataset',
+                                  style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Groceries Market Basket Dataset',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'Dataset riil transaksi pasar swalayan yang merekam kombinasi belanja konsumen untuk pengujian association rules mining.',
+                              style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: CupertinoButton(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                color: const Color(0xFFE0F2FE),
+                                borderRadius: BorderRadius.circular(10),
+                                onPressed: () {
+                                  launchUrl(
+                                    Uri.parse('https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset'),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: Color(0xFF007AFF)),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      'Buka Dataset di Kaggle',
+                                      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
