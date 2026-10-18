@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop/components/dot_indicators.dart';
 import 'package:shop/constants.dart';
-import 'package:shop/route/route_constants.dart';
+import 'package:shop/entry_point.dart';
 
 import 'components/onbording_content.dart';
 
@@ -72,9 +72,12 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
                     const SizedBox(width: 40),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
+                        Navigator.pushAndRemoveUntil(
                           context,
-                          entryPointScreenRoute,
+                          CupertinoPageRoute(
+                            settings: const RouteSettings(name: '/'),
+                            builder: (context) => const EntryPoint(),
+                          ),
                           (route) => false,
                         );
                       },
@@ -132,9 +135,12 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
                               duration: defaultDuration,
                             );
                           } else {
-                            Navigator.pushNamedAndRemoveUntil(
+                            Navigator.pushAndRemoveUntil(
                               context,
-                              entryPointScreenRoute,
+                              CupertinoPageRoute(
+                                settings: const RouteSettings(name: '/'),
+                                builder: (context) => const EntryPoint(),
+                              ),
                               (route) => false,
                             );
                           }
