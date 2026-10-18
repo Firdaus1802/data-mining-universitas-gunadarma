@@ -2,17 +2,19 @@
 
 Project tugas besar mata kuliah Konsep Data Mining untuk menganalisis pola pembelian konsumen menggunakan Algoritma Apriori. Aplikasi ini dibuat dengan Flutter dan bisa diakses langsung lewat web browser.
 
-Live Demo: https://data-mining-universitas-gunadarma.vercel.app
+Live Demo: [https://data-mining-universitas-gunadarma.vercel.app](https://data-mining-universitas-gunadarma.vercel.app)
 
 ---
 
-### Informasi Tim
+## Informasi Tim
+
 - Kampus: Universitas Gunadarma
 - Fakultas / Jurusan: FIKTI / S1 Sistem Informasi
 - Kelas: 3KA31 (Kelompok 4)
 - Dosen Pengampu: Dr. Dina Anggraini, S.Kom., M.M.S.I.
 
-Anggota Kelompok:
+**Anggota Kelompok:**
+
 1. Firdaus Dhuha Prabowo (10124497)
 2. Bagas Sena Dwi Jatmika (10124237)
 3. Fabio Arvin Aeneas (10124402)
@@ -22,7 +24,8 @@ Anggota Kelompok:
 
 ---
 
-### Fitur Aplikasi
+## Fitur Aplikasi
+
 - Dashboard Apriori: Menghitung nilai Support, Confidence, dan Lift Ratio secara otomatis dari dataset transaksi.
 - Skenario Split Data: Pilihan pengujian dataset master (100%, 80:20, 70:30, dan 60:40) sesuai kebutuhan analisis.
 - Simulasi Kasir & Rekomendasi: Simulasi keranjang belanja interaktif yang menampilkan rekomendasi produk terkait berdasarkan hasil aturan asosiasi.
@@ -32,7 +35,8 @@ Anggota Kelompok:
 
 ---
 
-### Dataset & Metode
+## Dataset & Metode
+
 - Dataset: Groceries Market Basket Dataset (1.000 data transaksi terpilih).
 - Metode: Market Basket Analysis dengan Algoritma Apriori.
 - Metrik Evaluasi:
@@ -42,22 +46,25 @@ Anggota Kelompok:
 
 ---
 
-### Cara Menjalankan Project
+## Cara Menjalankan Project
 
 Pastikan sudah menginstall Flutter SDK di komputer.
 
 1. Clone repository:
+
    ```bash
    git clone https://github.com/Firdaus1802/data-mining-universitas-gunadarma.git
    cd data-mining-universitas-gunadarma
    ```
 
 2. Install dependencies:
+
    ```bash
    flutter pub get
    ```
 
 3. Jalankan aplikasi di browser Chrome:
+
    ```bash
    flutter run -d chrome
    ```
