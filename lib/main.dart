@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Data Mining Kelompok 4 - Universitas Gunadarma',
+      title: 'AprioriMart - Universitas Gunadarma',
       theme: AppTheme.lightTheme(context),
       themeMode: ThemeMode.light,
       scrollBehavior: const IOSBouncingScrollBehavior(),

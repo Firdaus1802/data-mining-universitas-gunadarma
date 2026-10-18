@@ -1,6 +1,6 @@
-# Data Mining - Market Basket Analysis (Apriori)
+# AprioriMart - Market Basket Analysis (Apriori)
 
-Project tugas besar mata kuliah Konsep Data Mining untuk menganalisis pola pembelian konsumen menggunakan Algoritma Apriori. Aplikasi ini dibuat dengan Flutter dan bisa diakses langsung lewat web browser.
+Aplikasi Market Basket Analysis E-Commerce menggunakan Algoritma Apriori untuk tugas besar mata kuliah Konsep Data Mining, S1 Sistem Informasi Universitas Gunadarma. Aplikasi ini dibuat dengan Flutter dan bisa diakses langsung lewat web browser.
 
 Live Demo: [https://data-mining-universitas-gunadarma.vercel.app](https://data-mining-universitas-gunadarma.vercel.app)
 
