@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:shop/models/apriori_state_manager.dart';
 import 'package:shop/route/route_constants.dart';
 import 'package:shop/route/router.dart' as router;
@@ -6,6 +8,9 @@ import 'package:shop/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
   await AprioriStateManager.instance.init();
   runApp(const MyApp());
 }
@@ -32,7 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Data Mining Kelompok 4 - Universitas Gunadarma',
+      title: 'AprioriMart - Universitas Gunadarma',
       theme: AppTheme.lightTheme(context),
       themeMode: ThemeMode.light,
       scrollBehavior: const IOSBouncingScrollBehavior(),

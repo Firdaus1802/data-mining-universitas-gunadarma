@@ -2,6 +2,16 @@
 <html lang="id">
 <head>
   <base href="$FLUTTER_BASE_HREF">
+  <script>
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    window.addEventListener('hashchange', function() {
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    });
+  </script>
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -16,12 +26,12 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Data Mining UG">
+  <meta name="apple-mobile-web-app-title" content="AprioriMart">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Data Mining Kelompok 4 - Universitas Gunadarma</title>
+  <title>AprioriMart - Data Mining Kelompok 4 (Universitas Gunadarma)</title>
   <link rel="manifest" href="manifest.json">
   <link rel="preload" href="main.dart.js" as="script">
   <link rel="preload" href="gunadarma_logo.png" as="image">

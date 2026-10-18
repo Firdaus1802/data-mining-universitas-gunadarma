@@ -1,126 +1,70 @@
-# Market Basket Analysis E-Commerce — Algoritma Apriori
-### Universitas Gunadarma • Fakultas Ilmu Komputer & Teknologi Informasi
-**Program Studi S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4 (2026)**
+# AprioriMart - Market Basket Analysis (Apriori)
+
+Aplikasi Market Basket Analysis E-Commerce menggunakan Algoritma Apriori untuk tugas besar mata kuliah Konsep Data Mining, S1 Sistem Informasi Universitas Gunadarma. Aplikasi ini dibuat dengan Flutter dan bisa diakses langsung lewat web browser.
+
+Live Demo: [https://data-mining-universitas-gunadarma.vercel.app](https://data-mining-universitas-gunadarma.vercel.app)
 
 ---
 
-## 📌 Ringkasan Proyek
+## Informasi Tim
 
-Aplikasi **Market Basket Analysis** ini dibangun untuk menganalisis pola transaksi belanja konsumen pada platform e-commerce menggunakan **Algoritma Apriori**. Sistem ini mengekstraksi kombinasi produk yang sering dibeli bersamaan (*Frequent Itemsets*) dan menghasilkan aturan asosiasi (*Association Rules*) yang valid berdasarkan metrik **Support**, **Confidence**, dan **Lift Ratio**.
+- Kampus: Universitas Gunadarma
+- Fakultas / Jurusan: FIKTI / S1 Sistem Informasi
+- Kelas: 3KA31 (Kelompok 4)
+- Dosen Pengampu: Dr. Dina Anggraini, S.Kom., M.M.S.I.
 
-Hasil analisis diintegrasikan secara langsung ke dalam fitur **Simulasi Kasir Cerdas (*Smart Checkout*)** untuk memberikan rekomendasi produk pelengkap secara otomatis dan *real-time*.
+**Anggota Kelompok:**
 
----
-
-## 🏛️ Informasi Akademik
-
-* **Perguruan Tinggi:** Universitas Gunadarma
-* **Fakultas:** Fakultas Ilmu Komputer dan Teknologi Informasi (FIKTI)
-* **Program Studi:** S1 Sistem Informasi
-* **Kelas:** 3KA31
-* **Mata Kuliah:** Konsep Data Mining
-* **Dosen Pengampu:** Dr. Dina Anggraini, S.Kom., M.M.S.I.
-
-### 👥 Anggota Kelompok 4
-
-| No | Nama Anggota | NPM | Peran / Kontribusi |
-|:---:|:---|:---:|:---|
-| 1 | **Firdaus Dhuha Prabowo** | 10124497 | Ketua Kelompok & Lead Researcher |
-| 2 | **Bagas Sena Dwi Jatmika** | 10124237 | Algoritma Apriori & Data Engine |
-| 3 | **Fabio Arvin Aeneas** | 10124402 | Frontend UI/UX & Mobile Developer |
-| 4 | **Farid Hilmy Cordova** | 10124442 | Data Mining Analyst & Preprocessing |
-| 5 | **Hesti Setiana** | 10124563 | Business Intelligence & Evaluation |
-| 6 | **Nur Bian'Aziza** | 11124490 | Dokumentasi Riset & Presentasi |
+1. Firdaus Dhuha Prabowo (10124497)
+2. Bagas Sena Dwi Jatmika (10124237)
+3. Fabio Arvin Aeneas (10124402)
+4. Farid Hilmy Cordova (10124442)
+5. Hesti Setiana (10124563)
+6. Nur Bian'Aziza (11124490)
 
 ---
 
-## ⚡ Arsitektur & Teknologi
+## Fitur Aplikasi
 
-* **Frontend:** **Flutter SDK (Dart)**
-  * Antarmuka responsif untuk Mobile (Android & iOS) dan Web.
-  * Desain mengadopsi prinsip **Apple iOS Human Interface Guidelines (HIG)** dengan komponen *Cupertino Inset Grouped*, tipografi *Plus Jakarta Display*, dan deteksi platform dinamis.
-* **Backend / Computation Engine:** **Client-Side Edge Computing**
-  * Seluruh kalkulasi Algoritma Apriori dijalankan langsung pada memori perangkat pengguna (*In-Memory Client-Side Engine*), menjamin kecepatan komputasi instan tanpa ketergantungan server terpusat.
-* **Database & Storage:** **In-Memory (Client-Side RAM)**
-  * Dataset transaksi diunggah via file picker (`.csv` / `.json`) dan diolah langsung di memori aplikasi (`AprioriStateManager`).
-  * Data tiap pengguna bersifat terisolasi dan aman di perangkat masing-masing.
-* **Layanan Cloud (Microservice):** **EmailJS REST API**
-  * Layanan pengiriman kode OTP / verifikasi pendaftaran akun pengguna.
-* **Infrastruktur & Hosting:** **GitHub & Netlify**
-  * Repository terpusat di GitHub dengan otomatisasi publikasi web via Netlify.
+- Dashboard Apriori: Menghitung nilai Support, Confidence, dan Lift Ratio secara otomatis dari dataset transaksi.
+- Skenario Split Data: Pilihan pengujian dataset master (100%, 80:20, 70:30, dan 60:40) sesuai kebutuhan analisis.
+- Simulasi Kasir & Rekomendasi: Simulasi keranjang belanja interaktif yang menampilkan rekomendasi produk terkait berdasarkan hasil aturan asosiasi.
+- Manajemen Data Transaksi: Dukungan impor dataset riil (format CSV/JSON) serta penambahan transaksi belanja secara manual.
+- Salin Hasil Aturan: Tombol salin hasil aturan asosiasi ke clipboard dalam format tabel untuk mempermudah pengerjaan laporan.
+- Dasar Teori & Jurnal: Dilengkapi popup referensi jurnal SINTA 3 (JMIB) dan sumber dataset Kaggle.
 
 ---
 
-## 🚀 Fitur Utama
+## Dataset & Metode
 
-1. **Dashboard Aturan Asosiasi (Apriori Analytics):**
-   * Visualisasi tabel aturan asosiasi ($Antecedent \rightarrow Consequent$).
-   * Pengaturan parameter interaktif: slider **Minimum Support** dan **Minimum Confidence**.
-   * Indikator validitas berbasis **Lift Ratio** ($Lift > 1.0$).
-2. **Simulasi Rekomendasi Kasir (Smart Checkout):**
-   * Simulasi katalog belanja kasir interaktif.
-   * Rekomendasi produk komplementer muncul otomatis seketika produk dimasukkan ke keranjang belanja.
-3. **Manajemen Dataset Transaksi:**
-   * Fitur import file dataset mandiri (format CSV / JSON).
-   * Opsi *Muat Dataset Contoh* (10 transaksi retail e-commerce) untuk keperluan demonstrasi.
-   * Fitur pembersihan dataset (*Clear Memory*).
-4. **Navigasi & Tata Letak iOS:**
-   * Struktur navigasi elegan dengan bottom navigation bar.
-   * Modal informasi sistem dan profil akademik terpadu.
+- Dataset: Groceries Market Basket Dataset (1.000 data transaksi terpilih).
+- Metode: Market Basket Analysis dengan Algoritma Apriori.
+- Metrik Evaluasi:
+  - Support: Mengukur seberapa sering kombinasi produk dibeli bersamaan.
+  - Confidence: Mengukur kepastian pembelian produk B setelah produk A dibeli.
+  - Lift Ratio: Mengukur kekuatan validitas aturan (Lift > 1 menandakan asosiasi yang kuat).
 
 ---
 
-## 📊 Metrik Data Mining
+## Cara Menjalankan Project
 
-Sistem mengevaluasi aturan asosiasi dengan 3 metrik utama:
+Pastikan sudah menginstall Flutter SDK di komputer.
 
-1. **Support:**
-   $$\text{Support}(A \cup B) = \frac{\text{Jumlah transaksi berisi } A \text{ dan } B}{\text{Total seluruh transaksi}}$$
+1. Clone repository:
 
-2. **Confidence:**
-   $$\text{Confidence}(A \rightarrow B) = \frac{\text{Support}(A \cup B)}{\text{Support}(A)}$$
-
-3. **Lift Ratio:**
-   $$\text{Lift}(A \rightarrow B) = \frac{\text{Confidence}(A \rightarrow B)}{\text{Support}(B)}$$
-   * Nilai **Lift > 1.0** menandakan adanya hubungan asosiasi yang positif dan kuat antar produk.
-
----
-
-## 🛠️ Panduan Instalasi & Menjalankan Aplikasi
-
-### Prasyarat
-* [Flutter SDK](https://flutter.dev) (versi $\ge$ 3.2.0)
-* [Git](https://git-scm.com)
-* Web Browser (Chrome / Edge / Safari) atau Android Device / Emulator
-
-### Langkah-langkah
-1. **Clone repositori:**
    ```bash
    git clone https://github.com/Firdaus1802/data-mining-universitas-gunadarma.git
    cd data-mining-universitas-gunadarma
    ```
 
-2. **Unduh dependensi pustaka:**
+2. Install dependencies:
+
    ```bash
    flutter pub get
    ```
 
-3. **Jalankan aplikasi (Mode Debug):**
+3. Jalankan aplikasi di browser Chrome:
+
    ```bash
-   # Menjalankan di Chrome (Web)
    flutter run -d chrome
-
-   # Menjalankan di perangkat Android
-   flutter run -d android
    ```
-
-4. **Kompilasi versi Web Release (untuk Netlify):**
-   ```bash
-   flutter build web --release
-   ```
-
----
-
-## 📜 Hak Cipta & Lisensi
-
-Proyek ini dikembangkan untuk keperluan akademik tugas besar mata kuliah **Konsep Data Mining**, Program Studi S1 Sistem Informasi, Fakultas Ilmu Komputer dan Teknologi Informasi, **Universitas Gunadarma** © 2026.

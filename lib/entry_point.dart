@@ -105,7 +105,7 @@ class _EntryPointState extends State<EntryPoint> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Kelompok 4",
+                              "AprioriMart",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
@@ -116,7 +116,7 @@ class _EntryPointState extends State<EntryPoint> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              "Data Mining E-Commerce - Universitas Gunadarma",
+                              "Data Mining Kelompok 4 - Universitas Gunadarma",
                               style: TextStyle(
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.w500,
