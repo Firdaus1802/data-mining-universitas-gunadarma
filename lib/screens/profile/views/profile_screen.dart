@@ -31,8 +31,8 @@ class ProfileScreen extends StatelessWidget {
             final email = "${displayName.toLowerCase().replaceAll(' ', '.')}@gunadarma.ac.id";
 
             return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 95),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

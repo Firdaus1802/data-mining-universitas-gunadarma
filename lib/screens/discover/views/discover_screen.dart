@@ -270,8 +270,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 final bool isDesktop = constraints.maxWidth >= 900;
 
                 return SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 95),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1140),

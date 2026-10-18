@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -56,130 +55,98 @@ class _EntryPointState extends State<EntryPoint> {
       backgroundColor: lightBg,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
-        child: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.94),
-                border: const Border(
-                  bottom: BorderSide(
-                    color: Color(0xFFD1D1D6),
-                    width: 0.8,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: Color(0xFFE2E8F0),
+                width: 1.0,
+              ),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x0A000000),
+                blurRadius: 4,
+                offset: Offset(0, 1),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              child: Row(
+                children: [
+                  Container(
+                    height: 38,
+                    width: 38,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: borderSubtle,
+                        width: 1.2,
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: Image.asset(
+                      "assets/logo/gunadarma.png",
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "AprioriMart",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: darkText,
+                            letterSpacing: -0.2,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "Data Mining Kelompok 4 - Universitas Gunadarma",
+                          style: TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w500,
+                            color: slateMuted,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _buildHeaderButton(
+                    icon: CupertinoIcons.search,
+                    onPressed: () async {
+                      final result = await Navigator.pushNamed(context, searchScreenRoute);
+                      if (result == 'open_dataset' && mounted) {
+                        setState(() {
+                          _currentIndex = 2;
+                        });
+                      }
+                    },
                   ),
                 ],
-              ),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 38,
-                        width: 38,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: borderSubtle,
-                            width: 1.2,
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(4),
-                        child: Image.asset(
-                          "assets/logo/gunadarma.png",
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "AprioriMart",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                color: darkText,
-                                letterSpacing: -0.2,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              "Data Mining Kelompok 4 - Universitas Gunadarma",
-                              style: TextStyle(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.w500,
-                                color: slateMuted,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      _buildHeaderButton(
-                        icon: CupertinoIcons.search,
-                        onPressed: () async {
-                          final result = await Navigator.pushNamed(context, searchScreenRoute);
-                          if (result == 'open_dataset' && mounted) {
-                            setState(() {
-                              _currentIndex = 2;
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ),
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          ...List.generate(_pages.length, (index) {
-            final bool isCurrent = index == _currentIndex;
-            final int diff = index - _currentIndex;
-            final double slideOffset = diff == 0 ? 0.0 : (diff > 0 ? 0.05 : -0.05);
-
-            return Positioned.fill(
-              child: IgnorePointer(
-                ignoring: !isCurrent,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 260),
-                  curve: Curves.easeInOutCubic,
-                  opacity: isCurrent ? 1.0 : 0.0,
-                  child: AnimatedSlide(
-                    duration: const Duration(milliseconds: 260),
-                    curve: Curves.easeOutCubic,
-                    offset: Offset(slideOffset, 0),
-                    child: _pages[index],
-                  ),
-                ),
-              ),
-            );
-          }),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildDockedNavigationBar(),
-          ),
-        ],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
       ),
+      bottomNavigationBar: _buildDockedNavigationBar(),
     );
   }
 
@@ -209,24 +176,28 @@ class _EntryPointState extends State<EntryPoint> {
   }
 
   Widget _buildDockedNavigationBar() {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.94),
-            border: const Border(
-              top: BorderSide(
-                color: Color(0xFFD1D1D6),
-                width: 0.8,
-              ),
-            ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: Color(0xFFE2E8F0),
+            width: 1.0,
           ),
-          child: SafeArea(
-            top: false,
-            child: SizedBox(
-              height: 56,
-              child: Row(
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 6,
+            offset: Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 56,
+          child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildNavItem(0, "Home",
@@ -245,10 +216,8 @@ class _EntryPointState extends State<EntryPoint> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
+        );
+      }
 
   Widget _buildNavItem(
     int index,

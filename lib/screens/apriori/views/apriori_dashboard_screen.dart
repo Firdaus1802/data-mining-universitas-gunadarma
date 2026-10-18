@@ -734,8 +734,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
         child: FadeTransition(
           opacity: _fadeAnim,
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 95),
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
