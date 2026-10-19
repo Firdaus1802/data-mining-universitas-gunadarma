@@ -1659,13 +1659,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     final frequentItems = res.itemFrequencies.where((i) => i.percent >= _minSupport).toList();
     final itemsToDisplay = _showOnlyL1 ? frequentItems.take(6).toList() : allTopItems;
 
-    double displayMax = 30.0;
-    if (_minSupport > 50.0) {
-      displayMax = 100.0;
-    } else if (_minSupport > 25.0) {
-      displayMax = 50.0;
-    }
-
+    const double displayMax = 100.0;
     final double thresholdFraction = (_minSupport / displayMax).clamp(0.0, 1.0);
 
     return Container(
@@ -1769,21 +1763,21 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                           child: Stack(
                             clipBehavior: Clip.none,
                             children: [
-                              Positioned(
+                              const Positioned(
                                 bottom: 0,
                                 left: 0,
                                 right: 0,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('0%', style: TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
-                                    Text('${(displayMax / 2).toInt()}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
-                                    Text('${displayMax.toInt()}%', style: const TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('0%', style: TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('50%', style: TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
+                                    Text('100%', style: TextStyle(fontSize: 8.5, color: mutedText, fontWeight: FontWeight.w600)),
                                   ],
                                 ),
                               ),
                               AnimatedPositioned(
-                                duration: const Duration(milliseconds: 100),
+                                duration: const Duration(milliseconds: 50),
                                 curve: Curves.easeOutCubic,
                                 left: badgeLeft,
                                 top: 0,
@@ -1847,7 +1841,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                         ),
                                         Expanded(
                                           child: Text(
-                                            item.name,
+                                            _formatItemName(item.name),
                                             style: TextStyle(
                                               fontSize: 11.5,
                                               fontWeight: isAbove ? FontWeight.w700 : FontWeight.w500,
@@ -1962,7 +1956,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                         clipBehavior: Clip.none,
                                         children: [
                                           AnimatedPositioned(
-                                            duration: const Duration(milliseconds: 100),
+                                            duration: const Duration(milliseconds: 50),
                                             curve: Curves.easeOutCubic,
                                             left: math.max(0.0, needlePosition - 1.0),
                                             top: 0,
@@ -2003,6 +1997,22 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
         ],
       ),
     );
+  }
+
+  String _formatItemName(String text) {
+    if (text.isEmpty) return text;
+    return text.split(',').map((item) {
+      final trimmed = item.trim();
+      if (trimmed.isEmpty) return '';
+      return trimmed.split('/').map((sub) {
+        final subTrimmed = sub.trim();
+        if (subTrimmed.isEmpty) return '';
+        return subTrimmed.split(' ').map((word) {
+          if (word.isEmpty) return '';
+          return word[0].toUpperCase() + word.substring(1).toLowerCase();
+        }).join(' ');
+      }).join(' / ');
+    }).join(', ');
   }
 
   Widget _buildAssociationRulesSection(_AprioriResult res) {
