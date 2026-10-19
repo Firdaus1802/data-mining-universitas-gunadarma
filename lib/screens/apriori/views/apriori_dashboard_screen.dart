@@ -34,6 +34,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   final TextEditingController _customItemCtrl = TextEditingController();
   final TextEditingController _csvImportCtrl = TextEditingController();
 
+  int _lastCachedTransHash = 0;
+  List<_ItemFreq> _cachedItemFrequencies = [];
+  Map<String, int> _cachedItemCounts = {};
+  List<_LiveRule> _cachedAllCandidateRules = [];
+  int _cachedTotalTrans = 0;
+
   late final AnimationController _animCtrl;
   late final Animation<double> _fadeAnim;
 
@@ -621,17 +627,18 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     );
   }
 
-  _AprioriResult _calculateApriori() {
-    final int totalTrans = _transactions.length;
-    if (totalTrans == 0) {
-      return const _AprioriResult(
-        totalTransactions: 0,
-        uniqueItemCount: 0,
-        frequentItemCount: 0,
-        itemFrequencies: [],
-        rules: [],
-      );
+  void _ensureDatasetMined() {
+    final int currentHash = Object.hashAll([
+      _transactions.length,
+      if (_transactions.isNotEmpty) _transactions.first.length,
+      if (_transactions.isNotEmpty) _transactions.last.length,
+    ]);
+    if (_lastCachedTransHash == currentHash && _cachedItemFrequencies.isNotEmpty) {
+      return;
     }
+    _lastCachedTransHash = currentHash;
+    _cachedTotalTrans = _transactions.length;
+    if (_cachedTotalTrans == 0) return;
 
     final Map<String, int> itemCounts = {};
     for (final trans in _transactions) {
@@ -640,13 +647,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       }
     }
 
-    final List<_ItemFreq> itemFrequencies = itemCounts.entries.map((e) {
-      final double pct = (e.value / totalTrans) * 100.0;
+    _cachedItemCounts = itemCounts;
+    _cachedItemFrequencies = itemCounts.entries.map((e) {
+      final double pct = (e.value / _cachedTotalTrans) * 100.0;
       return _ItemFreq(name: e.key, count: e.value, percent: pct);
     }).toList()
       ..sort((a, b) => b.count.compareTo(a.count));
-
-    final int frequentItemCount = itemFrequencies.where((i) => i.percent >= _minSupport).length;
 
     final Map<String, int> pairCounts = {};
     for (final trans in _transactions) {
@@ -661,7 +667,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       }
     }
 
-    final List<_LiveRule> rules = [];
+    final List<_LiveRule> candidates = [];
     pairCounts.forEach((key, countBoth) {
       final parts = key.split('|||');
       final itemA = parts[0];
@@ -670,49 +676,68 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       final countA = itemCounts[itemA] ?? 1;
       final countB = itemCounts[itemB] ?? 1;
 
-      final double supportBoth = (countBoth / totalTrans) * 100.0;
-
+      final double supportBoth = (countBoth / _cachedTotalTrans) * 100.0;
       final double confAtoB = (countBoth / countA) * 100.0;
-      final double suppB = (countB / totalTrans) * 100.0;
+      final double suppB = (countB / _cachedTotalTrans) * 100.0;
       final double liftAtoB = suppB > 0 ? (confAtoB / suppB) : 0.0;
 
-      if (supportBoth >= _minSupport && confAtoB >= _minConfidence) {
-        rules.add(_LiveRule(
-          antecedent: itemA,
-          consequent: itemB,
-          confidence: confAtoB,
-          support: supportBoth,
-          lift: liftAtoB,
-        ));
-      }
+      candidates.add(_LiveRule(
+        antecedent: itemA,
+        consequent: itemB,
+        confidence: confAtoB,
+        support: supportBoth,
+        lift: liftAtoB,
+      ));
 
       final double confBtoA = (countBoth / countB) * 100.0;
-      final double suppA = (countA / totalTrans) * 100.0;
+      final double suppA = (countA / _cachedTotalTrans) * 100.0;
       final double liftBtoA = suppA > 0 ? (confBtoA / suppA) : 0.0;
 
-      if (supportBoth >= _minSupport && confBtoA >= _minConfidence) {
-        rules.add(_LiveRule(
-          antecedent: itemB,
-          consequent: itemA,
-          confidence: confBtoA,
-          support: supportBoth,
-          lift: liftBtoA,
-        ));
-      }
+      candidates.add(_LiveRule(
+        antecedent: itemB,
+        consequent: itemA,
+        confidence: confBtoA,
+        support: supportBoth,
+        lift: liftBtoA,
+      ));
     });
 
-    rules.sort((a, b) {
+    candidates.sort((a, b) {
       final cmp = b.confidence.compareTo(a.confidence);
       if (cmp != 0) return cmp;
       return b.lift.compareTo(a.lift);
     });
 
+    _cachedAllCandidateRules = candidates;
+  }
+
+  _AprioriResult _calculateApriori() {
+    final int totalTrans = _transactions.length;
+    if (totalTrans == 0) {
+      return const _AprioriResult(
+        totalTransactions: 0,
+        uniqueItemCount: 0,
+        frequentItemCount: 0,
+        itemFrequencies: [],
+        rules: [],
+      );
+    }
+
+    _ensureDatasetMined();
+
+    final int frequentItemCount =
+        _cachedItemFrequencies.where((i) => i.percent >= _minSupport).length;
+
+    final List<_LiveRule> activeRules = _cachedAllCandidateRules
+        .where((r) => r.support >= _minSupport && r.confidence >= _minConfidence)
+        .toList();
+
     return _AprioriResult(
-      totalTransactions: totalTrans,
-      uniqueItemCount: itemCounts.keys.length,
+      totalTransactions: _cachedTotalTrans,
+      uniqueItemCount: _cachedItemCounts.keys.length,
       frequentItemCount: frequentItemCount,
-      itemFrequencies: itemFrequencies,
-      rules: rules,
+      itemFrequencies: _cachedItemFrequencies,
+      rules: activeRules,
     );
   }
 
@@ -720,12 +745,6 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final aprioriResult = _calculateApriori();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      AprioriStateManager.instance.updateParameters(_minSupport, _minConfidence);
-      AprioriStateManager.instance.setRulesCount(aprioriResult.rules.length);
-      AprioriStateManager.instance.setTransactions(_transactions);
-    });
 
     return Scaffold(
       backgroundColor: iosBg,
@@ -1596,6 +1615,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               activeColor: gunadarmaPurple,
               onChanged: (val) {
                 setState(() => _minSupport = val);
+              },
+              onChangeEnd: (val) {
                 _syncState();
               },
             ),
@@ -1625,6 +1646,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               activeColor: gunadarmaPurple,
               onChanged: (val) {
                 setState(() => _minConfidence = val);
+              },
+              onChangeEnd: (val) {
                 _syncState();
               },
             ),
@@ -1776,9 +1799,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                   ],
                                 ),
                               ),
-                              AnimatedPositioned(
-                                duration: const Duration(milliseconds: 50),
-                                curve: Curves.easeOutCubic,
+                              Positioned(
                                 left: badgeLeft,
                                 top: 0,
                                 child: Container(
@@ -1955,9 +1976,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                       return Stack(
                                         clipBehavior: Clip.none,
                                         children: [
-                                          AnimatedPositioned(
-                                            duration: const Duration(milliseconds: 50),
-                                            curve: Curves.easeOutCubic,
+                                          Positioned(
                                             left: math.max(0.0, needlePosition - 1.0),
                                             top: 0,
                                             bottom: 0,
