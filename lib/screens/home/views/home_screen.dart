@@ -879,17 +879,58 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  String _formatItemName(String text) {
+    if (text.isEmpty) return text;
+    return text.split(',').map((item) {
+      final trimmed = item.trim();
+      if (trimmed.isEmpty) return '';
+      return trimmed.split('/').map((sub) {
+        final subTrimmed = sub.trim();
+        if (subTrimmed.isEmpty) return '';
+        return subTrimmed.split(' ').map((word) {
+          if (word.isEmpty) return '';
+          return word[0].toUpperCase() + word.substring(1).toLowerCase();
+        }).join(' ');
+      }).join(' / ');
+    }).join(', ');
+  }
+
   List<Widget> _buildTopRulesList(List<AprioriRuleSummary> rules) {
     final topRules = rules.take(3).toList();
     final List<Widget> items = [];
 
     for (int i = 0; i < topRules.length; i++) {
       final rule = topRules[i];
+      final isPositiveLift = rule.lift >= 1.0;
+
       items.add(
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: gunadarmaPurple.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: gunadarmaPurple.withValues(alpha: 0.16),
+                    width: 0.8,
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  '#${i + 1}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: gunadarmaPurple,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -898,11 +939,12 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            rule.antecedent,
+                            _formatItemName(rule.antecedent),
                             style: const TextStyle(
                               fontSize: 13.5,
                               fontWeight: FontWeight.w600,
                               color: darkText,
+                              letterSpacing: -0.2,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -913,16 +955,17 @@ class HomeScreen extends StatelessWidget {
                           child: Icon(
                             CupertinoIcons.arrow_right,
                             size: 11,
-                            color: textMuted,
+                            color: Color(0xFF94A3B8),
                           ),
                         ),
                         Flexible(
                           child: Text(
-                            rule.consequent,
+                            _formatItemName(rule.consequent),
                             style: const TextStyle(
                               fontSize: 13.5,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                               color: gunadarmaPurple,
+                              letterSpacing: -0.2,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -931,31 +974,56 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 3),
-                    Text(
-                      'Support: ${rule.support.toStringAsFixed(1)}%   •   Confidence: ${rule.confidence.toStringAsFixed(1)}%',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: textMuted,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Support ${rule.support.toStringAsFixed(1)}%',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: textMuted,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            '•',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Color(0xFFCBD5E1),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Confidence ${rule.confidence.toStringAsFixed(1)}%',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: textMuted,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
+                  color: isPositiveLift ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                  border: Border.all(
+                    color: isPositiveLift ? const Color(0xFFA7F3D0) : const Color(0xFFE2E8F0),
+                    width: 0.8,
+                  ),
                 ),
                 child: Text(
                   'Lift ${rule.lift.toStringAsFixed(2)}x',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1E293B),
+                    color: isPositiveLift ? const Color(0xFF047857) : const Color(0xFF334155),
                   ),
                 ),
               ),
@@ -969,7 +1037,7 @@ class HomeScreen extends StatelessWidget {
           const Divider(
             height: 1,
             thickness: 0.5,
-            indent: 16,
+            indent: 56,
             endIndent: 16,
             color: borderLine,
           ),
@@ -1095,7 +1163,7 @@ class HomeScreen extends StatelessWidget {
                               border: Border.all(color: const Color(0xFFE2E8F0)),
                             ),
                             child: const Text(
-                              "v2.5.0",
+                              "v1.0.0",
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
