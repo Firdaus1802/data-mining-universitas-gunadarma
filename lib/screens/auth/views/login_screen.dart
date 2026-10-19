@@ -26,6 +26,28 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  void _showTermsDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text("Ketentuan Layanan & Privasi"),
+        content: const Padding(
+          padding: EdgeInsets.only(top: 8),
+          child: Text(
+            "Aplikasi AprioriMart Universitas Gunadarma dirancang untuk keperluan akademik, penelitian Data Mining, dan analisis Association Rules. Seluruh data transaksi diolah secara aman dan kredensial disimpan terenkripsi.",
+            textAlign: TextAlign.center,
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Tutup"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,10 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       children: [
                                         TextSpan(
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Navigator.pushNamed(
-                                                  context, termsOfServicesScreenRoute);
-                                            },
+                                            ..onTap = _showTermsDialog,
                                           text: "Terms of service ",
                                           style: const TextStyle(
                                             color: primaryColor,

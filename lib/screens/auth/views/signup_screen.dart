@@ -26,6 +26,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  void _showTermsDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Ketentuan Layanan & Privasi"),
+        content: const Text(
+          "Aplikasi AprioriMart Universitas Gunadarma dirancang untuk keperluan akademik, penelitian Data Mining, dan analisis Association Rules. Seluruh data transaksi diolah secara aman dan kredensial disimpan terenkripsi.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Tutup"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,10 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       children: [
                                         TextSpan(
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Navigator.pushNamed(
-                                                  context, termsOfServicesScreenRoute);
-                                            },
+                                            ..onTap = _showTermsDialog,
                                           text: " Terms of service ",
                                           style: const TextStyle(
                                             color: primaryColor,
