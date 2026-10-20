@@ -441,17 +441,21 @@ class ProfileScreen extends StatelessWidget {
                           width: 26,
                           height: 26,
                           decoration: BoxDecoration(
-                            color: isLead ? gunadarmaPurple : purpleTint,
+                            color: const Color(0xFFF1F5F9),
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isLead ? gunadarmaPurple.withValues(alpha: 0.35) : const Color(0xFFE2E8F0),
+                              width: 0.8,
+                            ),
                           ),
                           child: Center(
                             child: Text(
                               "${index + 1}",
                               style: TextStyle(
                                 fontFamily: "Plus Jakarta",
-                                fontSize: 11.5,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w700,
-                                color: isLead ? Colors.white : gunadarmaPurple,
+                                color: isLead ? gunadarmaPurple : const Color(0xFF475569),
                               ),
                             ),
                           ),
@@ -474,17 +478,17 @@ class ProfileScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: isLead ? purpleTint : purpleLightPill,
+                            color: const Color(0xFFF8FAFC),
                             borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: borderLine),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
                           ),
                           child: Text(
                             member.npm,
                             style: const TextStyle(
                               fontFamily: "Plus Jakarta",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: gunadarmaPurple,
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF334155),
                             ),
                           ),
                         ),
@@ -564,6 +568,7 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.book_circle_fill,
+            iconColor: gunadarmaPurple,
             title: "Rujukan Jurnal & Dataset",
             trailing: "JUKTISI • CSV",
             onTap: () => _showAcademicReferenceModal(context),
@@ -578,6 +583,7 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.arrow_clockwise_circle_fill,
+            iconColor: gunadarmaPurple,
             title: "Muat Dataset Contoh",
             trailing: "Pulihkan",
             onTap: () => _showResetDatasetConfirm(context, state),
@@ -704,15 +710,15 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      padding: const EdgeInsets.only(left: 6, bottom: 8, top: 4),
       child: Text(
         title,
         style: const TextStyle(
           fontFamily: "Plus Jakarta",
-          fontSize: 11.5,
+          fontSize: 11,
           fontWeight: FontWeight.w700,
-          color: gunadarmaPurple,
-          letterSpacing: 0.6,
+          color: Color(0xFF64748B),
+          letterSpacing: 0.8,
         ),
       ),
     );
@@ -748,8 +754,8 @@ class ProfileScreen extends StatelessWidget {
     VoidCallback? onTap,
     bool showChevron = true,
   }) {
-    final effectiveIconColor = iconColor ?? gunadarmaPurple;
     final isDestructive = iconColor == destructiveRed;
+    final effectiveIconColor = iconColor ?? const Color(0xFF475569);
 
     final tileContent = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -760,8 +766,12 @@ class ProfileScreen extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: isDestructive ? const Color(0xFFFFEBEB) : purpleTint,
+              color: isDestructive ? const Color(0xFFFFEBEB) : const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: isDestructive ? const Color(0xFFFFCDD2) : const Color(0xFFE2E8F0),
+                width: 0.8,
+              ),
             ),
             child: Icon(
               icon,

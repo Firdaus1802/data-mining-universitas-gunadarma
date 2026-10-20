@@ -1021,7 +1021,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 subtitle: 'Dataset master',
                 icon: CupertinoIcons.doc_text_fill,
                 iconColor: gunadarmaPurple,
-                iconBg: const Color(0xFFF3E8FF),
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
             const SizedBox(width: 12),
@@ -1031,8 +1031,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 value: '${aprioriResult.uniqueItemCount} Produk',
                 subtitle: 'Katalog terdata',
                 icon: CupertinoIcons.cube_box_fill,
-                iconColor: const Color(0xFF0284C7),
-                iconBg: const Color(0xFFE0F2FE),
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
             const SizedBox(width: 12),
@@ -1042,8 +1042,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 value: '${avgItems.toStringAsFixed(1)} Item',
                 subtitle: 'Kepadatan transaksi',
                 icon: CupertinoIcons.cart_fill,
-                iconColor: const Color(0xFF059669),
-                iconBg: const Color(0xFFD1FAE5),
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
             const SizedBox(width: 12),
@@ -1053,8 +1053,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 value: badgeLabel,
                 subtitle: '${_transactions.length} Latih / ${_testTransactions.length} Uji',
                 icon: CupertinoIcons.slider_horizontal_3,
-                iconColor: const Color(0xFFD97706),
-                iconBg: const Color(0xFFFEF3C7),
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
           ],
@@ -1090,8 +1090,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 value: '${aprioriResult.frequentItemCount} Item',
                 subtitle: 'Lolos ambang batas L1',
                 icon: CupertinoIcons.check_mark_circled_solid,
-                iconColor: const Color(0xFF059669),
-                iconBg: const Color(0xFFD1FAE5),
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
             const SizedBox(width: 12),
@@ -1102,7 +1102,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 subtitle: 'Kaidah valid teruji',
                 icon: CupertinoIcons.arrow_branch,
                 iconColor: gunadarmaPurple,
-                iconBg: const Color(0xFFF3E8FF),
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
             const SizedBox(width: 12),
@@ -1112,8 +1112,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 value: '${_minSupport.toInt()}%',
                 subtitle: 'Ambang frekuensi',
                 icon: CupertinoIcons.percent,
-                iconColor: const Color(0xFF0284C7),
-                iconBg: const Color(0xFFE0F2FE),
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
             const SizedBox(width: 12),
@@ -1123,8 +1123,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 value: '${_minConfidence.toInt()}%',
                 subtitle: 'Ambang kepastian',
                 icon: CupertinoIcons.shield_fill,
-                iconColor: const Color(0xFF7C3AED),
-                iconBg: const Color(0xFFEDE9FE),
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFFAF5FF),
               ),
             ),
           ],
@@ -1178,6 +1178,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             decoration: BoxDecoration(
               color: iconBg,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
             ),
             child: Icon(icon, size: 22, color: iconColor),
           ),
@@ -1795,8 +1796,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 final actualIdx = startIndex + idx;
                 final displayIdx = _viewingTestSet ? _transactions.length + actualIdx + 1 : actualIdx + 1;
                 final isEven = idx % 2 == 0;
-                final badgeColor = _viewingTestSet ? const Color(0xFF007AFF) : gunadarmaPurple;
-                final badgeBg = _viewingTestSet ? const Color(0xFFE0F2FE) : const Color(0xFFEDE9FE);
+                const badgeColor = Color(0xFF475569);
+                const badgeBg = Color(0xFFF1F5F9);
 
                 return Container(
                   height: 48,
@@ -1813,12 +1814,13 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                             decoration: BoxDecoration(
                               color: badgeBg,
                               borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
                             ),
                             child: Text(
                               '#$displayIdx',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 11,
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.w700,
                                 color: badgeColor,
                               ),
                             ),
@@ -3100,8 +3102,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               itemBuilder: (ctx, idx) {
                 final trans = activeList[idx];
                 final displayIdx = _viewingTestSet ? _transactions.length + idx + 1 : idx + 1;
-                final badgeColor = _viewingTestSet ? const Color(0xFF007AFF) : gunadarmaPurple;
-                final badgeBg = _viewingTestSet ? const Color(0xFFE0F2FE) : const Color(0xFFEDE9FE);
+                const badgeColor = Color(0xFF475569);
+                const badgeBg = Color(0xFFF1F5F9);
 
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -3118,12 +3120,13 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                         decoration: BoxDecoration(
                           color: badgeBg,
                           borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
                         ),
                         child: Text(
                           '#$displayIdx',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 10,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                             color: badgeColor,
                           ),
                         ),
@@ -3262,8 +3265,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               final actualIdx = startIndex + idx;
               final displayIdx = _viewingTestSet ? _transactions.length + actualIdx + 1 : actualIdx + 1;
               final isEven = idx % 2 == 0;
-              final badgeColor = _viewingTestSet ? const Color(0xFF007AFF) : gunadarmaPurple;
-              final badgeBg = _viewingTestSet ? const Color(0xFFE0F2FE) : const Color(0xFFEDE9FE);
+              const badgeColor = Color(0xFF475569);
+              const badgeBg = Color(0xFFF1F5F9);
 
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -3277,13 +3280,14 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                         decoration: BoxDecoration(
                           color: badgeBg,
                           borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
                         ),
                         child: Text(
                           '#$displayIdx',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 11,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                             color: badgeColor,
                           ),
                         ),
