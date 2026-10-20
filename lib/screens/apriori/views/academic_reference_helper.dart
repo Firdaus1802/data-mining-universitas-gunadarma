@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -83,6 +84,29 @@ class AcademicReferenceHelper {
 
   static Future<void> downloadJournalPdf(BuildContext context) async {
     try {
+      if (kIsWeb) {
+        final ok = await launchUrl(
+          Uri.parse('jurnal.pdf'),
+          mode: LaunchMode.externalApplication,
+        );
+        if (!ok) {
+          await launchUrl(
+            Uri.parse('assets/assets/documents/jurnal_apriori_fpgrowth_reski_noviana.pdf'),
+            mode: LaunchMode.externalApplication,
+          );
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Berkas PDF Jurnal berhasil dibuka / diunduh!'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+        return;
+      }
+
       final byteData = await rootBundle.load('assets/documents/jurnal_apriori_fpgrowth_reski_noviana.pdf');
       final bytes = byteData.buffer.asUint8List();
       final uri = await FilePicker.saveFile(
@@ -130,6 +154,29 @@ class AcademicReferenceHelper {
 
   static Future<void> downloadDatasetCsv(BuildContext context) async {
     try {
+      if (kIsWeb) {
+        final ok = await launchUrl(
+          Uri.parse('dataset.csv'),
+          mode: LaunchMode.externalApplication,
+        );
+        if (!ok) {
+          await launchUrl(
+            Uri.parse('assets/assets/data/dataset_groceries_1000.csv'),
+            mode: LaunchMode.externalApplication,
+          );
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Dataset CSV berhasil dibuka / diunduh!'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+        return;
+      }
+
       final rawCsv = await loadDatasetString();
       final bytes = Uint8List.fromList(utf8.encode(rawCsv));
       final uri = await FilePicker.saveFile(
