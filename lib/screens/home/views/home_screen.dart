@@ -69,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              flex: 5,
+                              flex: 4,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -79,21 +79,13 @@ class HomeScreen extends StatelessWidget {
                                     minConf: minConf,
                                     isDataLoaded: isDataLoaded,
                                   ),
-                                  const SizedBox(height: 18),
-                                  _buildWorkflowGuideCard(context),
                                 ],
                               ),
                             ),
                             const SizedBox(width: 18),
                             Expanded(
-                              flex: 7,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildSectionHeader('KAIDAH ASOSIASI AKTIF'),
-                                  _buildRealtimeRulesStreamSection(context, state),
-                                ],
-                              ),
+                              flex: 8,
+                              child: _buildRealtimeRulesStreamSection(context, state),
                             ),
                           ],
                         ),
@@ -138,214 +130,6 @@ class HomeScreen extends StatelessWidget {
           letterSpacing: 0.6,
         ),
       ),
-    );
-  }
-
-  Widget _buildWorkflowGuideCard(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderLine, width: 0.8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Row(
-                children: [
-                  Icon(CupertinoIcons.list_number, color: darkText, size: 16),
-                  SizedBox(width: 8),
-                  Text(
-                    'ALUR PENGGUNAAN SISTEM',
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: darkText,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF2F2F7),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Text(
-                  '4 Tahap',
-                  style: TextStyle(
-                    fontFamily: "Plus Jakarta",
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w600,
-                    color: textMuted,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Tahapan operasional analisis transaksi menggunakan Algoritma Apriori:',
-            style: TextStyle(
-              fontFamily: "Plus Jakarta",
-              fontSize: 12,
-              color: textMuted,
-              height: 1.35,
-            ),
-          ),
-          const SizedBox(height: 14),
-          _buildWorkflowStepRow(
-            stepNumber: '1',
-            title: 'Unggah Dataset Transaksi',
-            desc: 'Impor berkas transaksi (.csv / .tsv / .txt) atau gunakan dataset pengujian bawaan pada tab Dataset.',
-            actionLabel: 'Tab Dataset',
-            onTap: onNavigateToDataset,
-          ),
-          const Divider(height: 18, thickness: 0.5, indent: 36, color: borderLine),
-          _buildWorkflowStepRow(
-            stepNumber: '2',
-            title: 'Konfigurasi Parameter Apriori',
-            desc: 'Tentukan ambang batas Minimum Support (frekuensi kemunculan) dan Minimum Confidence (kepastian aturan).',
-            actionLabel: null,
-            onTap: null,
-          ),
-          const Divider(height: 18, thickness: 0.5, indent: 36, color: borderLine),
-          _buildWorkflowStepRow(
-            stepNumber: '3',
-            title: 'Ekstraksi Itemset & Aturan Asosiasi',
-            desc: 'Jalankan kalkulasi algoritma Apriori untuk menghasilkan kandidat L1, L2, L3 dan aturan dengan Lift Ratio > 1.0.',
-            actionLabel: null,
-            onTap: null,
-          ),
-          const Divider(height: 18, thickness: 0.5, indent: 36, color: borderLine),
-          _buildWorkflowStepRow(
-            stepNumber: '4',
-            title: 'Simulasi Rekomendasi Kasir',
-            desc: 'Uji aturan asosiasi pada simulasi kasir di tab Discover untuk memvalidasi rekomendasi bundling produk secara langsung.',
-            actionLabel: 'Tab Discover',
-            onTap: onNavigateToDiscover,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWorkflowStepRow({
-    required String stepNumber,
-    required String title,
-    required String desc,
-    required String? actionLabel,
-    required VoidCallback? onTap,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF2F2F7),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            stepNumber,
-            style: const TextStyle(
-              fontFamily: "Plus Jakarta",
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: darkText,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontFamily: "Plus Jakarta",
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: darkText,
-                        letterSpacing: -0.2,
-                      ),
-                    ),
-                  ),
-                  if (actionLabel != null && onTap != null) ...[
-                    const SizedBox(width: 8),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                      onPressed: onTap,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF2F2F7),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: borderLine, width: 0.5),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              actionLabel,
-                              style: const TextStyle(
-                                fontFamily: "Plus Jakarta",
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.w600,
-                                color: darkText,
-                              ),
-                            ),
-                            const SizedBox(width: 2),
-                            const Icon(
-                              CupertinoIcons.chevron_right,
-                              size: 10,
-                              color: textMuted,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-              const SizedBox(height: 3),
-              Text(
-                desc,
-                style: const TextStyle(
-                  fontFamily: "Plus Jakarta",
-                  fontSize: 11.5,
-                  color: textBody,
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -705,7 +489,7 @@ class HomeScreen extends StatelessWidget {
           ),
           const Divider(height: 1, thickness: 0.5, indent: 58, endIndent: 16, color: borderLine),
           _buildParamRow(
-            icon: CupertinoIcons.percent,
+            icon: CupertinoIcons.gauge,
             label: 'Minimum Confidence',
             value: '$minConf%',
           ),
@@ -847,7 +631,7 @@ class HomeScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildSectionHeader('ATURAN ASOSIASI UTAMA'),
+            _buildSectionHeader('KAIDAH ASOSIASI AKTIF'),
             if (hasRules)
               GestureDetector(
                 onTap: onNavigateToDataset,
@@ -917,7 +701,7 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
             decoration: const BoxDecoration(
               color: Color(0xFFF8FAFC),
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -941,7 +725,7 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'JIKA DIBELI (ANTECEDENT)',
+                    'ANTECEDENT (X)',
                     style: TextStyle(
                       fontFamily: "Plus Jakarta",
                       fontSize: 10.5,
@@ -955,7 +739,7 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'MAKA DIBELI (CONSEQUENT)',
+                    'CONSEQUENT (Y)',
                     style: TextStyle(
                       fontFamily: "Plus Jakarta",
                       fontSize: 10.5,
@@ -1039,7 +823,7 @@ class HomeScreen extends StatelessWidget {
               final isPositiveLift = rule.lift >= 1.0;
 
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 color: isEven ? Colors.white : const Color(0xFFFAFAFC),
                 child: Row(
                   children: [
@@ -1057,53 +841,44 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 3,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3F4F6),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: borderLine, width: 0.6),
-                          ),
-                          child: Text(
-                            _formatItemName(rule.antecedent),
-                            style: const TextStyle(
-                              fontFamily: "Plus Jakarta",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: darkText,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      child: Text(
+                        _formatItemName(rule.antecedent),
+                        style: const TextStyle(
+                          fontFamily: "Plus Jakarta",
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: darkText,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       flex: 3,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3E8FF),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: const Color(0xFFE9D5FF), width: 0.6),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            CupertinoIcons.arrow_right,
+                            size: 11,
+                            color: gunadarmaPurple,
                           ),
-                          child: Text(
-                            _formatItemName(rule.consequent),
-                            style: const TextStyle(
-                              fontFamily: "Plus Jakarta",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: gunadarmaPurple,
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              _formatItemName(rule.consequent),
+                              style: const TextStyle(
+                                fontFamily: "Plus Jakarta",
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w700,
+                                color: gunadarmaPurple,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -1153,12 +928,12 @@ class HomeScreen extends StatelessWidget {
                       flex: 2,
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: isPositiveLift ? const Color(0xFFECFDF5) : const Color(0xFFF3F4F6),
+                            color: isPositiveLift ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: isPositiveLift ? const Color(0xFFA7F3D0) : borderLine,
+                              color: isPositiveLift ? const Color(0xFFA7F3D0) : const Color(0xFFE2E8F0),
                               width: 0.6,
                             ),
                           ),
@@ -1168,7 +943,7 @@ class HomeScreen extends StatelessWidget {
                               fontFamily: "Plus Jakarta",
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
-                              color: isPositiveLift ? const Color(0xFF059669) : textMuted,
+                              color: isPositiveLift ? const Color(0xFF059669) : const Color(0xFF64748B),
                             ),
                           ),
                         ),

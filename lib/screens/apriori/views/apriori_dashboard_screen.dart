@@ -2568,7 +2568,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'JIKA DIBELI (ANTECEDENT)',
+                    'ANTECEDENT (X)',
                     style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
                   ),
                 ),
@@ -2576,7 +2576,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'MAKA DIBELI (CONSEQUENT)',
+                    'CONSEQUENT (Y)',
                     style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
                   ),
                 ),
@@ -2655,43 +2655,34 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       ),
                       Expanded(
                         flex: 3,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF1F5F9),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: cardBorder, width: 0.6),
-                            ),
-                            child: Text(
-                              r.antecedent,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: darkText),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
+                        child: Text(
+                          _formatItemName(r.antecedent),
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: darkText),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         flex: 3,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF3E8FF),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: const Color(0xFFE9D5FF), width: 0.6),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              CupertinoIcons.arrow_right,
+                              size: 11,
+                              color: gunadarmaPurple,
                             ),
-                            child: Text(
-                              r.consequent,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: gunadarmaPurple),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                _formatItemName(r.consequent),
+                                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -2730,9 +2721,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                         flex: 2,
                         child: Center(
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: isStrong ? const Color(0xFFECFDF5) : const Color(0xFFF3F4F6),
+                              color: isStrong ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
                                 color: isStrong ? const Color(0xFFA7F3D0) : cardBorder,
@@ -4389,7 +4380,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'JIKA DIBELI (ANTECEDENT)',
+                    'ANTECEDENT (X)',
                     style: TextStyle(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w700,
@@ -4402,7 +4393,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 Expanded(
                   flex: 3,
                   child: Text(
-                    'MAKA DIBELI (CONSEQUENT)',
+                    'CONSEQUENT (Y)',
                     style: TextStyle(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w700,
@@ -4482,7 +4473,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               final globalIdx = startIndex + idx + 1;
 
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 color: isEven ? Colors.white : const Color(0xFFFAFAFC),
                 child: Row(
                   children: [
@@ -4499,51 +4490,42 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                     ),
                     Expanded(
                       flex: 3,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3F4F6),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: cardBorder, width: 0.6),
-                          ),
-                          child: Text(
-                            r.antecedent,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: darkText,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      child: Text(
+                        _formatItemName(r.antecedent),
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: darkText,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       flex: 3,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3E8FF),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: const Color(0xFFE9D5FF), width: 0.6),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            CupertinoIcons.arrow_right,
+                            size: 11,
+                            color: gunadarmaPurple,
                           ),
-                          child: Text(
-                            r.consequent,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: gunadarmaPurple,
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(
+                              _formatItemName(r.consequent),
+                              style: const TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w700,
+                                color: gunadarmaPurple,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -4590,9 +4572,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       flex: 2,
                       child: Center(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: isStrong ? const Color(0xFFECFDF5) : const Color(0xFFF3F4F6),
+                            color: isStrong ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: isStrong ? const Color(0xFFA7F3D0) : cardBorder,
