@@ -56,7 +56,15 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       _buildGrandHeroBanner(context, resolvedName),
                       const SizedBox(height: 18),
-                      if (isDesktop)
+                      if (isDesktop) ...[
+                        _buildSectionHeader('RINGKASAN METRIK OPERASIONAL'),
+                        _buildDesktopHomeKPIStrip(
+                          totalTransactions: totalTransactions,
+                          totalRules: totalRules,
+                          minSupport: minSupport,
+                          minConf: minConf,
+                        ),
+                        const SizedBox(height: 18),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -65,12 +73,6 @@ class HomeScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _buildSectionHeader('RINGKASAN DATASET'),
-                                  _buildRealtimeMetrics(
-                                    totalTransactions: totalTransactions,
-                                    totalRules: totalRules,
-                                  ),
-                                  const SizedBox(height: 18),
                                   _buildSectionHeader('PARAMETER ALGORITMA'),
                                   _buildParameterConfigPanel(
                                     minSupport: minSupport,
@@ -82,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 18),
                             Expanded(
                               flex: 7,
                               child: Column(
@@ -94,8 +96,8 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                           ],
-                        )
-                      else ...[
+                        ),
+                      ] else ...[
                         _buildSectionHeader('RINGKASAN DATASET'),
                         _buildRealtimeMetrics(
                           totalTransactions: totalTransactions,
@@ -547,6 +549,53 @@ class HomeScreen extends StatelessWidget {
             value: '$totalRules',
             unit: 'Aturan Valid',
             icon: CupertinoIcons.arrow_branch,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopHomeKPIStrip({
+    required int totalTransactions,
+    required int totalRules,
+    required String minSupport,
+    required String minConf,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildMetricCard(
+            label: 'TOTAL TRANSAKSI',
+            value: '$totalTransactions',
+            unit: 'Struk Belanja',
+            icon: CupertinoIcons.doc_text,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildMetricCard(
+            label: 'ATURAN ASOSIASI',
+            value: '$totalRules',
+            unit: 'Kaidah Valid',
+            icon: CupertinoIcons.arrow_branch,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildMetricCard(
+            label: 'MINIMUM SUPPORT',
+            value: '$minSupport%',
+            unit: 'Ambang Frekuensi',
+            icon: CupertinoIcons.percent,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildMetricCard(
+            label: 'MINIMUM CONFIDENCE',
+            value: '$minConf%',
+            unit: 'Ambang Kepastian',
+            icon: CupertinoIcons.shield_fill,
           ),
         ),
       ],

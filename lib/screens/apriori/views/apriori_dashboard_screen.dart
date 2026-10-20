@@ -959,62 +959,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               const SizedBox(height: 14),
               if (isDesktop) ...[
                 if (_selectedSegment == 0)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildScenarioSplitCard(),
-                            const SizedBox(height: 14),
-                            _buildImportActionCard(),
-                            const SizedBox(height: 14),
-                            _buildManualBasketCard(),
-                            const SizedBox(height: 14),
-                            _buildDatasetStatsRow(aprioriResult),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        flex: 7,
-                        child: _buildTransactionListSection(),
-                      ),
-                    ],
-                  )
+                  _buildDesktopDatasetView(aprioriResult)
                 else
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildScenarioSplitCard(),
-                            const SizedBox(height: 14),
-                            _buildParameterCard(),
-                            const SizedBox(height: 14),
-                            _buildItemFrequencyDistribution(aprioriResult),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        flex: 7,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildExecutiveMetrics(aprioriResult),
-                            const SizedBox(height: 14),
-                            _buildAssociationRulesSection(aprioriResult),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  _buildDesktopAprioriView(aprioriResult),
               ] else ...[
                 _buildScenarioSplitCard(),
                 const SizedBox(height: 14),
@@ -1044,6 +991,1620 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   ),
 ),
 );
+  }
+
+  Widget _buildDesktopDatasetView(_AprioriResult aprioriResult) {
+    final double avgItems = _transactions.isEmpty
+        ? 0.0
+        : _transactions.map((t) => t.length).reduce((a, b) => a + b) / _transactions.length;
+
+    String badgeLabel;
+    if (_scenarioIndex == 1) {
+      badgeLabel = 'Rasio 80 : 20';
+    } else if (_scenarioIndex == 2) {
+      badgeLabel = 'Rasio 70 : 30';
+    } else {
+      badgeLabel = '${_masterTransactions.length} Data Penuh';
+    }
+
+    final activeList = _viewingTestSet ? _testTransactions : _transactions;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'TOTAL TRANSAKSI',
+                value: '${_masterTransactions.length} Struk',
+                subtitle: 'Dataset master',
+                icon: CupertinoIcons.doc_text_fill,
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFF3E8FF),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'ITEM UNIK',
+                value: '${aprioriResult.uniqueItemCount} Produk',
+                subtitle: 'Katalog terdata',
+                icon: CupertinoIcons.cube_box_fill,
+                iconColor: const Color(0xFF0284C7),
+                iconBg: const Color(0xFFE0F2FE),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'RATA-RATA / STRUK',
+                value: '${avgItems.toStringAsFixed(1)} Item',
+                subtitle: 'Kepadatan transaksi',
+                icon: CupertinoIcons.cart_fill,
+                iconColor: const Color(0xFF059669),
+                iconBg: const Color(0xFFD1FAE5),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'PARTISI AKTIF',
+                value: badgeLabel,
+                subtitle: '${_transactions.length} Latih / ${_testTransactions.length} Uji',
+                icon: CupertinoIcons.slider_horizontal_3,
+                iconColor: const Color(0xFFD97706),
+                iconBg: const Color(0xFFFEF3C7),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 4,
+              child: _buildDesktopDatasetControlPanel(aprioriResult),
+            ),
+            const SizedBox(width: 18),
+            Expanded(
+              flex: 8,
+              child: _buildDesktopTransactionsCard(activeList),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopAprioriView(_AprioriResult aprioriResult) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'FREQUENT ITEMSETS',
+                value: '${aprioriResult.frequentItemCount} Item',
+                subtitle: 'Lolos ambang batas L1',
+                icon: CupertinoIcons.check_mark_circled_solid,
+                iconColor: const Color(0xFF059669),
+                iconBg: const Color(0xFFD1FAE5),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'ATURAN ASOSIASI',
+                value: '${aprioriResult.rules.length} Aturan',
+                subtitle: 'Kaidah valid teruji',
+                icon: CupertinoIcons.arrow_branch,
+                iconColor: gunadarmaPurple,
+                iconBg: const Color(0xFFF3E8FF),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'MINIMUM SUPPORT',
+                value: '${_minSupport.toInt()}%',
+                subtitle: 'Ambang frekuensi',
+                icon: CupertinoIcons.percent,
+                iconColor: const Color(0xFF0284C7),
+                iconBg: const Color(0xFFE0F2FE),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildDesktopKPICard(
+                title: 'MINIMUM CONFIDENCE',
+                value: '${_minConfidence.toInt()}%',
+                subtitle: 'Ambang kepastian',
+                icon: CupertinoIcons.shield_fill,
+                iconColor: const Color(0xFF7C3AED),
+                iconBg: const Color(0xFFEDE9FE),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 4,
+              child: _buildDesktopAprioriControlPanel(aprioriResult),
+            ),
+            const SizedBox(width: 18),
+            Expanded(
+              flex: 8,
+              child: _buildDesktopRulesCard(aprioriResult.rules),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopKPICard({
+    required String title,
+    required String value,
+    required String subtitle,
+    required IconData icon,
+    required Color iconColor,
+    required Color iconBg,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: cardBorder, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: iconBg,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, size: 22, color: iconColor),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w700,
+                    color: mutedText,
+                    letterSpacing: 0.5,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: darkText,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w500,
+                    color: mutedText,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopDatasetControlPanel(_AprioriResult res) {
+    final totalMaster = _masterTransactions.length;
+    final trainCount = _transactions.length;
+    final testCount = _testTransactions.length;
+    final int trainPct = totalMaster > 0 ? ((trainCount / totalMaster) * 100).round() : 0;
+    final int testPct = totalMaster > 0 ? ((testCount / totalMaster) * 100).round() : 0;
+
+    String badgeLabel;
+    if (_scenarioIndex == 1) {
+      badgeLabel = 'Rasio 80 : 20';
+    } else if (_scenarioIndex == 2) {
+      badgeLabel = 'Rasio 70 : 30';
+    } else {
+      badgeLabel = '$totalMaster Data Penuh';
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorder, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Row(
+                children: [
+                  Icon(CupertinoIcons.slider_horizontal_3, size: 16, color: darkText),
+                  SizedBox(width: 8),
+                  Text(
+                    'Panel Kontrol Dataset',
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w800,
+                      color: darkText,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3E8FF),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  badgeLabel,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: gunadarmaPurple,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 24, thickness: 0.8, color: cardBorder),
+          const Text(
+            '1. Skenario Partisi Data',
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: darkText,
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoSlidingSegmentedControl<int>(
+              groupValue: _scenarioIndex,
+              backgroundColor: const Color(0xFFE5E5EA),
+              thumbColor: Colors.white,
+              padding: const EdgeInsets.all(3.5),
+              children: {
+                0: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
+                  child: Text(
+                    'Semua ($totalMaster)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 0 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 0 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+                1: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
+                  child: Text(
+                    '80 : 20',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 1 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 1 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+                2: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
+                  child: Text(
+                    '70 : 30',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 2 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 2 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+              },
+              onValueChanged: _onScenarioChanged,
+            ),
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: SizedBox(
+              height: 4.5,
+              width: double.infinity,
+              child: _scenarioIndex == 0
+                  ? Container(color: gunadarmaPurple)
+                  : Row(
+                      children: [
+                        Expanded(
+                          flex: trainPct > 0 ? trainPct : 1,
+                          child: Container(color: gunadarmaPurple),
+                        ),
+                        const SizedBox(width: 2),
+                        Expanded(
+                          flex: testPct > 0 ? testPct : 1,
+                          child: Container(color: const Color(0xFF007AFF)),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+          const SizedBox(height: 7),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: gunadarmaPurple,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Latih: $trainCount ($trainPct%)',
+                    style: const TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w600,
+                      color: darkText,
+                    ),
+                  ),
+                ],
+              ),
+              if (testCount > 0)
+                Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF007AFF),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'Uji: $testCount ($testPct%)',
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF007AFF),
+                      ),
+                    ),
+                  ],
+                )
+              else
+                const Text(
+                  '100% untuk pemodelan',
+                  style: TextStyle(
+                    fontSize: 10.5,
+                    color: mutedText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+            ],
+          ),
+          const Divider(height: 24, thickness: 0.8, color: cardBorder),
+          const Text(
+            '2. Impor Berkas Dataset',
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: darkText,
+            ),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Unggah berkas transaksi (.csv / .txt) atau tempel baris data.',
+            style: TextStyle(fontSize: 11, color: mutedText, height: 1.35),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: CupertinoButton(
+                  color: gunadarmaPurple,
+                  borderRadius: BorderRadius.circular(10),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  onPressed: _pickFileFromDevice,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.folder_badge_plus, size: 14, color: Colors.white),
+                      SizedBox(width: 6),
+                      Text(
+                        'Pilih Berkas',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CupertinoButton(
+                  color: iosBg,
+                  borderRadius: BorderRadius.circular(10),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  onPressed: _openCsvImportSheet,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.doc_on_clipboard, size: 14, color: gunadarmaPurple),
+                      SizedBox(width: 6),
+                      Text(
+                        'Tempel Teks',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                          color: gunadarmaPurple,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 24, thickness: 0.8, color: cardBorder),
+          const Text(
+            '3. Input Struk Tunggal (Manual)',
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: darkText,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: iosBg,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: cardBorder),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: TextField(
+                    controller: _customItemCtrl,
+                    onSubmitted: (v) {
+                      if (v.trim().isNotEmpty) _addItemToBasket(v);
+                    },
+                    style: const TextStyle(fontSize: 12, color: darkText),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Ketik nama item...',
+                      hintStyle: TextStyle(fontSize: 11.5, color: mutedText),
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                color: gunadarmaPurple,
+                borderRadius: BorderRadius.circular(10),
+                onPressed: () => _addItemToBasket(_customItemCtrl.text),
+                child: const Text('Tambah', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white)),
+              ),
+            ],
+          ),
+          if (_currentBasket.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: _currentBasket.map((it) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDE9FE),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(it, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: gunadarmaPurple)),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () => _removeItemFromBasket(it),
+                        child: const Icon(CupertinoIcons.clear, size: 10, color: gunadarmaPurple),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: CupertinoButton(
+                color: accentPurple,
+                borderRadius: BorderRadius.circular(10),
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                onPressed: _saveTransaction,
+                child: const Text('Simpan Struk ke Dataset', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white)),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopTransactionsCard(List<List<String>> activeList) {
+    final totalTrans = activeList.length;
+    final totalPages = totalTrans == 0 ? 1 : ((totalTrans - 1) ~/ _transPerPage) + 1;
+    final currentPage = _transCurrentPage.clamp(0, totalPages - 1);
+    final startIndex = currentPage * _transPerPage;
+    final endIndex = (startIndex + _transPerPage < totalTrans) ? startIndex + _transPerPage : totalTrans;
+    final displayList = totalTrans == 0 ? <List<String>>[] : activeList.sublist(startIndex, endIndex);
+
+    final String titleText = _scenarioIndex == 0
+        ? 'Daftar Struk Transaksi ($totalTrans)'
+        : _viewingTestSet
+            ? 'Daftar Struk Uji ($totalTrans)'
+            : 'Daftar Struk Latih ($totalTrans)';
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorder, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(CupertinoIcons.doc_text_fill, size: 16, color: gunadarmaPurple),
+                    const SizedBox(width: 8),
+                    Text(
+                      titleText,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: darkText,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    if (_scenarioIndex > 0 && _testTransactions.isNotEmpty) ...[
+                      CupertinoSlidingSegmentedControl<bool>(
+                        groupValue: _viewingTestSet,
+                        backgroundColor: const Color(0xFFE5E5EA),
+                        thumbColor: Colors.white,
+                        padding: const EdgeInsets.all(2.5),
+                        children: {
+                          false: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            child: Text(
+                              'Latih (${_transactions.length})',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: !_viewingTestSet ? FontWeight.w700 : FontWeight.w500,
+                                color: !_viewingTestSet ? gunadarmaPurple : mutedText,
+                              ),
+                            ),
+                          ),
+                          true: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            child: Text(
+                              'Uji (${_testTransactions.length})',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: _viewingTestSet ? FontWeight.w700 : FontWeight.w500,
+                                color: _viewingTestSet ? const Color(0xFF007AFF) : mutedText,
+                              ),
+                            ),
+                          ),
+                        },
+                        onValueChanged: (val) {
+                          if (val != null) {
+                            setState(() {
+                              _viewingTestSet = val;
+                              _transCurrentPage = 0;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    if (_masterTransactions.isNotEmpty)
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        onPressed: _resetAllData,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF3B30).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'Hapus Semua',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFFFF3B30),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              border: Border(
+                top: BorderSide(color: cardBorder, width: 0.8),
+                bottom: BorderSide(color: cardBorder, width: 0.8),
+              ),
+            ),
+            child: const Row(
+              children: [
+                SizedBox(
+                  width: 75,
+                  child: Text(
+                    'ID STRUK',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'ITEM BELANJA TRANSAKSI',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12),
+                SizedBox(
+                  width: 90,
+                  child: Text(
+                    'JUMLAH',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                SizedBox(
+                  width: 50,
+                  child: Text(
+                    'AKSI',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (activeList.isEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 16),
+              alignment: Alignment.center,
+              child: const Text(
+                'Belum ada transaksi dalam dataset ini.',
+                style: TextStyle(fontSize: 12, color: mutedText),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: displayList.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, color: Color(0xFFF1F5F9)),
+              itemBuilder: (ctx, idx) {
+                final trans = displayList[idx];
+                final actualIdx = startIndex + idx;
+                final displayIdx = _viewingTestSet ? _transactions.length + actualIdx + 1 : actualIdx + 1;
+                final isEven = idx % 2 == 0;
+                final badgeColor = _viewingTestSet ? const Color(0xFF007AFF) : gunadarmaPurple;
+                final badgeBg = _viewingTestSet ? const Color(0xFFE0F2FE) : const Color(0xFFEDE9FE);
+
+                return Container(
+                  height: 48,
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  color: isEven ? Colors.white : const Color(0xFFFAFAFC),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 75,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                            decoration: BoxDecoration(
+                              color: badgeBg,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              '#$displayIdx',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: badgeColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Tooltip(
+                          message: trans.join(', '),
+                          child: Text(
+                            trans.join(', '),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                              color: darkText,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 90,
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: cardBorder, width: 0.6),
+                            ),
+                            child: Text(
+                              '${trans.length} Item',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: darkText,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 50,
+                        child: Center(
+                          child: CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(28, 28),
+                            onPressed: () => _deleteTransaction(actualIdx),
+                            child: const Icon(CupertinoIcons.trash, size: 15, color: Color(0xFFFF3B30)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+              border: Border(top: BorderSide(color: cardBorder, width: 0.8)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Halaman ${currentPage + 1} dari $totalPages (Total $totalTrans Transaksi)',
+                  style: const TextStyle(fontSize: 11.5, color: mutedText, fontWeight: FontWeight.w500),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CupertinoButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      minimumSize: Size.zero,
+                      onPressed: currentPage > 0
+                          ? () => setState(() => _transCurrentPage = currentPage - 1)
+                          : null,
+                      child: Text(
+                        'Sebelumnya',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: currentPage > 0 ? gunadarmaPurple : mutedText.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    CupertinoButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      minimumSize: Size.zero,
+                      onPressed: currentPage < totalPages - 1
+                          ? () => setState(() => _transCurrentPage = currentPage + 1)
+                          : null,
+                      child: Text(
+                        'Selanjutnya',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: currentPage < totalPages - 1 ? gunadarmaPurple : mutedText.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopAprioriControlPanel(_AprioriResult res) {
+    final totalMaster = _masterTransactions.length;
+    final trainCount = _transactions.length;
+    final testCount = _testTransactions.length;
+    final int trainPct = totalMaster > 0 ? ((trainCount / totalMaster) * 100).round() : 0;
+    final int testPct = totalMaster > 0 ? ((testCount / totalMaster) * 100).round() : 0;
+
+    final frequentItems = res.itemFrequencies.where((i) => i.percent >= _minSupport).toList();
+    final allTopItems = res.itemFrequencies.take(5).toList();
+    final itemsToDisplay = _showOnlyL1 ? frequentItems.take(5).toList() : allTopItems;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorder, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(CupertinoIcons.gear_alt_fill, size: 16, color: darkText),
+                  SizedBox(width: 8),
+                  Text(
+                    'Panel Parameter & L1',
+                    style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w800,
+                      color: darkText,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                'Algoritma Apriori',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: gunadarmaPurple,
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 24, thickness: 0.8, color: cardBorder),
+          const Text(
+            '1. Skenario Partisi Data',
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: darkText,
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoSlidingSegmentedControl<int>(
+              groupValue: _scenarioIndex,
+              backgroundColor: const Color(0xFFE5E5EA),
+              thumbColor: Colors.white,
+              padding: const EdgeInsets.all(3.5),
+              children: {
+                0: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
+                  child: Text(
+                    'Semua ($totalMaster)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 0 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 0 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+                1: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
+                  child: Text(
+                    '80 : 20',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 1 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 1 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+                2: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6.5),
+                  child: Text(
+                    '70 : 30',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: _scenarioIndex == 2 ? FontWeight.w700 : FontWeight.w500,
+                      color: _scenarioIndex == 2 ? gunadarmaPurple : mutedText,
+                    ),
+                  ),
+                ),
+              },
+              onValueChanged: _onScenarioChanged,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: SizedBox(
+              height: 4.5,
+              width: double.infinity,
+              child: _scenarioIndex == 0
+                  ? Container(color: gunadarmaPurple)
+                  : Row(
+                      children: [
+                        Expanded(
+                          flex: trainPct > 0 ? trainPct : 1,
+                          child: Container(color: gunadarmaPurple),
+                        ),
+                        const SizedBox(width: 2),
+                        Expanded(
+                          flex: testPct > 0 ? testPct : 1,
+                          child: Container(color: const Color(0xFF007AFF)),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+          const Divider(height: 24, thickness: 0.8, color: cardBorder),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '2. Ambang Batas Min. Support',
+                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: darkText),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3E8FF),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  '${_minSupport.toInt()}%',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: gunadarmaPurple),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoSlider(
+              value: _minSupport.clamp(1.0, 100.0),
+              min: 1.0,
+              max: 100.0,
+              divisions: 99,
+              activeColor: gunadarmaPurple,
+              onChanged: (val) {
+                setState(() => _minSupport = val);
+              },
+              onChangeEnd: (val) {
+                _syncState();
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '3. Ambang Batas Min. Confidence',
+                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: darkText),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3E8FF),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  '${_minConfidence.toInt()}%',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: gunadarmaPurple),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoSlider(
+              value: _minConfidence.clamp(1.0, 100.0),
+              min: 1.0,
+              max: 100.0,
+              divisions: 99,
+              activeColor: gunadarmaPurple,
+              onChanged: (val) {
+                setState(() => _minConfidence = val);
+              },
+              onChangeEnd: (val) {
+                _syncState();
+              },
+            ),
+          ),
+          const Divider(height: 24, thickness: 0.8, color: cardBorder),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '4. Distribusi Item (L1)',
+                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: darkText),
+              ),
+              CupertinoSlidingSegmentedControl<bool>(
+                groupValue: _showOnlyL1,
+                padding: const EdgeInsets.all(2),
+                children: const {
+                  false: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    child: Text('Semua', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+                  ),
+                  true: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    child: Text('Lolos L1', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
+                  ),
+                },
+                onValueChanged: (val) {
+                  if (val != null) {
+                    setState(() => _showOnlyL1 = val);
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (itemsToDisplay.isEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              alignment: Alignment.center,
+              child: const Text(
+                'Tidak ada item yang lolos ambang batas',
+                style: TextStyle(fontSize: 11, color: mutedText),
+                textAlign: TextAlign.center,
+              ),
+            )
+          else
+            ...itemsToDisplay.map((it) {
+              final isLolos = it.percent >= _minSupport;
+              final double barWidthRatio = (it.percent / 100.0).clamp(0.05, 1.0);
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          it.name,
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            fontWeight: isLolos ? FontWeight.w700 : FontWeight.w500,
+                            color: isLolos ? darkText : mutedText,
+                          ),
+                        ),
+                        Text(
+                          '${it.count}x (${it.percent.toStringAsFixed(1)}%)',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: isLolos ? gunadarmaPurple : mutedText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: Container(
+                        height: 5,
+                        width: double.infinity,
+                        color: const Color(0xFFF1F5F9),
+                        child: FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: barWidthRatio,
+                          child: Container(
+                            color: isLolos ? gunadarmaPurple : const Color(0xFFCBD5E1),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopRulesCard(List<_LiveRule> rules) {
+    final totalRules = rules.length;
+    final totalPages = totalRules == 0 ? 1 : ((totalRules - 1) ~/ _rulesPerPage) + 1;
+    final currentPage = _rulesCurrentPage.clamp(0, totalPages - 1);
+    final startIndex = currentPage * _rulesPerPage;
+    final endIndex = (startIndex + _rulesPerPage < totalRules) ? startIndex + _rulesPerPage : totalRules;
+    final displayRules = totalRules == 0 ? <_LiveRule>[] : rules.sublist(startIndex, endIndex);
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorder, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(CupertinoIcons.arrow_branch, size: 16, color: gunadarmaPurple),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Kaidah Asosiasi Apriori ($totalRules Aturan)',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: darkText,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _showFormulaExplanationModal(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: iosBg,
+                          borderRadius: BorderRadius.circular(7),
+                          border: Border.all(color: cardBorder),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(CupertinoIcons.question_circle, size: 12, color: darkText),
+                            SizedBox(width: 4),
+                            Text(
+                              'Rumus',
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: darkText),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (rules.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => _copyRulesToClipboard(rules),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3E8FF),
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: const Color(0xFFE9D5FF)),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(CupertinoIcons.doc_on_doc, size: 12, color: gunadarmaPurple),
+                              SizedBox(width: 4),
+                              Text(
+                                'Salin',
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              border: Border(
+                top: BorderSide(color: cardBorder, width: 0.8),
+                bottom: BorderSide(color: cardBorder, width: 0.8),
+              ),
+            ),
+            child: const Row(
+              children: [
+                SizedBox(
+                  width: 45,
+                  child: Text(
+                    'NO',
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'JIKA DIBELI (ANTECEDENT)',
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'MAKA DIBELI (CONSEQUENT)',
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'SUPPORT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'CONFIDENCE',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'LIFT RATIO',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'KORELASI',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (rules.isEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 16),
+              alignment: Alignment.center,
+              child: const Text(
+                'Belum ada aturan yang memenuhi ambang batas minimum.',
+                style: TextStyle(fontSize: 12, color: mutedText),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: displayRules.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, color: Color(0xFFF1F5F9)),
+              itemBuilder: (ctx, idx) {
+                final r = displayRules[idx];
+                final isEven = idx % 2 == 0;
+                final isStrong = r.lift >= 1.0;
+                final globalIdx = startIndex + idx + 1;
+
+                return Container(
+                  height: 48,
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  color: isEven ? Colors.white : const Color(0xFFFAFAFC),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 45,
+                        child: Text(
+                          '#$globalIdx',
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: mutedText),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: cardBorder, width: 0.6),
+                            ),
+                            child: Text(
+                              r.antecedent,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: darkText),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: const Color(0xFFE9D5FF), width: 0.6),
+                            ),
+                            child: Text(
+                              r.consequent,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          '${r.support.toStringAsFixed(1)}%',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: darkText),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          '${r.confidence.toStringAsFixed(1)}%',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: darkText),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          '${r.lift.toStringAsFixed(2)}x',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: isStrong ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                            decoration: BoxDecoration(
+                              color: isStrong ? const Color(0xFFECFDF5) : const Color(0xFFF3F4F6),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: isStrong ? const Color(0xFFA7F3D0) : cardBorder,
+                                width: 0.6,
+                              ),
+                            ),
+                            child: Text(
+                              isStrong ? 'Sangat Kuat' : 'Kurang Kuat',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: isStrong ? const Color(0xFF059669) : mutedText,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+              border: Border(top: BorderSide(color: cardBorder, width: 0.8)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Halaman ${currentPage + 1} dari $totalPages (Total $totalRules Aturan)',
+                  style: const TextStyle(fontSize: 11.5, color: mutedText, fontWeight: FontWeight.w500),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CupertinoButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      minimumSize: Size.zero,
+                      onPressed: currentPage > 0
+                          ? () => setState(() => _rulesCurrentPage = currentPage - 1)
+                          : null,
+                      child: Text(
+                        'Sebelumnya',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: currentPage > 0 ? gunadarmaPurple : mutedText.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    CupertinoButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      minimumSize: Size.zero,
+                      onPressed: currentPage < totalPages - 1
+                          ? () => setState(() => _rulesCurrentPage = currentPage + 1)
+                          : null,
+                      child: Text(
+                        'Selanjutnya',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: currentPage < totalPages - 1 ? gunadarmaPurple : mutedText.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildScenarioSplitCard() {
