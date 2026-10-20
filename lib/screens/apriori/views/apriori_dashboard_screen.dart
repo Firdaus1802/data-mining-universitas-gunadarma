@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shop/models/apriori_state_manager.dart';
 import 'package:shop/screens/apriori/views/academic_reference_helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AprioriDashboardScreen extends StatefulWidget {
   const AprioriDashboardScreen({super.key});
@@ -2080,6 +2081,30 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
+                'Preset Parameter Cepat',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: mutedText,
+                  letterSpacing: 0.3,
+                ),
+              ),
+              Row(
+                children: [
+                  _buildPresetButton('Standar', sup: 1.0, conf: 16.0),
+                  const SizedBox(width: 4),
+                  _buildPresetButton('Selektif', sup: 2.5, conf: 30.0),
+                  const SizedBox(width: 4),
+                  _buildPresetButton('Ketat', sup: 5.0, conf: 50.0),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
                 '2. Ambang Batas Min. Support',
                 style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: darkText),
               ),
@@ -2219,7 +2244,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                     height: 6,
                     width: double.infinity,
                     color: const Color(0xFFE2E8F0),
-                    child: FractionallySizedBox(
+                    child: AnimatedFractionallySizedBox(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOutCubic,
                       alignment: Alignment.centerLeft,
                       widthFactor: (_minSupport / 100.0).clamp(0.01, 1.0),
                       child: Container(
@@ -2277,47 +2304,27 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       ],
                     ),
                     const SizedBox(height: 4),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final double totalW = constraints.maxWidth;
-                        final double thresholdX = (totalW * (_minSupport / 100.0)).clamp(0.0, totalW);
-                        return Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            ClipRRect(
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: Container(
+                        height: 6.5,
+                        width: double.infinity,
+                        color: const Color(0xFFF1F5F9),
+                        child: AnimatedFractionallySizedBox(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutCubic,
+                          alignment: Alignment.centerLeft,
+                          widthFactor: barWidthRatio,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOutCubic,
+                            decoration: BoxDecoration(
+                              color: isLolos ? gunadarmaPurple : const Color(0xFFDDD6FE),
                               borderRadius: BorderRadius.circular(3),
-                              child: Container(
-                                height: 6,
-                                width: double.infinity,
-                                color: const Color(0xFFF1F5F9),
-                                child: FractionallySizedBox(
-                                  alignment: Alignment.centerLeft,
-                                  widthFactor: barWidthRatio,
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    decoration: BoxDecoration(
-                                      color: isLolos ? gunadarmaPurple : const Color(0xFFCBD5E1),
-                                      borderRadius: BorderRadius.circular(3),
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
-                            Positioned(
-                              left: (thresholdX - 1.0).clamp(0.0, totalW - 2.0),
-                              top: -1,
-                              bottom: -1,
-                              child: Container(
-                                width: 2,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFEF4444),
-                                  borderRadius: BorderRadius.circular(1),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -2450,6 +2457,32 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                               Text(
                                 'Salin',
                                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => _exportRulesToCsv(rules),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8FAFC),
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: cardBorder),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(CupertinoIcons.arrow_down_doc, size: 12, color: gunadarmaPurple),
+                              SizedBox(width: 4),
+                              Text(
+                                'Ekspor CSV',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: gunadarmaPurple,
+                                ),
                               ),
                             ],
                           ),
@@ -4601,6 +4634,49 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     }
     Clipboard.setData(ClipboardData(text: buffer.toString()));
     _showIOSNotification('${rules.length} aturan disalin ke clipboard');
+  }
+
+  Widget _buildPresetButton(String label, {required double sup, required double conf}) {
+    final isSelected = (_minSupport - sup).abs() < 0.1 && (_minConfidence - conf).abs() < 0.1;
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+      minimumSize: Size.zero,
+      color: isSelected ? gunadarmaPurple : const Color(0xFFF1F5F9),
+      borderRadius: BorderRadius.circular(6),
+      onPressed: () {
+        setState(() {
+          _minSupport = sup;
+          _minConfidence = conf;
+        });
+        _syncState();
+      },
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+          color: isSelected ? Colors.white : const Color(0xFF475569),
+        ),
+      ),
+    );
+  }
+
+  void _exportRulesToCsv(List<_LiveRule> rules) {
+    if (rules.isEmpty) {
+      _showIOSNotification('Tidak ada aturan untuk diekspor.', isError: true);
+      return;
+    }
+    final buffer = StringBuffer();
+    buffer.writeln('No,Antecedent (Jika Dibeli),Consequent (Maka Dibeli),Support (%),Confidence (%),Lift Ratio,Korelasi');
+    for (int i = 0; i < rules.length; i++) {
+      final r = rules[i];
+      final interp = r.lift > 1.0 ? 'Sangat Kuat' : 'Kurang Kuat';
+      buffer.writeln('${i + 1},"${r.antecedent}","${r.consequent}",${r.support.toStringAsFixed(1)},${r.confidence.toStringAsFixed(1)},${r.lift.toStringAsFixed(2)},$interp');
+    }
+    final csvContent = buffer.toString();
+    Clipboard.setData(ClipboardData(text: csvContent));
+    launchUrl(Uri.dataFromString(csvContent, mimeType: 'text/csv', encoding: utf8));
+    _showIOSNotification('${rules.length} kaidah asosiasi diekspor ke file CSV.');
   }
 
   Widget _buildFormulaExplanationModalContent(BuildContext context, VoidCallback onClose) {
