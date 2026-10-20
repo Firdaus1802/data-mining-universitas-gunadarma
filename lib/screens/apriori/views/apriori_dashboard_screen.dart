@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shop/models/apriori_state_manager.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:shop/screens/apriori/views/academic_reference_helper.dart';
 
 class AprioriDashboardScreen extends StatefulWidget {
   const AprioriDashboardScreen({super.key});
@@ -2542,39 +2542,64 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'Penerapan Algoritma Apriori Dalam Penentuan Pola Pembelian Konsumen',
+                              'Market Basket Analysis Menggunakan Algoritma Apriori dan FP Growth untuk Menentukan Pola Pembelian Konsumen',
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
                             ),
                             const SizedBox(height: 6),
                             const Text(
-                              'Jurnal Media Informatika Budidarma (JMIB) • Vol. 7, No. 2\nPenerbit: STMIK Budi Darma Medan',
+                              'Jurnal Media Informatika Budidarma (JMIB) • Vol. 7, No. 3 (Juli 2023)\nPenulis: Reski Noviana, Arief Hermawan, Donny Avianto (UTY)',
                               style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
                             ),
                             const SizedBox(height: 14),
-                            SizedBox(
-                              width: double.infinity,
-                              child: CupertinoButton(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                color: const Color(0xFFF3E8FF),
-                                borderRadius: BorderRadius.circular(10),
-                                onPressed: () {
-                                  launchUrl(
-                                    Uri.parse('https://ejurnal.stmik-budidarma.ac.id/index.php/mib/article/view/6304'),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: gunadarmaPurple),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      'Buka Halaman Jurnal',
-                                      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CupertinoButton(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    color: gunadarmaPurple,
+                                    borderRadius: BorderRadius.circular(10),
+                                    onPressed: () {
+                                      AcademicReferenceHelper.safeLaunchUrl(
+                                        context,
+                                        AcademicReferenceHelper.journalDoiUrl,
+                                      );
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: Colors.white),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Buka DOI',
+                                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: CupertinoButton(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    color: const Color(0xFFF3E8FF),
+                                    borderRadius: BorderRadius.circular(10),
+                                    onPressed: () {
+                                      AcademicReferenceHelper.showJournalModal(context);
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(CupertinoIcons.doc_text_fill, size: 15, color: gunadarmaPurple),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Naskah & PDF',
+                                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -2622,30 +2647,65 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                               style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
                             ),
                             const SizedBox(height: 14),
-                            SizedBox(
-                              width: double.infinity,
-                              child: CupertinoButton(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                color: const Color(0xFFE0F2FE),
-                                borderRadius: BorderRadius.circular(10),
-                                onPressed: () {
-                                  launchUrl(
-                                    Uri.parse('https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset'),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: Color(0xFF007AFF)),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      'Buka Dataset di Kaggle',
-                                      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CupertinoButton(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    color: const Color(0xFF007AFF),
+                                    borderRadius: BorderRadius.circular(10),
+                                    onPressed: () {
+                                      AcademicReferenceHelper.downloadDatasetCsv(context);
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Unduh CSV',
+                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: CupertinoButton(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    color: const Color(0xFFE0F2FE),
+                                    borderRadius: BorderRadius.circular(10),
+                                    onPressed: () {
+                                      AcademicReferenceHelper.showDatasetModal(context);
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(CupertinoIcons.eye_fill, size: 15, color: Color(0xFF007AFF)),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Pratinjau',
+                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                CupertinoButton(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                  color: const Color(0xFFF3F4F6),
+                                  borderRadius: BorderRadius.circular(10),
+                                  onPressed: () {
+                                    AcademicReferenceHelper.safeLaunchUrl(
+                                      context,
+                                      AcademicReferenceHelper.kaggleDatasetUrl,
+                                    );
+                                  },
+                                  child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF4B5563)),
+                                ),
+                              ],
                             ),
                           ],
                         ),
