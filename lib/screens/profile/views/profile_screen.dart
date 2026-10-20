@@ -33,9 +33,12 @@ class ProfileScreen extends StatelessWidget {
             return SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 820),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   _buildAppleIdHeaderCard(context, state, displayName, email),
                   const SizedBox(height: 22),
                   _buildSectionHeader("TIM PENELITI & AKADEMIK"),
@@ -233,8 +236,10 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                 ],
               ),
-            );
-          },
+            ),
+          ),
+        );
+      },
         ),
       ),
     );

@@ -755,9 +755,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1140),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -909,6 +912,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
           ),
         ),
       ),
+    ),
+    ),
     ),
   );
   }

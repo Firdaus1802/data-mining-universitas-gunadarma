@@ -47,28 +47,33 @@ class HomeScreen extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGrandHeroBanner(context, resolvedName),
-                  const SizedBox(height: 18),
-                  _buildSectionHeader('RINGKASAN DATASET'),
-                  _buildRealtimeMetrics(
-                    totalTransactions: totalTransactions,
-                    totalRules: totalRules,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1140),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildGrandHeroBanner(context, resolvedName),
+                      const SizedBox(height: 18),
+                      _buildSectionHeader('RINGKASAN DATASET'),
+                      _buildRealtimeMetrics(
+                        totalTransactions: totalTransactions,
+                        totalRules: totalRules,
+                      ),
+                      const SizedBox(height: 18),
+                      _buildSectionHeader('PARAMETER ALGORITMA'),
+                      _buildParameterConfigPanel(
+                        minSupport: minSupport,
+                        minConf: minConf,
+                        isDataLoaded: isDataLoaded,
+                      ),
+                      const SizedBox(height: 18),
+                      _buildRealtimeRulesStreamSection(context, state),
+                      const SizedBox(height: 28),
+                      _buildAcademicCreditsFooter(),
+                    ],
                   ),
-                  const SizedBox(height: 18),
-                  _buildSectionHeader('PARAMETER ALGORITMA'),
-                  _buildParameterConfigPanel(
-                    minSupport: minSupport,
-                    minConf: minConf,
-                    isDataLoaded: isDataLoaded,
-                  ),
-                  const SizedBox(height: 18),
-                  _buildRealtimeRulesStreamSection(context, state),
-                  const SizedBox(height: 28),
-                  _buildAcademicCreditsFooter(),
-                ],
+                ),
               ),
             ),
           ),
