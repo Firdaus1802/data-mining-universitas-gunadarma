@@ -128,7 +128,7 @@ class AprioriStateManager extends ChangeNotifier {
   Future<void> init() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final savedJson = prefs.getString('saved_transactions_v1');
+      final savedJson = prefs.getString('saved_transactions_v2');
       final savedMinSup = prefs.getDouble('saved_min_support');
       final savedMinConf = prefs.getDouble('saved_min_confidence');
       final savedScenario = prefs.getInt('saved_scenario_index');
@@ -152,7 +152,7 @@ class AprioriStateManager extends ChangeNotifier {
         }
       }
 
-      if (_masterTransactions.length <= 1) {
+      if (_masterTransactions.length < 10) {
         _masterTransactions.clear();
         final csvString = await rootBundle.loadString('assets/data/dataset_groceries_1000.csv');
         final lines = csvString.split(RegExp(r'\r?\n'));
@@ -289,7 +289,7 @@ class AprioriStateManager extends ChangeNotifier {
   Future<void> _saveToPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('saved_transactions_v1', jsonEncode(_masterTransactions));
+      await prefs.setString('saved_transactions_v2', jsonEncode(_masterTransactions));
       await prefs.setDouble('saved_min_support', _minSupport);
       await prefs.setDouble('saved_min_confidence', _minConfidence);
       await prefs.setInt('saved_scenario_index', _scenarioIndex);
@@ -443,6 +443,7 @@ class AprioriStateManager extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('saved_transactions_v1');
+      await prefs.remove('saved_transactions_v2');
       await prefs.remove('saved_min_support');
       await prefs.remove('saved_min_confidence');
       await prefs.remove('saved_scenario_index');

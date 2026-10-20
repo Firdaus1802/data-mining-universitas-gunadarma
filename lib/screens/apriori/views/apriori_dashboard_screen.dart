@@ -61,7 +61,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
     _scenarioIndex = mgr.scenarioIndex;
     _masterTransactions.clear();
     _masterTransactions.addAll(mgr.masterTransactions.isNotEmpty ? mgr.masterTransactions : mgr.transactions);
-    if (_masterTransactions.length <= 1) {
+    if (_masterTransactions.length < 10) {
       AprioriStateManager.instance.resetToDefaultDataset().then((_) {
         if (mounted) {
           setState(() {
@@ -2181,6 +2181,61 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             ],
           ),
           const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: cardBorder, width: 0.8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Batas Eliminasi Min. Support',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: mutedText,
+                      ),
+                    ),
+                    Text(
+                      '${_minSupport.toInt()}%',
+                      style: const TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: gunadarmaPurple,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: Container(
+                    height: 6,
+                    width: double.infinity,
+                    color: const Color(0xFFE2E8F0),
+                    child: FractionallySizedBox(
+                      alignment: Alignment.centerLeft,
+                      widthFactor: (_minSupport / 100.0).clamp(0.01, 1.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [gunadarmaPurple, accentPurple],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
           if (itemsToDisplay.isEmpty)
             Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -2222,25 +2277,88 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       ],
                     ),
                     const SizedBox(height: 4),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: Container(
-                        height: 5,
-                        width: double.infinity,
-                        color: const Color(0xFFF1F5F9),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: barWidthRatio,
-                          child: Container(
-                            color: isLolos ? gunadarmaPurple : const Color(0xFFCBD5E1),
-                          ),
-                        ),
-                      ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final double totalW = constraints.maxWidth;
+                        final double thresholdX = (totalW * (_minSupport / 100.0)).clamp(0.0, totalW);
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(3),
+                              child: Container(
+                                height: 6,
+                                width: double.infinity,
+                                color: const Color(0xFFF1F5F9),
+                                child: FractionallySizedBox(
+                                  alignment: Alignment.centerLeft,
+                                  widthFactor: barWidthRatio,
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    decoration: BoxDecoration(
+                                      color: isLolos ? gunadarmaPurple : const Color(0xFFCBD5E1),
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: (thresholdX - 1.0).clamp(0.0, totalW - 2.0),
+                              top: -1,
+                              bottom: -1,
+                              child: Container(
+                                width: 2,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEF4444),
+                                  borderRadius: BorderRadius.circular(1),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
               );
             }),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoButton(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(10),
+              onPressed: () {
+                AprioriStateManager.instance.resetToDefaultDataset().then((_) {
+                  if (mounted) {
+                    setState(() {
+                      _masterTransactions.clear();
+                      _masterTransactions.addAll(AprioriStateManager.instance.masterTransactions);
+                      _applyScenarioSplitLocal();
+                      _syncState();
+                    });
+                  }
+                });
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(CupertinoIcons.arrow_clockwise, size: 13, color: gunadarmaPurple),
+                  SizedBox(width: 6),
+                  Text(
+                    'Muat Ulang Dataset 1.000 Transaksi',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: gunadarmaPurple,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

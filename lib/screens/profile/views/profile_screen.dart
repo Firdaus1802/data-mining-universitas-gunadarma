@@ -254,14 +254,15 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: Center(
+            child: const Center(
               child: Text(
-                _getInitials(displayName),
-                style: const TextStyle(
+                "K4",
+                style: TextStyle(
                   fontFamily: "Plus Jakarta",
                   fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                   color: Colors.white,
+                  letterSpacing: -0.5,
                 ),
               ),
             ),
@@ -271,11 +272,11 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  displayName,
-                  style: const TextStyle(
+                const Text(
+                  "Kelompok 4 Data Mining Association",
+                  style: TextStyle(
                     fontFamily: "Plus Jakarta",
-                    fontSize: 16.5,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: darkText,
                     letterSpacing: -0.3,
@@ -289,12 +290,12 @@ class ProfileScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                       decoration: BoxDecoration(
-                        color: purpleLightPill,
+                        color: const Color(0xFFF8FAFC),
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: borderLine),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
                       ),
                       child: const Text(
-                        "10124497",
+                        "3KA31",
                         style: TextStyle(
                           fontFamily: "Plus Jakarta",
                           fontSize: 11,
@@ -305,19 +306,19 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     const Text(
-                      "Ketua Kelompok 4",
+                      "FIKTI • Universitas Gunadarma",
                       style: TextStyle(
                         fontFamily: "Plus Jakarta",
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
-                        color: gunadarmaPurple,
+                        color: Color(0xFF475569),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 3),
                 const Text(
-                  "S1 Sistem Informasi • Kelas 3KA31",
+                  "S1 Sistem Informasi • Riset Algoritma Apriori",
                   style: TextStyle(
                     fontFamily: "Plus Jakarta",
                     fontSize: 11.5,
@@ -330,75 +331,33 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            color: purpleLightPill,
-            borderRadius: BorderRadius.circular(8),
-            onPressed: () => _showEditUserNameDialog(context, state, displayName),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+            ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  CupertinoIcons.pencil,
+                  CupertinoIcons.checkmark_seal_fill,
                   size: 13,
                   color: gunadarmaPurple,
                 ),
-                SizedBox(width: 4),
+                SizedBox(width: 5),
                 Text(
-                  "Ubah",
+                  "Sistem Aktif",
                   style: TextStyle(
                     fontFamily: "Plus Jakarta",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
                     color: gunadarmaPurple,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getInitials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.isEmpty || parts[0].isEmpty) return "FD";
-    if (parts.length == 1) return parts[0].substring(0, 1).toUpperCase();
-    return "${parts[0].substring(0, 1)}${parts[1].substring(0, 1)}".toUpperCase();
-  }
-
-  void _showEditUserNameDialog(BuildContext context, AprioriStateManager state, String currentName) {
-    final controller = TextEditingController(text: currentName);
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text("Ubah Nama Profil"),
-        content: Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: CupertinoTextField(
-            controller: controller,
-            placeholder: "Nama Lengkap",
-            autofocus: true,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            style: const TextStyle(fontSize: 14),
-          ),
-        ),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text("Batal"),
-            onPressed: () => Navigator.pop(ctx),
-          ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () {
-              final newName = controller.text.trim();
-              if (newName.isNotEmpty) {
-                state.setUserName(newName);
-              }
-              Navigator.pop(ctx);
-            },
-            child: const Text("Simpan"),
           ),
         ],
       ),
@@ -648,8 +607,8 @@ class ProfileScreen extends StatelessWidget {
         _buildGroupCard([
           _buildSettingsTile(
             icon: CupertinoIcons.info_circle_fill,
-            title: "Versi Aplikasi",
-            trailing: "1.0.0 (Release)",
+            title: "Versi Web App",
+            trailing: "1.0.0 (Production)",
             showChevron: false,
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
