@@ -603,13 +603,221 @@ class ProfileScreen extends StatelessWidget {
     }
   }
 
+  Widget _buildTeamMembersModalContent(
+    BuildContext context,
+    AprioriStateManager state,
+    VoidCallback onClose,
+  ) {
+    final members = state.teamMembers;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Anggota Kelompok 4",
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: darkText,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    "S1 Sistem Informasi • Kelas 3KA31",
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w400,
+                      color: textMuted,
+                    ),
+                  ),
+                ],
+              ),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: onClose,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFE5E5EA),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    CupertinoIcons.xmark,
+                    size: 13,
+                    color: Color(0xFF3C3C43),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 0.5, thickness: 0.5, color: borderLine),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 12, bottom: 8),
+                  child: Text(
+                    "DAFTAR ANGGOTA",
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      color: textMuted,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: cardBg,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: borderLine, width: 0.6),
+                  ),
+                  child: Column(
+                    children: List.generate(members.length, (index) {
+                      final member = members[index];
+                      final isLead = index == 0;
+                      final isLast = index == members.length - 1;
+
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 26,
+                                  height: 26,
+                                  decoration: BoxDecoration(
+                                    color: isLead ? gunadarmaPurple.withValues(alpha: 0.1) : const Color(0xFFF2F2F7),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "${index + 1}",
+                                      style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: isLead ? gunadarmaPurple : const Color(0xFF8E8E93),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        member.name,
+                                        style: const TextStyle(
+                                          fontFamily: "Plus Jakarta",
+                                          fontSize: 14.5,
+                                          fontWeight: FontWeight.w600,
+                                          color: darkText,
+                                          letterSpacing: -0.2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        member.npm,
+                                        style: const TextStyle(
+                                          fontFamily: "Plus Jakarta",
+                                          fontSize: 12.5,
+                                          fontWeight: FontWeight.w400,
+                                          color: textMuted,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (!isLast)
+                            const Divider(height: 0.5, thickness: 0.5, indent: 52, color: borderLine),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Center(
+                  child: Text(
+                    "Universitas Gunadarma • Konsep Data Mining",
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w400,
+                      color: textMuted,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   void _showTeamMembersModal(BuildContext context, AprioriStateManager state) {
+    final isDesktop = MediaQuery.of(context).size.width >= 850;
+    if (isDesktop) {
+      showDialog(
+        context: context,
+        builder: (dialogCtx) => Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520, maxHeight: 680),
+            child: Container(
+              decoration: BoxDecoration(
+                color: pageBg,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x26000000),
+                    blurRadius: 30,
+                    offset: Offset(0, 10),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.antiAlias,
+              padding: const EdgeInsets.only(top: 18),
+              child: _buildTeamMembersModalContent(
+                context,
+                state,
+                () => Navigator.pop(dialogCtx),
+              ),
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (bottomSheetContext) {
-        final members = state.teamMembers;
         return Container(
           height: MediaQuery.of(context).size.height * 0.72,
           decoration: const BoxDecoration(
@@ -630,165 +838,11 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Anggota Kelompok 4",
-                          style: TextStyle(
-                            fontFamily: "Plus Jakarta",
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: darkText,
-                            letterSpacing: -0.3,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          "S1 Sistem Informasi • Kelas 3KA31",
-                          style: TextStyle(
-                            fontFamily: "Plus Jakarta",
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w400,
-                            color: textMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pop(bottomSheetContext),
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFE5E5EA),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          CupertinoIcons.xmark,
-                          size: 13,
-                          color: Color(0xFF3C3C43),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 0.5, thickness: 0.5, color: borderLine),
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 12, bottom: 8),
-                        child: Text(
-                          "DAFTAR ANGGOTA",
-                          style: TextStyle(
-                            fontFamily: "Plus Jakarta",
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w600,
-                            color: textMuted,
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: cardBg,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: borderLine, width: 0.6),
-                        ),
-                        child: Column(
-                          children: List.generate(members.length, (index) {
-                            final member = members[index];
-                            final isLead = index == 0;
-                            final isLast = index == members.length - 1;
-
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 26,
-                                        height: 26,
-                                        decoration: BoxDecoration(
-                                          color: isLead ? gunadarmaPurple.withValues(alpha: 0.1) : const Color(0xFFF2F2F7),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "${index + 1}",
-                                            style: TextStyle(
-                                              fontFamily: "Plus Jakarta",
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w700,
-                                              color: isLead ? gunadarmaPurple : const Color(0xFF8E8E93),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              member.name,
-                                              style: const TextStyle(
-                                                fontFamily: "Plus Jakarta",
-                                                fontSize: 14.5,
-                                                fontWeight: FontWeight.w600,
-                                                color: darkText,
-                                                letterSpacing: -0.2,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              member.npm,
-                                              style: const TextStyle(
-                                                fontFamily: "Plus Jakarta",
-                                                fontSize: 12.5,
-                                                fontWeight: FontWeight.w400,
-                                                color: textMuted,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (!isLast)
-                                  const Divider(height: 0.5, thickness: 0.5, indent: 52, color: borderLine),
-                              ],
-                            );
-                          }),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Center(
-                        child: Text(
-                          "Universitas Gunadarma • Konsep Data Mining",
-                          style: TextStyle(
-                            fontFamily: "Plus Jakarta",
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w400,
-                            color: textMuted,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: _buildTeamMembersModalContent(
+                  context,
+                  state,
+                  () => Navigator.pop(bottomSheetContext),
                 ),
               ),
             ],
@@ -916,444 +970,6 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _showAcademicReferenceModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.78,
-              decoration: const BoxDecoration(
-                color: pageBg,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 8, bottom: 8),
-                      width: 36,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD1D1D6),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Rujukan Ilmiah & Dataset",
-                              style: TextStyle(
-                                fontFamily: "Plus Jakarta",
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: darkText,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              "Publikasi algoritma Apriori dan data transaksi",
-                              style: TextStyle(
-                                fontFamily: "Plus Jakarta",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: textMuted,
-                              ),
-                            ),
-                          ],
-                        ),
-                        CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () => Navigator.pop(ctx),
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFE5E5EA),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              CupertinoIcons.xmark,
-                              size: 13,
-                              color: Color(0xFF3C3C43),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 0.5, thickness: 0.5, color: borderLine),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: cardBg,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: borderLine, width: 0.8),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF3E8FF),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: const Text(
-                                        "JURNAL NASIONAL",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w800,
-                                          color: gunadarmaPurple,
-                                          letterSpacing: 0.4,
-                                        ),
-                                      ),
-                                    ),
-                                    const Text(
-                                      "JUKTISI 2026",
-                                      style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                const Text(
-                                  "Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya",
-                                  style: TextStyle(
-                                    fontFamily: "Plus Jakarta",
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: darkText,
-                                    height: 1.3,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P., Muhammad Arifin (Universitas Muria Kudus)\nJurnal: JUKTISI, Vol. 5, No. 1, 2026 • 310 KB",
-                                  style: TextStyle(fontSize: 11, color: textMuted, height: 1.3),
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 5,
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(vertical: 9),
-                                        color: gunadarmaPurple,
-                                        borderRadius: BorderRadius.circular(8),
-                                        onPressed: () => AcademicReferenceHelper.directOpenNationalPdf(context),
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(CupertinoIcons.doc_text_fill, size: 13, color: Colors.white),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              "Buka PDF",
-                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Expanded(
-                                      flex: 5,
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(vertical: 9),
-                                        color: const Color(0xFFF3E8FF),
-                                        borderRadius: BorderRadius.circular(8),
-                                        onPressed: () => AcademicReferenceHelper.safeLaunchUrl(context, AcademicReferenceHelper.nationalJournalUrl),
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(CupertinoIcons.globe, size: 13, color: gunadarmaPurple),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              "Laman Jurnal",
-                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                                      color: const Color(0xFFF2F2F7),
-                                      borderRadius: BorderRadius.circular(8),
-                                      onPressed: () => AcademicReferenceHelper.downloadNationalJournalPdf(context),
-                                      child: const Icon(CupertinoIcons.arrow_down_to_line, size: 14, color: darkText),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: cardBg,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: borderLine, width: 0.8),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFDCFCE7),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: const Text(
-                                        "JURNAL PEMBANDING",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(0xFF166534),
-                                          letterSpacing: 0.4,
-                                        ),
-                                      ),
-                                    ),
-                                    const Text(
-                                      "IJIIS 2025",
-                                      style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                const Text(
-                                  "Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data",
-                                  style: TextStyle(
-                                    fontFamily: "Plus Jakarta",
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: darkText,
-                                    height: 1.3,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad (ITTS & Universiti Teknikal Malaysia Melaka)\nJurnal: IJIIS, Vol. 8, No. 2, 2025 • 381 KB",
-                                  style: TextStyle(fontSize: 11, color: textMuted, height: 1.3),
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 5,
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(vertical: 9),
-                                        color: const Color(0xFF166534),
-                                        borderRadius: BorderRadius.circular(8),
-                                        onPressed: () => AcademicReferenceHelper.directOpenInternationalPdf(context),
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(CupertinoIcons.doc_text_fill, size: 13, color: Colors.white),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              "Buka PDF",
-                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Expanded(
-                                      flex: 5,
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(vertical: 9),
-                                        color: const Color(0xFFDCFCE7),
-                                        borderRadius: BorderRadius.circular(8),
-                                        onPressed: () => AcademicReferenceHelper.safeLaunchUrl(context, AcademicReferenceHelper.internationalJournalUrl),
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(CupertinoIcons.globe, size: 13, color: Color(0xFF166534)),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              "Laman Jurnal",
-                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF166534)),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                                      color: const Color(0xFFF2F2F7),
-                                      borderRadius: BorderRadius.circular(8),
-                                      onPressed: () => AcademicReferenceHelper.downloadInternationalJournalPdf(context),
-                                      child: const Icon(CupertinoIcons.arrow_down_to_line, size: 14, color: darkText),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: cardBg,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: borderLine, width: 0.8),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFE0F2FE),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: const Text(
-                                        "DATASET TRANSAKSI",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(0xFF007AFF),
-                                          letterSpacing: 0.4,
-                                        ),
-                                      ),
-                                    ),
-                                    const Text(
-                                      "Kaggle Groceries",
-                                      style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                const Text(
-                                  "Groceries Market Basket Dataset",
-                                  style: TextStyle(
-                                    fontFamily: "Plus Jakarta",
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: darkText,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text(
-                                  "Data transaksi riil pasar swalayan yang mencakup 1.000 riwayat belanja produk untuk pengujian kaidah asosiasi.",
-                                  style: TextStyle(fontSize: 11, color: textMuted, height: 1.3),
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(vertical: 9),
-                                        color: const Color(0xFF007AFF),
-                                        borderRadius: BorderRadius.circular(8),
-                                        onPressed: () {
-                                          AcademicReferenceHelper.downloadDatasetCsv(context);
-                                        },
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: Colors.white),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              "Unduh CSV",
-                                              style: TextStyle(
-                                                fontSize: 11.5,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Expanded(
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.symmetric(vertical: 9),
-                                        color: const Color(0xFFE0F2FE),
-                                        borderRadius: BorderRadius.circular(8),
-                                        onPressed: () {
-                                          AcademicReferenceHelper.safeLaunchUrl(
-                                            context,
-                                            AcademicReferenceHelper.kaggleDatasetUrl,
-                                          );
-                                        },
-                                        child: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(CupertinoIcons.link, size: 14, color: Color(0xFF007AFF)),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              "Link Kaggle",
-                                              style: TextStyle(
-                                                fontSize: 11.5,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFF007AFF),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                                      color: const Color(0xFFF3F4F6),
-                                      borderRadius: BorderRadius.circular(8),
-                                      onPressed: () {
-                                        AcademicReferenceHelper.showDatasetModal(context);
-                                      },
-                                      child: const Icon(CupertinoIcons.eye_fill, size: 15, color: Color(0xFF4B5563)),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    AcademicReferenceHelper.showJournalModal(context);
   }
 }

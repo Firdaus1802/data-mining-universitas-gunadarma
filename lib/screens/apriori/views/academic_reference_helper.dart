@@ -91,7 +91,197 @@ class AcademicReferenceHelper {
     );
   }
 
+  static Widget _buildPdfDirectPickerContent(
+    BuildContext context,
+    BuildContext sheetContext, {
+    bool isDesktop = false,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!isDesktop)
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD1D1D6),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        if (!isDesktop) const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rujukan Ilmiah & Jurnal',
+                  style: TextStyle(
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w700,
+                    color: darkText,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  'Akses naskah PDF atau kunjungi laman jurnal',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: mutedText,
+                  ),
+                ),
+              ],
+            ),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => Navigator.of(sheetContext).pop(),
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE5E5EA),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  CupertinoIcons.xmark,
+                  size: 13,
+                  color: Color(0xFF3C3C43),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _buildJournalCard(
+          context: context,
+          tag: 'JURNAL NASIONAL (UTAMA)',
+          tagColor: gunadarmaPurple,
+          tagBg: const Color(0xFFF3E8FF),
+          title:
+              'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
+          meta: 'JUKTISI (2026) • Durrotun Nafisah et al. • 310 KB',
+          onOpenPdf: () {
+            Navigator.of(sheetContext).pop();
+            directOpenNationalPdf(context);
+          },
+          onOpenWeb: () => safeLaunchUrl(context, nationalJournalUrl),
+          onDownload: () => downloadNationalJournalPdf(context),
+        ),
+        const SizedBox(height: 10),
+        _buildJournalCard(
+          context: context,
+          tag: 'JURNAL PEMBANDING (INTERNASIONAL)',
+          tagColor: const Color(0xFF166534),
+          tagBg: const Color(0xFFDCFCE7),
+          title:
+              'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
+          meta: 'IJIIS (2025) • Agung Budi Prasetio et al. • 381 KB',
+          onOpenPdf: () {
+            Navigator.of(sheetContext).pop();
+            directOpenInternationalPdf(context);
+          },
+          onOpenWeb: () => safeLaunchUrl(context, internationalJournalUrl),
+          onDownload: () => downloadInternationalJournalPdf(context),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: CupertinoButton(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                color: const Color(0xFFF2F2F7),
+                borderRadius: BorderRadius.circular(10),
+                onPressed: () {
+                  Navigator.of(sheetContext).pop();
+                  showDatasetModal(context);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(CupertinoIcons.table, size: 14, color: darkText),
+                    SizedBox(width: 5),
+                    Text(
+                      'Dataset CSV',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: darkText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: CupertinoButton(
+                padding: const EdgeInsets.symmetric(vertical: 9),
+                color: const Color(0xFFF2F2F7),
+                borderRadius: BorderRadius.circular(10),
+                onPressed: () {
+                  Navigator.of(sheetContext).pop();
+                  showJournalModal(context);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(CupertinoIcons.info_circle, size: 14, color: darkText),
+                    SizedBox(width: 5),
+                    Text(
+                      'Sitasi & Detail',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: darkText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   static void showPdfDirectPicker(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 850;
+    if (isDesktop) {
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x26000000),
+                      blurRadius: 28,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+                child: _buildPdfDirectPickerContent(context, dialogContext, isDesktop: true),
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -117,156 +307,7 @@ class AcademicReferenceHelper {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(18, 12, 18, 18),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 36,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD1D1D6),
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Rujukan Ilmiah & Jurnal',
-                                style: TextStyle(
-                                  fontSize: 16.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: darkText,
-                                  letterSpacing: -0.3,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                'Akses naskah PDF atau kunjungi laman jurnal',
-                                style: TextStyle(
-                                  fontSize: 11.5,
-                                  color: mutedText,
-                                ),
-                              ),
-                            ],
-                          ),
-                          CupertinoButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () => Navigator.of(sheetContext).pop(),
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE5E5EA),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                CupertinoIcons.xmark,
-                                size: 13,
-                                color: Color(0xFF3C3C43),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      _buildJournalCard(
-                        context: context,
-                        tag: 'JURNAL NASIONAL (UTAMA)',
-                        tagColor: gunadarmaPurple,
-                        tagBg: const Color(0xFFF3E8FF),
-                        title:
-                            'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
-                        meta: 'JUKTISI (2026) • Durrotun Nafisah et al. • 310 KB',
-                        onOpenPdf: () {
-                          Navigator.of(sheetContext).pop();
-                          directOpenNationalPdf(context);
-                        },
-                        onOpenWeb: () => safeLaunchUrl(context, nationalJournalUrl),
-                        onDownload: () => downloadNationalJournalPdf(context),
-                      ),
-                      const SizedBox(height: 10),
-                      _buildJournalCard(
-                        context: context,
-                        tag: 'JURNAL PEMBANDING (INTERNASIONAL)',
-                        tagColor: const Color(0xFF166534),
-                        tagBg: const Color(0xFFDCFCE7),
-                        title:
-                            'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
-                        meta: 'IJIIS (2025) • Agung Budi Prasetio et al. • 381 KB',
-                        onOpenPdf: () {
-                          Navigator.of(sheetContext).pop();
-                          directOpenInternationalPdf(context);
-                        },
-                        onOpenWeb: () => safeLaunchUrl(context, internationalJournalUrl),
-                        onDownload: () => downloadInternationalJournalPdf(context),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CupertinoButton(
-                              padding: const EdgeInsets.symmetric(vertical: 9),
-                              color: const Color(0xFFF2F2F7),
-                              borderRadius: BorderRadius.circular(10),
-                              onPressed: () {
-                                Navigator.of(sheetContext).pop();
-                                showDatasetModal(context);
-                              },
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(CupertinoIcons.table, size: 14, color: darkText),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'Dataset CSV',
-                                    style: TextStyle(
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w600,
-                                      color: darkText,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: CupertinoButton(
-                              padding: const EdgeInsets.symmetric(vertical: 9),
-                              color: const Color(0xFFF2F2F7),
-                              borderRadius: BorderRadius.circular(10),
-                              onPressed: () {
-                                Navigator.of(sheetContext).pop();
-                                showJournalModal(context);
-                              },
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(CupertinoIcons.info_circle, size: 14, color: darkText),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'Sitasi & Detail',
-                                    style: TextStyle(
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w600,
-                                      color: darkText,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: _buildPdfDirectPickerContent(context, sheetContext, isDesktop: false),
                 ),
               ),
             ),
@@ -336,7 +377,136 @@ class AcademicReferenceHelper {
     }
   }
 
+  static Widget _buildDownloadJournalContent(
+    BuildContext context,
+    BuildContext sheetContext, {
+    bool isDesktop = false,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!isDesktop)
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD1D1D6),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        if (!isDesktop) const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Unduh Berkas Riset & Data',
+                  style: TextStyle(
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w700,
+                    color: darkText,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  'Simpan dokumen PDF atau CSV ke perangkat',
+                  style: TextStyle(fontSize: 11.5, color: mutedText),
+                ),
+              ],
+            ),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => Navigator.of(sheetContext).pop(),
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE5E5EA),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(CupertinoIcons.xmark, size: 13, color: Color(0xFF3C3C43)),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _buildDownloadTile(
+          icon: CupertinoIcons.doc_text_fill,
+          iconColor: gunadarmaPurple,
+          bgColor: const Color(0xFFF3E8FF),
+          title: 'PDF Jurnal Nasional (JUKTISI)',
+          subtitle: 'Warung Kelontong Maju Jaya • 310 KB',
+          onTap: () {
+            Navigator.of(sheetContext).pop();
+            downloadNationalJournalPdf(context);
+          },
+        ),
+        const SizedBox(height: 8),
+        _buildDownloadTile(
+          icon: CupertinoIcons.doc_text_fill,
+          iconColor: const Color(0xFF166534),
+          bgColor: const Color(0xFFDCFCE7),
+          title: 'PDF Jurnal Pembanding (IJIIS)',
+          subtitle: 'Retail Transaction Analysis • 381 KB',
+          onTap: () {
+            Navigator.of(sheetContext).pop();
+            downloadInternationalJournalPdf(context);
+          },
+        ),
+        const SizedBox(height: 8),
+        _buildDownloadTile(
+          icon: CupertinoIcons.table,
+          iconColor: const Color(0xFF007AFF),
+          bgColor: const Color(0xFFE0F2FE),
+          title: 'Dataset Transaksi Groceries (.csv)',
+          subtitle: '1.000 Transaksi Riil Kaggle • 29.3 KB',
+          onTap: () {
+            Navigator.of(sheetContext).pop();
+            downloadDatasetCsv(context);
+          },
+        ),
+      ],
+    );
+  }
+
   static void downloadJournalPdf(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 850;
+    if (isDesktop) {
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x26000000),
+                      blurRadius: 28,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+                child: _buildDownloadJournalContent(context, dialogContext, isDesktop: true),
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -362,95 +532,7 @@ class AcademicReferenceHelper {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(18, 12, 18, 18),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 36,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD1D1D6),
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Unduh Berkas Riset & Data',
-                                style: TextStyle(
-                                  fontSize: 16.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: darkText,
-                                  letterSpacing: -0.3,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                'Simpan dokumen PDF atau CSV ke perangkat',
-                                style: TextStyle(fontSize: 11.5, color: mutedText),
-                              ),
-                            ],
-                          ),
-                          CupertinoButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () => Navigator.of(sheetContext).pop(),
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE5E5EA),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(CupertinoIcons.xmark, size: 13, color: Color(0xFF3C3C43)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      _buildDownloadTile(
-                        icon: CupertinoIcons.doc_text_fill,
-                        iconColor: gunadarmaPurple,
-                        bgColor: const Color(0xFFF3E8FF),
-                        title: 'PDF Jurnal Nasional (JUKTISI)',
-                        subtitle: 'Warung Kelontong Maju Jaya • 310 KB',
-                        onTap: () {
-                          Navigator.of(sheetContext).pop();
-                          downloadNationalJournalPdf(context);
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDownloadTile(
-                        icon: CupertinoIcons.doc_text_fill,
-                        iconColor: const Color(0xFF166534),
-                        bgColor: const Color(0xFFDCFCE7),
-                        title: 'PDF Jurnal Pembanding (IJIIS)',
-                        subtitle: 'Retail Transaction Analysis • 381 KB',
-                        onTap: () {
-                          Navigator.of(sheetContext).pop();
-                          downloadInternationalJournalPdf(context);
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDownloadTile(
-                        icon: CupertinoIcons.table,
-                        iconColor: const Color(0xFF007AFF),
-                        bgColor: const Color(0xFFE0F2FE),
-                        title: 'Dataset Transaksi Groceries (.csv)',
-                        subtitle: '1.000 Transaksi Riil Kaggle • 29.3 KB',
-                        onTap: () {
-                          Navigator.of(sheetContext).pop();
-                          downloadDatasetCsv(context);
-                        },
-                      ),
-                    ],
-                  ),
+                  child: _buildDownloadJournalContent(context, sheetContext, isDesktop: false),
                 ),
               ),
             ),
@@ -684,6 +766,42 @@ class AcademicReferenceHelper {
   }
 
   static void showJournalModal(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 850;
+    if (isDesktop) {
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 680, maxHeight: 800),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x26000000),
+                      blurRadius: 30,
+                      offset: Offset(0, 10),
+                    ),
+                  ],
+                ),
+                clipBehavior: Clip.antiAlias,
+                padding: const EdgeInsets.only(top: 20),
+                child: _buildJournalModalContent(
+                  context,
+                  () => Navigator.of(dialogContext).pop(),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -713,43 +831,68 @@ class AcademicReferenceHelper {
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Rujukan Ilmiah & Dataset',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: darkText,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'Publikasi ilmiah algoritma Apriori dan data transaksi',
-                              style: TextStyle(fontSize: 12, color: mutedText),
-                            ),
-                          ],
+                      Expanded(
+                        child: _buildJournalModalContent(
+                          context,
+                          () => Navigator.of(sheetContext).pop(),
+                          scrollController: scrollController,
                         ),
-                        IconButton(
-                          onPressed: () => Navigator.of(sheetContext).pop(),
-                          icon: const Icon(CupertinoIcons.xmark_circle_fill, color: Color(0xFF8E8E93), size: 28),
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget _buildJournalModalContent(
+    BuildContext context,
+    VoidCallback onClose, {
+    ScrollController? scrollController,
+  }) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rujukan Ilmiah & Dataset',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: darkText,
+                      letterSpacing: -0.3,
                     ),
                   ),
-                  const Divider(height: 16),
-                  Expanded(
-                    child: ListView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
-                      children: [
+                  SizedBox(height: 2),
+                  Text(
+                    'Publikasi ilmiah algoritma Apriori dan data transaksi',
+                    style: TextStyle(fontSize: 12, color: mutedText),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: onClose,
+                icon: const Icon(CupertinoIcons.xmark_circle_fill, color: Color(0xFF8E8E93), size: 28),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 16),
+        Expanded(
+          child: ListView(
+            controller: scrollController,
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+            children: [
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -1101,17 +1244,28 @@ class AcademicReferenceHelper {
                     ),
                   ),
                 ],
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  },
-);
-}
+              );
+  }
 
   static void showDatasetModal(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 850;
+    if (isDesktop) {
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 680, maxHeight: 800),
+              child: _DatasetViewerSheet(sheetContext: dialogContext, isDialog: true),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -1120,7 +1274,7 @@ class AcademicReferenceHelper {
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 520),
-            child: _DatasetViewerSheet(sheetContext: sheetContext),
+            child: _DatasetViewerSheet(sheetContext: sheetContext, isDialog: false),
           ),
         );
       },
@@ -1386,8 +1540,12 @@ class AcademicReferenceHelper {
 
 class _DatasetViewerSheet extends StatefulWidget {
   final BuildContext sheetContext;
+  final bool isDialog;
 
-  const _DatasetViewerSheet({required this.sheetContext});
+  const _DatasetViewerSheet({
+    required this.sheetContext,
+    this.isDialog = false,
+  });
 
   @override
   State<_DatasetViewerSheet> createState() => _DatasetViewerSheetState();
@@ -1446,8 +1604,219 @@ class _DatasetViewerSheetState extends State<_DatasetViewerSheet> {
     });
   }
 
+  Widget _buildBody(BuildContext context, {ScrollController? scrollController}) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Dataset Transaksi Groceries',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AcademicReferenceHelper.darkText,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Total ${_allRows.length} Transaksi Riil Swalayan',
+                    style: const TextStyle(fontSize: 12, color: AcademicReferenceHelper.mutedText),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () => Navigator.of(widget.sheetContext).pop(),
+                icon: const Icon(CupertinoIcons.xmark_circle_fill, color: Color(0xFF8E8E93), size: 28),
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Expanded(
+                child: CupertinoButton(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  color: AcademicReferenceHelper.gunadarmaPurple,
+                  borderRadius: BorderRadius.circular(10),
+                  onPressed: () => AcademicReferenceHelper.downloadDatasetCsv(context),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
+                      SizedBox(width: 6),
+                      Text(
+                        'Unduh File CSV',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CupertinoButton(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  color: const Color(0xFFF3E8FF),
+                  borderRadius: BorderRadius.circular(10),
+                  onPressed: () => AcademicReferenceHelper.copyDatasetCsv(context),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.doc_on_clipboard, size: 15, color: AcademicReferenceHelper.gunadarmaPurple),
+                      SizedBox(width: 6),
+                      Text(
+                        'Salin Semua Baris',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: AcademicReferenceHelper.gunadarmaPurple,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                color: const Color(0xFFE0F2FE),
+                borderRadius: BorderRadius.circular(10),
+                onPressed: () => AcademicReferenceHelper.safeLaunchUrl(
+                  context,
+                  AcademicReferenceHelper.kaggleDatasetUrl,
+                ),
+                child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF007AFF)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: CupertinoSearchTextField(
+            controller: _searchCtrl,
+            placeholder: 'Cari transaksi berdasarkan nama produk...',
+            style: const TextStyle(fontSize: 13),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Menampilkan ${_filteredRows.length} dari ${_allRows.length} baris',
+                style: const TextStyle(fontSize: 11, color: AcademicReferenceHelper.mutedText),
+              ),
+              const Text(
+                'Format: CSV Item-separated',
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AcademicReferenceHelper.mutedText),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CupertinoActivityIndicator())
+              : _filteredRows.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'Tidak ada transaksi yang cocok.',
+                        style: TextStyle(color: AcademicReferenceHelper.mutedText),
+                      ),
+                    )
+                  : ListView.separated(
+                      controller: scrollController,
+                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+                      itemCount: _filteredRows.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, idx) {
+                        final rowText = _filteredRows[idx];
+                        final items = rowText.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 44,
+                                padding: const EdgeInsets.symmetric(vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3F4F6),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '#${idx + 1}',
+                                  style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: Color(0xFF6B7280)),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Wrap(
+                                  spacing: 6,
+                                  runSpacing: 4,
+                                  children: items.map((it) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF3E8FF),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(color: const Color(0xFFE9D5FF), width: 0.8),
+                                      ),
+                                      child: Text(
+                                        it,
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: AcademicReferenceHelper.gunadarmaPurple,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.isDialog) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x26000000),
+              blurRadius: 30,
+              offset: Offset(0, 10),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        padding: const EdgeInsets.only(top: 20),
+        child: _buildBody(context),
+      );
+    }
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 520),
@@ -1472,196 +1841,13 @@ class _DatasetViewerSheetState extends State<_DatasetViewerSheet> {
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Dataset Transaksi Groceries',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: AcademicReferenceHelper.darkText,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Total ${_allRows.length} Transaksi Riil Swalayan',
-                          style: const TextStyle(fontSize: 12, color: AcademicReferenceHelper.mutedText),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(widget.sheetContext).pop(),
-                      icon: const Icon(CupertinoIcons.xmark_circle_fill, color: Color(0xFF8E8E93), size: 28),
-                    ),
-                  ],
-                ),
+                  Expanded(
+                    child: _buildBody(context, scrollController: scrollController),
+                  ),
+                ],
               ),
-              const Divider(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoButton(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        color: AcademicReferenceHelper.gunadarmaPurple,
-                        borderRadius: BorderRadius.circular(10),
-                        onPressed: () => AcademicReferenceHelper.downloadDatasetCsv(context),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
-                            SizedBox(width: 6),
-                            Text(
-                              'Unduh File CSV',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: CupertinoButton(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        color: const Color(0xFFF3E8FF),
-                        borderRadius: BorderRadius.circular(10),
-                        onPressed: () => AcademicReferenceHelper.copyDatasetCsv(context),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(CupertinoIcons.doc_on_clipboard, size: 15, color: AcademicReferenceHelper.gunadarmaPurple),
-                            SizedBox(width: 6),
-                            Text(
-                              'Salin Semua Baris',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: AcademicReferenceHelper.gunadarmaPurple,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    CupertinoButton(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      color: const Color(0xFFE0F2FE),
-                      borderRadius: BorderRadius.circular(10),
-                      onPressed: () => AcademicReferenceHelper.safeLaunchUrl(
-                        context,
-                        AcademicReferenceHelper.kaggleDatasetUrl,
-                      ),
-                      child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF007AFF)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CupertinoSearchTextField(
-                  controller: _searchCtrl,
-                  placeholder: 'Cari transaksi berdasarkan nama produk...',
-                  style: const TextStyle(fontSize: 13),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Menampilkan ${_filteredRows.length} dari ${_allRows.length} baris',
-                      style: const TextStyle(fontSize: 11, color: AcademicReferenceHelper.mutedText),
-                    ),
-                    const Text(
-                      'Format: CSV Item-separated',
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AcademicReferenceHelper.mutedText),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CupertinoActivityIndicator())
-                    : _filteredRows.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'Tidak ada transaksi yang cocok.',
-                              style: TextStyle(color: AcademicReferenceHelper.mutedText),
-                            ),
-                          )
-                        : ListView.separated(
-                            controller: scrollController,
-                            padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-                            itemCount: _filteredRows.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
-                            itemBuilder: (context, idx) {
-                              final rowText = _filteredRows[idx];
-                              final items = rowText.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 44,
-                                      padding: const EdgeInsets.symmetric(vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF3F4F6),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '#${idx + 1}',
-                                        style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: Color(0xFF6B7280)),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Wrap(
-                                        spacing: 6,
-                                        runSpacing: 4,
-                                        children: items.map((it) {
-                                          return Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFF3E8FF),
-                                              borderRadius: BorderRadius.circular(6),
-                                              border: Border.all(color: const Color(0xFFE9D5FF), width: 0.8),
-                                            ),
-                                            child: Text(
-                                              it,
-                                              style: const TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w600,
-                                                color: AcademicReferenceHelper.gunadarmaPurple,
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-              ),
-            ],
-          ),
-        );
-      },
+            );
+          },
         ),
       ),
     );
