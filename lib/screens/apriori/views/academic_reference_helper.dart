@@ -81,6 +81,49 @@ class AcademicReferenceHelper {
     );
   }
 
+  static Future<void> downloadJournalPdf(BuildContext context) async {
+    try {
+      final byteData = await rootBundle.load('assets/documents/jurnal_apriori_fpgrowth_reski_noviana.pdf');
+      final bytes = byteData.buffer.asUint8List();
+      final uri = await FilePicker.saveFile(
+        fileName: 'Jurnal_Apriori_FPGrowth_Reski_Noviana.pdf',
+        bytes: bytes,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        mimeType: 'application/pdf',
+        dialogTitle: 'Simpan Naskah PDF Jurnal Ilmiah',
+      );
+
+      if (context.mounted) {
+        if (uri != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Berkas PDF Jurnal berhasil diunduh dan disimpan ke perangkat!'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Penyimpanan berkas PDF dibatalkan.'),
+              backgroundColor: Color(0xFF757575),
+            ),
+          );
+        }
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal menyimpan berkas PDF. Silakan periksa izin penyimpanan.'),
+            backgroundColor: Color(0xFFFF3B30),
+          ),
+        );
+      }
+    }
+  }
+
   static Future<String> loadDatasetString() async {
     return await rootBundle.loadString('assets/data/dataset_groceries_1000.csv');
   }
@@ -272,6 +315,37 @@ class AcademicReferenceHelper {
                         ),
                         const SizedBox(height: 10),
                         _buildActionTile(
+                          icon: CupertinoIcons.arrow_down_doc_fill,
+                          iconColor: Colors.white,
+                          bgColor: gunadarmaPurple,
+                          title: 'Unduh Berkas PDF Jurnal Lengkap (.pdf)',
+                          subtitle: 'Simpan berkas PDF resmi (9,9 KB) langsung ke perangkat',
+                          onTap: () => downloadJournalPdf(context),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: const Color(0xFFFDE68A)),
+                          ),
+                          child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(CupertinoIcons.info_circle_fill, size: 16, color: Color(0xFFD97706)),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Catatan: Tautan unduhan PDF pada situs web OJS STMIK Budidarma saat ini sedang error 404 dari server kampus. Berkas PDF naskah resmi telah disertakan langsung di dalam aplikasi agar dapat diunduh tanpa kendala.',
+                                  style: TextStyle(fontSize: 10.5, color: Color(0xFF92400E), height: 1.35),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        _buildActionTile(
                           icon: CupertinoIcons.link,
                           iconColor: gunadarmaPurple,
                           bgColor: const Color(0xFFF3E8FF),
@@ -382,58 +456,14 @@ class AcademicReferenceHelper {
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 color: gunadarmaPurple,
                                 borderRadius: BorderRadius.circular(12),
-                                onPressed: () async {
-                                  const summaryText =
-                                      'JUDUL: Market Basket Analysis Menggunakan Algoritma Apriori dan FP Growth untuk Menentukan Pola Pembelian Konsumen\n'
-                                      'PENULIS: Reski Noviana, Arief Hermawan, Donny Avianto\n'
-                                      'INSTITUSI: Universitas Teknologi Yogyakarta\n'
-                                      'JURNAL: Jurnal Media Informatika Budidarma (JMIB), Vol. 7, No. 3, Juli 2023, Hal. 1474-1482\n'
-                                      'DOI: 10.30865/mib.v7i3.6304\n\n'
-                                      'SITASI APA:\n$apaCitation\n\n'
-                                      'TEMUAN ATURAN ASOSIASI:\n'
-                                      '1. {yogurt, sausage} => {whole milk} (Support: 0.0147%, Conf: 25.58%, Lift: 1.62)\n'
-                                      '2. {sausage, rolls/buns} => {whole milk} (Support: 0.0113%, Conf: 21.25%, Lift: 1.35)\n\n'
-                                      'PERBANDINGAN KOMPUTASI:\n'
-                                      '• Apriori: 3.1765 detik\n'
-                                      '• FP-Growth: 0.15892 detik (FP-Growth lebih cepat 3.0176 detik)\n';
-
-                                  try {
-                                    final bytes = Uint8List.fromList(utf8.encode(summaryText));
-                                    final uri = await FilePicker.saveFile(
-                                      fileName: 'ringkasan_jurnal_apriori_fpgrowth.txt',
-                                      bytes: bytes,
-                                      type: FileType.custom,
-                                      allowedExtensions: ['txt'],
-                                      mimeType: 'text/plain',
-                                      dialogTitle: 'Simpan Ringkasan & Sitasi Jurnal',
-                                    );
-                                    if (uri != null && context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Ringkasan naskah berhasil disimpan ke berkas!'),
-                                          backgroundColor: Color(0xFF2E7D32),
-                                        ),
-                                      );
-                                    }
-                                  } catch (_) {
-                                    await Clipboard.setData(const ClipboardData(text: summaryText));
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Ringkasan naskah berhasil disalin ke papan klip!'),
-                                          backgroundColor: gunadarmaPurple,
-                                        ),
-                                      );
-                                    }
-                                  }
-                                },
+                                onPressed: () => downloadJournalPdf(context),
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(CupertinoIcons.arrow_down_doc_fill, size: 16, color: Colors.white),
                                     SizedBox(width: 6),
                                     Text(
-                                      'Unduh Ringkasan',
+                                      'Unduh Berkas PDF',
                                       style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white),
                                     ),
                                   ],
