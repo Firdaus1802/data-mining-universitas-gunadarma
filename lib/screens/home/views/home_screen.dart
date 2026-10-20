@@ -825,6 +825,8 @@ class HomeScreen extends StatelessWidget {
         ),
         if (!hasRules)
           _buildEmptyRulesCard(context)
+        else if (MediaQuery.of(context).size.width >= 960)
+          _buildDesktopHomeRulesDataTable(rules)
         else
           Container(
             decoration: BoxDecoration(
@@ -844,6 +846,300 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+
+  Widget _buildDesktopHomeRulesDataTable(List<AprioriRuleSummary> rules) {
+    final displayRules = rules.take(10).toList();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderLine, width: 0.8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              border: Border(bottom: BorderSide(color: borderLine, width: 0.8)),
+            ),
+            child: const Row(
+              children: [
+                SizedBox(
+                  width: 36,
+                  child: Text(
+                    'NO',
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'JIKA DIBELI (ANTECEDENT)',
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'MAKA DIBELI (CONSEQUENT)',
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'SUPPORT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'CONFIDENCE',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'LIFT RATIO',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'KORELASI',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: textMuted,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: displayRules.length,
+            separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, color: Color(0xFFF1F5F9)),
+            itemBuilder: (ctx, idx) {
+              final rule = displayRules[idx];
+              final isEven = idx % 2 == 0;
+              final isPositiveLift = rule.lift >= 1.0;
+
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                color: isEven ? Colors.white : const Color(0xFFFAFAFC),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 36,
+                      child: Text(
+                        '#${idx + 1}',
+                        style: const TextStyle(
+                          fontFamily: "Plus Jakarta",
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: textMuted,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3F4F6),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: borderLine, width: 0.6),
+                          ),
+                          child: Text(
+                            _formatItemName(rule.antecedent),
+                            style: const TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: darkText,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3E8FF),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: const Color(0xFFE9D5FF), width: 0.6),
+                          ),
+                          child: Text(
+                            _formatItemName(rule.consequent),
+                            style: const TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: gunadarmaPurple,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${rule.support.toStringAsFixed(1)}%',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: "Plus Jakarta",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: darkText,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${rule.confidence.toStringAsFixed(1)}%',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: "Plus Jakarta",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: darkText,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${rule.lift.toStringAsFixed(2)}x',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: "Plus Jakarta",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: isPositiveLift ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: isPositiveLift ? const Color(0xFFECFDF5) : const Color(0xFFF3F4F6),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: isPositiveLift ? const Color(0xFFA7F3D0) : borderLine,
+                              width: 0.6,
+                            ),
+                          ),
+                          child: Text(
+                            isPositiveLift ? 'Sangat Kuat' : 'Kurang Kuat',
+                            style: TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: isPositiveLift ? const Color(0xFF059669) : textMuted,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          if (rules.length > 10)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                'Menampilkan 10 dari ${rules.length} aturan asosiasi aktif',
+                style: const TextStyle(fontFamily: "Plus Jakarta", fontSize: 11, color: textMuted, fontWeight: FontWeight.w500),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

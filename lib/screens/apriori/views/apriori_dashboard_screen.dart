@@ -1461,6 +1461,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 ],
               ),
             )
+          else if (MediaQuery.of(context).size.width >= 960)
+            _buildDesktopTransactionsDataTable(activeList)
           else
             ListView.separated(
               shrinkWrap: true,
@@ -1531,7 +1533,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 );
               },
             ),
-          if (activeList.length > 25) ...[
+          if (activeList.length > 25 && MediaQuery.of(context).size.width < 960) ...[
             const SizedBox(height: 8),
             Center(
               child: Text(
@@ -1540,6 +1542,176 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopTransactionsDataTable(List<List<String>> activeList) {
+    final displayList = activeList.length > 25 ? activeList.take(25).toList() : activeList;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: cardBorder, width: 0.8),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              border: Border(bottom: BorderSide(color: cardBorder, width: 0.8)),
+            ),
+            child: const Row(
+              children: [
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    'STRUK ID',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    'ITEM BELANJA (TRANSAKSI)',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 90,
+                  child: Text(
+                    'TOTAL ITEM',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 50,
+                  child: Text(
+                    'HAPUS',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: displayList.length,
+            separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, color: Color(0xFFF1F5F9)),
+            itemBuilder: (ctx, idx) {
+              final trans = displayList[idx];
+              final displayIdx = _viewingTestSet ? _transactions.length + idx + 1 : idx + 1;
+              final isEven = idx % 2 == 0;
+              final badgeColor = _viewingTestSet ? const Color(0xFF007AFF) : gunadarmaPurple;
+              final badgeBg = _viewingTestSet ? const Color(0xFFE0F2FE) : const Color(0xFFEDE9FE);
+
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                color: isEven ? Colors.white : const Color(0xFFFAFAFC),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 70,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                        decoration: BoxDecoration(
+                          color: badgeBg,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '#$displayIdx',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: badgeColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: trans.map((item) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: cardBorder),
+                            ),
+                            child: Text(
+                              item,
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: darkText),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 90,
+                      child: Text(
+                        '${trans.length} Item',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: mutedText,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 50,
+                      child: Center(
+                        child: CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(28, 28),
+                          onPressed: () => _deleteTransaction(idx),
+                          child: const Icon(CupertinoIcons.trash, size: 15, color: Color(0xFFFF3B30)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          if (activeList.length > 25)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                'Menampilkan 25 dari ${activeList.length} transaksi',
+                style: const TextStyle(fontSize: 11, color: mutedText, fontWeight: FontWeight.w500),
+              ),
+            ),
         ],
       ),
     );
@@ -2201,6 +2373,8 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 ),
               ),
             )
+          else if (MediaQuery.of(context).size.width >= 960)
+            _buildDesktopRulesDataTable(rules)
           else
             ListView.separated(
               shrinkWrap: true,
@@ -2282,6 +2456,279 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                   ),
                 );
               },
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopRulesDataTable(List<_LiveRule> rules) {
+    final displayRules = rules.length > 25 ? rules.take(25).toList() : rules;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: cardBorder, width: 0.8),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              border: Border(bottom: BorderSide(color: cardBorder, width: 0.8)),
+            ),
+            child: const Row(
+              children: [
+                SizedBox(
+                  width: 36,
+                  child: Text(
+                    'NO',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'JIKA DIBELI (ANTECEDENT)',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'MAKA DIBELI (CONSEQUENT)',
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'SUPPORT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'CONFIDENCE',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'LIFT RATIO',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'KORELASI',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: mutedText,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: displayRules.length,
+            separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.5, color: Color(0xFFF1F5F9)),
+            itemBuilder: (ctx, idx) {
+              final r = displayRules[idx];
+              final isEven = idx % 2 == 0;
+              final isStrong = r.lift >= 1.0;
+
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                color: isEven ? Colors.white : const Color(0xFFFAFAFC),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 36,
+                      child: Text(
+                        '#${idx + 1}',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: mutedText,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3F4F6),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: cardBorder, width: 0.6),
+                          ),
+                          child: Text(
+                            r.antecedent,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: darkText,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3E8FF),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: const Color(0xFFE9D5FF), width: 0.6),
+                          ),
+                          child: Text(
+                            r.consequent,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: gunadarmaPurple,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${r.support.toStringAsFixed(1)}%',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: darkText,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${r.confidence.toStringAsFixed(1)}%',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: darkText,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${r.lift.toStringAsFixed(2)}x',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: isStrong ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: isStrong ? const Color(0xFFECFDF5) : const Color(0xFFF3F4F6),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: isStrong ? const Color(0xFFA7F3D0) : cardBorder,
+                              width: 0.6,
+                            ),
+                          ),
+                          child: Text(
+                            isStrong ? 'Sangat Kuat' : 'Kurang Kuat',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: isStrong ? const Color(0xFF059669) : mutedText,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          if (rules.length > 25)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                'Menampilkan 25 dari ${rules.length} aturan asosiasi yang memenuhi ambang batas',
+                style: const TextStyle(fontSize: 11, color: mutedText, fontWeight: FontWeight.w500),
+              ),
             ),
         ],
       ),
