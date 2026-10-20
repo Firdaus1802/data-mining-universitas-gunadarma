@@ -1543,8 +1543,6 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 14),
                       const Divider(height: 1, color: borderLine),
                       const SizedBox(height: 14),
-                      _buildWorkflowGuideCard(context),
-                      const SizedBox(height: 14),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(14),

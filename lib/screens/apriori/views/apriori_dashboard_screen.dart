@@ -2280,10 +2280,10 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 margin: const EdgeInsets.only(bottom: 6),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isLolos ? const Color(0xFFFAF5FF) : const Color(0xFFF8FAFC),
+                  color: const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: isLolos ? const Color(0xFFE9D5FF) : cardBorder,
+                    color: cardBorder,
                     width: 0.8,
                   ),
                 ),
