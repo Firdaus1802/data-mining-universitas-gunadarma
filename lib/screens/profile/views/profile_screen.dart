@@ -690,7 +690,7 @@ class ProfileScreen extends StatelessWidget {
                       const Padding(
                         padding: EdgeInsets.only(left: 12, bottom: 8),
                         child: Text(
-                          "DAFTAR PENELITI",
+                          "DAFTAR ANGGOTA",
                           style: TextStyle(
                             fontFamily: "Plus Jakarta",
                             fontSize: 11.5,
@@ -754,10 +754,10 @@ class ProfileScreen extends StatelessWidget {
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
-                                              "${member.npm} • ${member.role}",
+                                              member.npm,
                                               style: const TextStyle(
                                                 fontFamily: "Plus Jakarta",
-                                                fontSize: 12,
+                                                fontSize: 12.5,
                                                 fontWeight: FontWeight.w400,
                                                 color: textMuted,
                                               ),
@@ -765,16 +765,6 @@ class ProfileScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                      if (isLead)
-                                        const Text(
-                                          "Ketua",
-                                          style: TextStyle(
-                                            fontFamily: "Plus Jakarta",
-                                            fontSize: 12.5,
-                                            fontWeight: FontWeight.w600,
-                                            color: gunadarmaPurple,
-                                          ),
-                                        ),
                                     ],
                                   ),
                                 ),

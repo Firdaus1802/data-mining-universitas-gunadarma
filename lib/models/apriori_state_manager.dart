@@ -30,7 +30,7 @@ class TeamMember {
   const TeamMember({
     required this.name,
     required this.npm,
-    required this.role,
+    this.role = "",
     this.imagePath,
     this.developerUrl,
     this.developerType = "GitHub",
@@ -75,32 +75,26 @@ class AprioriStateManager extends ChangeNotifier {
     const TeamMember(
       name: "Firdaus Dhuha Prabowo",
       npm: "10124497",
-      role: "Ketua Kelompok & Lead Researcher",
     ),
     const TeamMember(
       name: "Bagas Sena Dwi Jatmika",
       npm: "10124237",
-      role: "Algoritma Apriori & Data Engine",
     ),
     const TeamMember(
       name: "Fabio Arvin Aeneas",
       npm: "10124402",
-      role: "Frontend UI/UX & Mobile Developer",
     ),
     const TeamMember(
       name: "Farid Hilmy Cordova",
       npm: "10124442",
-      role: "Data Mining Analyst & Preprocessing",
     ),
     const TeamMember(
       name: "Hesti Setiana",
       npm: "10124563",
-      role: "Business Intelligence & Evaluation",
     ),
     const TeamMember(
       name: "Nur Bian'Aziza",
       npm: "11124490",
-      role: "Dokumentasi Riset & Presentasi",
     ),
   ];
 
