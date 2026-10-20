@@ -38,6 +38,7 @@ class HomeScreen extends StatelessWidget {
         final resolvedName = state.userName.isNotEmpty
             ? state.userName
             : (userName != null && userName!.isNotEmpty ? userName! : '');
+        final bool isDesktop = MediaQuery.of(context).size.width >= 960;
 
         return Scaffold(
           backgroundColor: pageBg,
@@ -55,20 +56,61 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       _buildGrandHeroBanner(context, resolvedName),
                       const SizedBox(height: 18),
-                      _buildSectionHeader('RINGKASAN DATASET'),
-                      _buildRealtimeMetrics(
-                        totalTransactions: totalTransactions,
-                        totalRules: totalRules,
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSectionHeader('PARAMETER ALGORITMA'),
-                      _buildParameterConfigPanel(
-                        minSupport: minSupport,
-                        minConf: minConf,
-                        isDataLoaded: isDataLoaded,
-                      ),
-                      const SizedBox(height: 18),
-                      _buildRealtimeRulesStreamSection(context, state),
+                      if (isDesktop)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildSectionHeader('RINGKASAN DATASET'),
+                                  _buildRealtimeMetrics(
+                                    totalTransactions: totalTransactions,
+                                    totalRules: totalRules,
+                                  ),
+                                  const SizedBox(height: 18),
+                                  _buildSectionHeader('PARAMETER ALGORITMA'),
+                                  _buildParameterConfigPanel(
+                                    minSupport: minSupport,
+                                    minConf: minConf,
+                                    isDataLoaded: isDataLoaded,
+                                  ),
+                                  const SizedBox(height: 18),
+                                  _buildWorkflowGuideCard(context),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              flex: 7,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildSectionHeader('KAIDAH ASOSIASI AKTIF'),
+                                  _buildRealtimeRulesStreamSection(context, state),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      else ...[
+                        _buildSectionHeader('RINGKASAN DATASET'),
+                        _buildRealtimeMetrics(
+                          totalTransactions: totalTransactions,
+                          totalRules: totalRules,
+                        ),
+                        const SizedBox(height: 18),
+                        _buildSectionHeader('PARAMETER ALGORITMA'),
+                        _buildParameterConfigPanel(
+                          minSupport: minSupport,
+                          minConf: minConf,
+                          isDataLoaded: isDataLoaded,
+                        ),
+                        const SizedBox(height: 18),
+                        _buildRealtimeRulesStreamSection(context, state),
+                      ],
                       const SizedBox(height: 28),
                       _buildAcademicCreditsFooter(),
                     ],

@@ -18,6 +18,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth >= 960;
+
     return Scaffold(
       backgroundColor: pageBg,
       body: SafeArea(
@@ -35,212 +38,291 @@ class ProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 820),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                  _buildAppleIdHeaderCard(context, state, displayName, email),
-                  const SizedBox(height: 22),
-                  _buildSectionHeader("TIM PENELITI & AKADEMIK"),
-                  _buildGroupCard([
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.person_2_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Anggota Tim",
-                      trailing: "${state.teamMembers.length} Profil",
-                      onTap: () => _showTeamMembersModal(context, state),
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.person_crop_circle_badge_checkmark,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Dosen Pengampu",
-                      trailing: "Dr. Dina Anggraini, S.Kom., M.M.S.I.",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.book_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Mata Kuliah",
-                      trailing: "Konsep Data Mining",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.number,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Kelas",
-                      trailing: "3KA31",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.square_grid_2x2_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Jurusan / Prodi",
-                      trailing: "S1 Sistem Informasi",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.building_2_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Institusi",
-                      trailing: "Universitas Gunadarma",
-                      showChevron: false,
-                    ),
-                  ]),
-                  const SizedBox(height: 22),
-                  _buildSectionHeader("DATABASE & DATASET TRANSAKSI"),
-                  _buildGroupCard([
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.archivebox_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Status Penyimpanan",
-                      trailing: state.transactions.isNotEmpty
-                          ? "${state.totalTransactions} Transaksi"
-                          : "Kosong (0 Struk)",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.book_circle_fill,
-                      iconColor: gunadarmaPurple,
-                      title: "Rujukan Jurnal & Dataset",
-                      trailing: "JUKTISI • CSV",
-                      onTap: () => _showAcademicReferenceModal(context),
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.doc_text_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Format Berkas",
-                      trailing: "CSV, TSV, TXT, Excel",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.arrow_clockwise_circle_fill,
-                      iconColor: gunadarmaPurple,
-                      title: "Muat Dataset Contoh",
-                      trailing: "Pulihkan",
-                      onTap: () => _showResetDatasetConfirm(context, state),
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.trash_fill,
-                      iconColor: destructiveRed,
-                      title: "Kosongkan Dataset",
-                      trailing: "Reset",
-                      titleColor: destructiveRed,
-                      onTap: () => _showClearDatasetConfirm(context, state),
-                    ),
-                  ]),
-                  const SizedBox(height: 22),
-                  _buildSectionHeader("KONFIGURASI ALGORITMA APRIORI"),
-                  _buildGroupCard([
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.slider_horizontal_3,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Minimum Support",
-                      trailing: "${state.minSupport.toStringAsFixed(1)}%",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.percent,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Minimum Confidence",
-                      trailing: "${state.minConfidence.toStringAsFixed(1)}%",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.chart_bar_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Metrik Evaluasi",
-                      trailing: "Support, Conf, Lift",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.scissors,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Pruning Engine",
-                      trailing: "Anti-monotonicity",
-                      showChevron: false,
-                    ),
-                  ]),
-                  const SizedBox(height: 22),
-                  _buildSectionHeader("SISTEM & SESI"),
-                  _buildGroupCard([
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.info_circle_fill,
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Versi Aplikasi",
-                      trailing: "1.0.0 (Release)",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: _getDetectedDesignSystemIcon(),
-                      iconColor: const Color(0xFF1C1C1E),
-                      title: "Device Platform",
-                      trailing: _getDetectedPlatformName(),
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.sparkles,
-                      iconColor: gunadarmaPurple,
-                      title: "Mode Akses",
-                      trailing: "Demo Akademik",
-                      showChevron: false,
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
-                      icon: CupertinoIcons.arrow_counterclockwise,
-                      iconColor: destructiveRed,
-                      title: "Mulai Ulang Sesi Demo",
-                      trailing: "Reset",
-                      titleColor: destructiveRed,
-                      showChevron: false,
-                      onTap: () => _showResetDemoSessionConfirm(context, state),
-                    ),
-                  ]),
-                  const SizedBox(height: 28),
-                  Center(
-                    child: Column(
-                      children: [
-                        const Text(
-                          "UNIVERSITAS GUNADARMA",
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: textMuted,
-                            letterSpacing: 0.8,
-                          ),
+                  constraints: BoxConstraints(maxWidth: isDesktop ? 1140 : 820),
+                  child: isDesktop
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildAppleIdHeaderCard(context, state, displayName, email),
+                                      const SizedBox(height: 22),
+                                      _buildTeamSection(context, state),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 24),
+                                Expanded(
+                                  flex: 7,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildDatabaseSection(context, state),
+                                      const SizedBox(height: 22),
+                                      _buildAprioriConfigSection(state),
+                                      const SizedBox(height: 22),
+                                      _buildSystemSection(context, state),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 32),
+                            _buildFooter(),
+                            const SizedBox(height: 10),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildAppleIdHeaderCard(context, state, displayName, email),
+                            const SizedBox(height: 22),
+                            _buildTeamSection(context, state),
+                            const SizedBox(height: 22),
+                            _buildDatabaseSection(context, state),
+                            const SizedBox(height: 22),
+                            _buildAprioriConfigSection(state),
+                            const SizedBox(height: 22),
+                            _buildSystemSection(context, state),
+                            const SizedBox(height: 28),
+                            _buildFooter(),
+                            const SizedBox(height: 10),
+                          ],
                         ),
-                        const SizedBox(height: 3),
-                        Text(
-                          "S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4 © 2026",
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: textMuted.withValues(alpha: 0.8),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                ],
+                ),
               ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTeamSection(BuildContext context, AprioriStateManager state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader("TIM PENELITI & AKADEMIK"),
+        _buildGroupCard([
+          _buildSettingsTile(
+            icon: CupertinoIcons.person_2_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Anggota Tim",
+            trailing: "${state.teamMembers.length} Profil",
+            onTap: () => _showTeamMembersModal(context, state),
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.person_crop_circle_badge_checkmark,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Dosen Pengampu",
+            trailing: "Dr. Dina Anggraini, S.Kom., M.M.S.I.",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.book_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Mata Kuliah",
+            trailing: "Konsep Data Mining",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.number,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Kelas",
+            trailing: "3KA31",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.square_grid_2x2_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Jurusan / Prodi",
+            trailing: "S1 Sistem Informasi",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.building_2_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Institusi",
+            trailing: "Universitas Gunadarma",
+            showChevron: false,
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildDatabaseSection(BuildContext context, AprioriStateManager state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader("DATABASE & DATASET TRANSAKSI"),
+        _buildGroupCard([
+          _buildSettingsTile(
+            icon: CupertinoIcons.archivebox_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Status Penyimpanan",
+            trailing: state.transactions.isNotEmpty
+                ? "${state.totalTransactions} Transaksi"
+                : "Kosong (0 Struk)",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.book_circle_fill,
+            iconColor: gunadarmaPurple,
+            title: "Rujukan Jurnal & Dataset",
+            trailing: "JUKTISI • CSV",
+            onTap: () => _showAcademicReferenceModal(context),
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.doc_text_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Format Berkas",
+            trailing: "CSV, TSV, TXT, Excel",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.arrow_clockwise_circle_fill,
+            iconColor: gunadarmaPurple,
+            title: "Muat Dataset Contoh",
+            trailing: "Pulihkan",
+            onTap: () => _showResetDatasetConfirm(context, state),
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.trash_fill,
+            iconColor: destructiveRed,
+            title: "Kosongkan Dataset",
+            trailing: "Reset",
+            titleColor: destructiveRed,
+            onTap: () => _showClearDatasetConfirm(context, state),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildAprioriConfigSection(AprioriStateManager state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader("KONFIGURASI ALGORITMA APRIORI"),
+        _buildGroupCard([
+          _buildSettingsTile(
+            icon: CupertinoIcons.slider_horizontal_3,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Minimum Support",
+            trailing: "${state.minSupport.toStringAsFixed(1)}%",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.percent,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Minimum Confidence",
+            trailing: "${state.minConfidence.toStringAsFixed(1)}%",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.chart_bar_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Metrik Evaluasi",
+            trailing: "Support, Conf, Lift",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.scissors,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Pruning Engine",
+            trailing: "Anti-monotonicity",
+            showChevron: false,
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildSystemSection(BuildContext context, AprioriStateManager state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader("SISTEM & SESI"),
+        _buildGroupCard([
+          _buildSettingsTile(
+            icon: CupertinoIcons.info_circle_fill,
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Versi Aplikasi",
+            trailing: "1.0.0 (Release)",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: _getDetectedDesignSystemIcon(),
+            iconColor: const Color(0xFF1C1C1E),
+            title: "Device Platform",
+            trailing: _getDetectedPlatformName(),
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.sparkles,
+            iconColor: gunadarmaPurple,
+            title: "Mode Akses",
+            trailing: "Demo Akademik",
+            showChevron: false,
+          ),
+          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+          _buildSettingsTile(
+            icon: CupertinoIcons.arrow_counterclockwise,
+            iconColor: destructiveRed,
+            title: "Mulai Ulang Sesi Demo",
+            trailing: "Reset",
+            titleColor: destructiveRed,
+            showChevron: false,
+            onTap: () => _showResetDemoSessionConfirm(context, state),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildFooter() {
+    return Center(
+      child: Column(
+        children: [
+          const Text(
+            "UNIVERSITAS GUNADARMA",
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: textMuted,
+              letterSpacing: 0.8,
             ),
           ),
-        );
-      },
-        ),
+          const SizedBox(height: 3),
+          Text(
+            "S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4 © 2026",
+            style: TextStyle(
+              fontSize: 10,
+              color: textMuted.withValues(alpha: 0.8),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -78,99 +78,104 @@ class _EntryPointState extends State<EntryPoint> {
           child: SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: isDesktop ? 24 : 16, vertical: 6),
-              child: Row(
-                children: [
-                  Container(
-                    height: 38,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: borderSubtle,
-                        width: 1.2,
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: Image.asset(
-                      "assets/logo/gunadarma.png",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1140),
+                  child: Row(
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            "AprioriMart",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: darkText,
-                              letterSpacing: -0.2,
-                            ),
+                      Container(
+                        height: 38,
+                        width: 38,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: borderSubtle,
+                            width: 1.2,
                           ),
-                          if (isDesktop) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3E8FF),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Text(
-                                "Web Dashboard",
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: Image.asset(
+                          "assets/logo/gunadarma.png",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                "AprioriMart",
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w700,
-                                  color: primaryPurple,
+                                  color: darkText,
+                                  letterSpacing: -0.2,
                                 ),
                               ),
+                              if (isDesktop) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF3E8FF),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    "Web Dashboard",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      color: primaryPurple,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          const Text(
+                            "Data Mining Kelompok 4 - Universitas Gunadarma",
+                            style: TextStyle(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w500,
+                              color: slateMuted,
                             ),
-                          ],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
-                      const Text(
-                        "Data Mining Kelompok 4 - Universitas Gunadarma",
-                        style: TextStyle(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w500,
-                          color: slateMuted,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      if (isDesktop) ...[
+                        const Spacer(),
+                        _buildDesktopNavPill(0, "Beranda", CupertinoIcons.house_fill, CupertinoIcons.house),
+                        const SizedBox(width: 6),
+                        _buildDesktopNavPill(1, "Simulasi Kasir", CupertinoIcons.compass_fill, CupertinoIcons.compass),
+                        const SizedBox(width: 6),
+                        _buildDesktopNavPill(2, "Dataset & Apriori", CupertinoIcons.square_stack_3d_up_fill, CupertinoIcons.square_stack_3d_up),
+                        const SizedBox(width: 6),
+                        _buildDesktopNavPill(3, "Pengaturan & Tim", CupertinoIcons.gear_alt_fill, CupertinoIcons.gear_alt),
+                        const SizedBox(width: 12),
+                      ] else ...[
+                        const Spacer(),
+                      ],
+                      _buildHeaderButton(
+                        icon: CupertinoIcons.search,
+                        onPressed: () async {
+                          final result = await Navigator.pushNamed(context, searchScreenRoute);
+                          if (result == 'open_dataset' && mounted) {
+                            setState(() {
+                              _currentIndex = 2;
+                            });
+                          }
+                        },
                       ),
                     ],
                   ),
-                  if (isDesktop) ...[
-                    const Spacer(),
-                    _buildDesktopNavPill(0, "Beranda", CupertinoIcons.house_fill, CupertinoIcons.house),
-                    const SizedBox(width: 6),
-                    _buildDesktopNavPill(1, "Simulasi Kasir", CupertinoIcons.compass_fill, CupertinoIcons.compass),
-                    const SizedBox(width: 6),
-                    _buildDesktopNavPill(2, "Dataset & Apriori", CupertinoIcons.square_stack_3d_up_fill, CupertinoIcons.square_stack_3d_up),
-                    const SizedBox(width: 6),
-                    _buildDesktopNavPill(3, "Pengaturan & Tim", CupertinoIcons.gear_alt_fill, CupertinoIcons.gear_alt),
-                    const SizedBox(width: 12),
-                  ] else ...[
-                    const Spacer(),
-                  ],
-                  _buildHeaderButton(
-                    icon: CupertinoIcons.search,
-                    onPressed: () async {
-                      final result = await Navigator.pushNamed(context, searchScreenRoute);
-                      if (result == 'open_dataset' && mounted) {
-                        setState(() {
-                          _currentIndex = 2;
-                        });
-                      }
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           ),

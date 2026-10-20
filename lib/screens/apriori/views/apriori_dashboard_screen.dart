@@ -745,6 +745,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final aprioriResult = _calculateApriori();
+    final bool isDesktop = MediaQuery.of(context).size.width >= 960;
 
     return Scaffold(
       backgroundColor: iosBg,
@@ -889,33 +890,93 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 ),
               ),
               const SizedBox(height: 14),
-              _buildScenarioSplitCard(),
-              const SizedBox(height: 14),
-              if (_selectedSegment == 0) ...[
-                _buildImportActionCard(),
-                const SizedBox(height: 14),
-                _buildManualBasketCard(),
-                const SizedBox(height: 14),
-                _buildDatasetStatsRow(aprioriResult),
-                const SizedBox(height: 14),
-                _buildTransactionListSection(),
+              if (isDesktop) ...[
+                if (_selectedSegment == 0)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildScenarioSplitCard(),
+                            const SizedBox(height: 14),
+                            _buildImportActionCard(),
+                            const SizedBox(height: 14),
+                            _buildManualBasketCard(),
+                            const SizedBox(height: 14),
+                            _buildDatasetStatsRow(aprioriResult),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 7,
+                        child: _buildTransactionListSection(),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildScenarioSplitCard(),
+                            const SizedBox(height: 14),
+                            _buildParameterCard(),
+                            const SizedBox(height: 14),
+                            _buildItemFrequencyDistribution(aprioriResult),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildExecutiveMetrics(aprioriResult),
+                            const SizedBox(height: 14),
+                            _buildAssociationRulesSection(aprioriResult),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
               ] else ...[
-                _buildParameterCard(),
+                _buildScenarioSplitCard(),
                 const SizedBox(height: 14),
-                _buildExecutiveMetrics(aprioriResult),
-                const SizedBox(height: 14),
-                _buildItemFrequencyDistribution(aprioriResult),
-                const SizedBox(height: 14),
-                _buildAssociationRulesSection(aprioriResult),
+                if (_selectedSegment == 0) ...[
+                  _buildImportActionCard(),
+                  const SizedBox(height: 14),
+                  _buildManualBasketCard(),
+                  const SizedBox(height: 14),
+                  _buildDatasetStatsRow(aprioriResult),
+                  const SizedBox(height: 14),
+                  _buildTransactionListSection(),
+                ] else ...[
+                  _buildParameterCard(),
+                  const SizedBox(height: 14),
+                  _buildExecutiveMetrics(aprioriResult),
+                  const SizedBox(height: 14),
+                  _buildItemFrequencyDistribution(aprioriResult),
+                  const SizedBox(height: 14),
+                  _buildAssociationRulesSection(aprioriResult),
+                ],
               ],
             ],
           ),
         ),
       ),
     ),
-    ),
-    ),
-  );
+  ),
+),
+);
   }
 
   Widget _buildScenarioSplitCard() {
