@@ -2276,23 +2276,58 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
           else
             ...itemsToDisplay.map((it) {
               final isLolos = it.percent >= _minSupport;
-              final double barWidthRatio = (it.percent / 100.0).clamp(0.05, 1.0);
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+              return Container(
+                margin: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isLolos ? const Color(0xFFFAF5FF) : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isLolos ? const Color(0xFFE9D5FF) : cardBorder,
+                    width: 0.8,
+                  ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          it.name,
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: isLolos ? FontWeight.w700 : FontWeight.w500,
-                            color: isLolos ? darkText : mutedText,
+                        Expanded(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  it.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 11.5,
+                                    fontWeight: isLolos ? FontWeight.w700 : FontWeight.w600,
+                                    color: isLolos ? darkText : mutedText,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                decoration: BoxDecoration(
+                                  color: isLolos ? const Color(0xFFF3E8FF) : const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  isLolos ? 'Lolos L1' : 'Gugur',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w700,
+                                    color: isLolos ? gunadarmaPurple : mutedText,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        const SizedBox(width: 8),
                         Text(
                           '${it.count}x (${it.percent.toStringAsFixed(1)}%)',
                           style: TextStyle(
@@ -2303,26 +2338,44 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(3),
                       child: Container(
-                        height: 6.5,
+                        height: 6,
                         width: double.infinity,
-                        color: const Color(0xFFF1F5F9),
-                        child: AnimatedFractionallySizedBox(
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutCubic,
-                          alignment: Alignment.centerLeft,
-                          widthFactor: barWidthRatio,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOutCubic,
-                            decoration: BoxDecoration(
-                              color: isLolos ? gunadarmaPurple : const Color(0xFFDDD6FE),
-                              borderRadius: BorderRadius.circular(3),
+                        color: const Color(0xFFE2E8F0),
+                        child: Stack(
+                          children: [
+                            AnimatedFractionallySizedBox(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOutCubic,
+                              alignment: Alignment.centerLeft,
+                              widthFactor: (it.percent / 100.0).clamp(0.01, 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isLolos ? const Color(0xFFDDD6FE) : const Color(0xFFCBD5E1),
+                                ),
+                              ),
                             ),
-                          ),
+                            AnimatedFractionallySizedBox(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOutCubic,
+                              alignment: Alignment.centerLeft,
+                              widthFactor: (isLolos ? (_minSupport / 100.0) : (it.percent / 100.0)).clamp(0.01, 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: isLolos
+                                      ? const LinearGradient(
+                                          colors: [gunadarmaPurple, accentPurple],
+                                        )
+                                      : const LinearGradient(
+                                          colors: [Color(0xFF94A3B8), Color(0xFF64748B)],
+                                        ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -56,6 +56,7 @@ class ProfileScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  _buildSectionHeader("IDENTITAS RISET & KELOMPOK"),
                                   _buildAppleIdHeaderCard(context, state, displayName, email),
                                   const SizedBox(height: 20),
                                   _buildTeamMembersCard(context, state),
@@ -472,7 +473,7 @@ class ProfileScreen extends StatelessWidget {
         _buildSectionHeader("INFORMASI AKADEMIK & KURIKULUM"),
         _buildGroupCard([
           _buildSettingsTile(
-            icon: CupertinoIcons.person_crop_circle_badge_checkmark,
+            icon: CupertinoIcons.person_crop_circle_fill,
             title: "Dosen Pengampu",
             trailing: "Dr. Dina Anggraini, S.Kom., M.M.S.I.",
             showChevron: false,
@@ -526,8 +527,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
-            icon: CupertinoIcons.book_circle_fill,
-            iconColor: gunadarmaPurple,
+            icon: CupertinoIcons.book_fill,
             title: "Rujukan Jurnal & Dataset",
             trailing: "JUKTISI • CSV",
             onTap: () => _showAcademicReferenceModal(context),
@@ -541,8 +541,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
-            icon: CupertinoIcons.arrow_clockwise_circle_fill,
-            iconColor: gunadarmaPurple,
+            icon: CupertinoIcons.arrow_clockwise,
             title: "Muat Dataset Contoh",
             trailing: "Pulihkan",
             onTap: () => _showResetDatasetConfirm(context, state),
@@ -575,14 +574,14 @@ class ProfileScreen extends StatelessWidget {
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
-            icon: CupertinoIcons.percent,
+            icon: CupertinoIcons.gauge,
             title: "Minimum Confidence",
             trailing: "${state.minConfidence.toStringAsFixed(1)}%",
             showChevron: false,
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
-            icon: CupertinoIcons.chart_bar_fill,
+            icon: CupertinoIcons.chart_bar_alt_fill,
             title: "Metrik Evaluasi",
             trailing: "Support, Conf, Lift",
             showChevron: false,
@@ -714,7 +713,7 @@ class ProfileScreen extends StatelessWidget {
     bool showChevron = true,
   }) {
     final isDestructive = iconColor == destructiveRed;
-    final effectiveIconColor = iconColor ?? const Color(0xFF475569);
+    final effectiveIconColor = iconColor ?? (isDestructive ? destructiveRed : gunadarmaPurple);
 
     final tileContent = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -725,10 +724,10 @@ class ProfileScreen extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: isDestructive ? const Color(0xFFFFEBEB) : const Color(0xFFF1F5F9),
+              color: isDestructive ? const Color(0xFFFFEBEB) : const Color(0xFFF3E8FF),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: isDestructive ? const Color(0xFFFFCDD2) : const Color(0xFFE2E8F0),
+                color: isDestructive ? const Color(0xFFFFCDD2) : const Color(0xFFE9D5FF),
                 width: 0.8,
               ),
             ),

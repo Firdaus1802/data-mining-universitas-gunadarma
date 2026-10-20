@@ -201,10 +201,12 @@ class _EntryPointState extends State<EntryPoint> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        height: 38,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isSelected ? primaryPurple.withValues(alpha: 0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(9),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? primaryPurple.withValues(alpha: 0.25) : Colors.transparent,
             width: 1,
@@ -212,6 +214,7 @@ class _EntryPointState extends State<EntryPoint> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               isSelected ? activeIcon : inactiveIcon,
