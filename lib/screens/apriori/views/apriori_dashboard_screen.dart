@@ -2461,294 +2461,394 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.75,
-          decoration: const BoxDecoration(
-            color: iosBg,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8, bottom: 8),
-                  width: 36,
-                  height: 4.5,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1D1D6),
-                    borderRadius: BorderRadius.circular(2.5),
-                  ),
-                ),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.78,
+              decoration: const BoxDecoration(
+                color: iosBg,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 8, bottom: 8),
+                      width: 36,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD1D1D6),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Referensi Riset & Dataset',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: darkText,
-                            letterSpacing: -0.3,
-                          ),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Referensi Riset & Dataset',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: darkText,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              'Dasar Teori Ilmiah & Sumber Data Transaksi',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: mutedText,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Dasar Teori Ilmiah & Sumber Data Transaksi',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: mutedText,
+                        CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFE5E5EA),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              CupertinoIcons.xmark,
+                              size: 13,
+                              color: Color(0xFF3C3C43),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pop(ctx),
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFE5E5EA),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          CupertinoIcons.xmark,
-                          size: 13,
-                          color: Color(0xFF3C3C43),
-                        ),
+                  ),
+                  const Divider(height: 0.5, thickness: 0.5, color: cardBorder),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: cardBorder),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF3E8FF),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text(
+                                        'JURNAL NASIONAL (UTAMA)',
+                                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: gunadarmaPurple, letterSpacing: 0.4),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'JUKTISI 2026',
+                                      style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
+                                  style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nPenulis: Durrotun Nafisah et al. (UMK) • 310 KB',
+                                  style: TextStyle(fontSize: 11, color: mutedText, height: 1.3),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        color: gunadarmaPurple,
+                                        borderRadius: BorderRadius.circular(8),
+                                        onPressed: () => AcademicReferenceHelper.directOpenNationalPdf(context),
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(CupertinoIcons.doc_text_fill, size: 13, color: Colors.white),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Buka PDF',
+                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      flex: 5,
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        color: const Color(0xFFF3E8FF),
+                                        borderRadius: BorderRadius.circular(8),
+                                        onPressed: () => AcademicReferenceHelper.safeLaunchUrl(context, AcademicReferenceHelper.nationalJournalUrl),
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(CupertinoIcons.globe, size: 13, color: gunadarmaPurple),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Laman OJS',
+                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                                      color: const Color(0xFFF2F2F7),
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () => AcademicReferenceHelper.downloadNationalJournalPdf(context),
+                                      child: const Icon(CupertinoIcons.arrow_down_to_line, size: 14, color: darkText),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: cardBorder),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFDCFCE7),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text(
+                                        'JURNAL PEMBANDING (INTERNASIONAL)',
+                                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF166534), letterSpacing: 0.4),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'IJIIS 2025',
+                                      style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
+                                  style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'International Journal of Informatics and Information Systems (IJIIS)\nPenulis: Agung Budi Prasetio et al. • 381 KB',
+                                  style: TextStyle(fontSize: 11, color: mutedText, height: 1.3),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        color: const Color(0xFF166534),
+                                        borderRadius: BorderRadius.circular(8),
+                                        onPressed: () => AcademicReferenceHelper.directOpenInternationalPdf(context),
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(CupertinoIcons.doc_text_fill, size: 13, color: Colors.white),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Buka PDF',
+                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      flex: 5,
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        color: const Color(0xFFDCFCE7),
+                                        borderRadius: BorderRadius.circular(8),
+                                        onPressed: () => AcademicReferenceHelper.safeLaunchUrl(context, AcademicReferenceHelper.internationalJournalUrl),
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(CupertinoIcons.globe, size: 13, color: Color(0xFF166534)),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Laman OJS',
+                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF166534)),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                                      color: const Color(0xFFF2F2F7),
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () => AcademicReferenceHelper.downloadInternationalJournalPdf(context),
+                                      child: const Icon(CupertinoIcons.arrow_down_to_line, size: 14, color: darkText),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: cardBorder),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE0F2FE),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text(
+                                        'DATASET KAGGLE • 1.000 TRANSAKSI',
+                                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF007AFF), letterSpacing: 0.4),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'Kaggle CSV',
+                                      style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Groceries Market Basket Dataset',
+                                  style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: darkText),
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Dataset riil transaksi pasar swalayan yang merekam kombinasi belanja konsumen untuk pengujian association rules mining.',
+                                  style: TextStyle(fontSize: 11, color: mutedText, height: 1.3),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        color: const Color(0xFF007AFF),
+                                        borderRadius: BorderRadius.circular(8),
+                                        onPressed: () {
+                                          AcademicReferenceHelper.downloadDatasetCsv(context);
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: Colors.white),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Unduh CSV',
+                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        color: const Color(0xFFE0F2FE),
+                                        borderRadius: BorderRadius.circular(8),
+                                        onPressed: () {
+                                          AcademicReferenceHelper.safeLaunchUrl(
+                                            context,
+                                            AcademicReferenceHelper.kaggleDatasetUrl,
+                                          );
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(CupertinoIcons.link, size: 14, color: Color(0xFF007AFF)),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Link Kaggle',
+                                              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                                      color: const Color(0xFFF3F4F6),
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () {
+                                        AcademicReferenceHelper.showDatasetModal(context);
+                                      },
+                                      child: const Icon(CupertinoIcons.eye_fill, size: 15, color: Color(0xFF4B5563)),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const Divider(height: 0.5, thickness: 0.5, color: cardBorder),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: cardBorder),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF3E8FF),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: const Text(
-                                    'Jurnal Nasional & Internasional',
-                                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
-                                  ),
-                                ),
-                                const Text(
-                                  'JUKTISI • IJIIS',
-                                  style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
-                            ),
-                            const SizedBox(height: 6),
-                            const Text(
-                              'Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI, 2026)\nPenulis: D. Nafisah et al. (UMK) • Pembanding: A. B. Prasetio et al. (IJIIS, 2025)',
-                              style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
-                            ),
-                            const SizedBox(height: 14),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    color: gunadarmaPurple,
-                                    borderRadius: BorderRadius.circular(10),
-                                    onPressed: () {
-                                      AcademicReferenceHelper.showPdfDirectPicker(context);
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(CupertinoIcons.doc_text_fill, size: 15, color: Colors.white),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'Buka PDF',
-                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    color: const Color(0xFFF3E8FF),
-                                    borderRadius: BorderRadius.circular(10),
-                                    onPressed: () {
-                                      AcademicReferenceHelper.downloadJournalPdf(context);
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: gunadarmaPurple),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'Unduh PDF',
-                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: gunadarmaPurple),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                CupertinoButton(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                                  color: const Color(0xFFF3F4F6),
-                                  borderRadius: BorderRadius.circular(10),
-                                  onPressed: () {
-                                    AcademicReferenceHelper.showJournalModal(context);
-                                  },
-                                  child: const Icon(CupertinoIcons.info_circle_fill, size: 16, color: Color(0xFF4B5563)),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: cardBorder),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE0F2FE),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: const Text(
-                                    '1.000 Transaksi Terpilih',
-                                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
-                                  ),
-                                ),
-                                const Text(
-                                  'Kaggle Dataset',
-                                  style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Groceries Market Basket Dataset',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText),
-                            ),
-                            const SizedBox(height: 6),
-                            const Text(
-                              'Dataset riil transaksi pasar swalayan yang merekam kombinasi belanja konsumen untuk pengujian association rules mining.',
-                              style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
-                            ),
-                            const SizedBox(height: 14),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    color: const Color(0xFF007AFF),
-                                    borderRadius: BorderRadius.circular(10),
-                                    onPressed: () {
-                                      AcademicReferenceHelper.downloadDatasetCsv(context);
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'Unduh CSV',
-                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    color: const Color(0xFFE0F2FE),
-                                    borderRadius: BorderRadius.circular(10),
-                                    onPressed: () {
-                                      AcademicReferenceHelper.safeLaunchUrl(
-                                        context,
-                                        AcademicReferenceHelper.kaggleDatasetUrl,
-                                      );
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(CupertinoIcons.link, size: 15, color: Color(0xFF007AFF)),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'Link Kaggle',
-                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                CupertinoButton(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                                  color: const Color(0xFFF3F4F6),
-                                  borderRadius: BorderRadius.circular(10),
-                                  onPressed: () {
-                                    AcademicReferenceHelper.showDatasetModal(context);
-                                  },
-                                  child: const Icon(CupertinoIcons.eye_fill, size: 16, color: Color(0xFF4B5563)),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
