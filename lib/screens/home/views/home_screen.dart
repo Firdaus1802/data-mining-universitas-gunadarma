@@ -724,88 +724,106 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'ANTECEDENT (X)',
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: textMuted,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Antecedent (X): Produk yang dibeli dalam transaksi',
+                    child: Text(
+                      'ANTECEDENT (X)',
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: textMuted,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'CONSEQUENT (Y)',
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: textMuted,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Consequent (Y): Produk yang direkomendasikan sistem jika X dibeli',
+                    child: Text(
+                      'CONSEQUENT (Y)',
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: textMuted,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'SUPPORT',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: textMuted,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Support = P(X ∩ Y): Rasio transaksi bersama terhadap total transaksi',
+                    child: Text(
+                      'SUPPORT',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: textMuted,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'CONFIDENCE',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: textMuted,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Confidence = P(Y|X) = Support(X ∪ Y) / Support(X): Kepastian aturan asosiasi',
+                    child: Text(
+                      'CONFIDENCE',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: textMuted,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'LIFT RATIO',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: textMuted,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Lift Ratio = Confidence / Support(Y): Nilai > 1.0 membuktikan asosiasi positif kuat',
+                    child: Text(
+                      'LIFT RATIO',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: textMuted,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'KORELASI',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: textMuted,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Korelasi: Sangat Kuat (Lift ≥ 1.0) menunjukkan peningkatan penjualan yang nyata',
+                    child: Text(
+                      'KORELASI',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: textMuted,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),

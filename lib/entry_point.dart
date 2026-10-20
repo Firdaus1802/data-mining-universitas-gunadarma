@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop/route/screen_export.dart';
 
@@ -21,28 +22,43 @@ class _EntryPointState extends State<EntryPoint> {
   static const Color lightBg = Color(0xFFFBFBFE);
   static const Color borderSubtle = Color(0xFFEDE9FE);
 
+  void _updateWebTitle(int index) {
+    const titles = [
+      'AprioriMart - Beranda | Data Mining Kelompok 4',
+      'AprioriMart - Simulasi Kasir & Rekomendasi | Kelompok 4',
+      'AprioriMart - Dataset & Kaidah Apriori | Kelompok 4',
+      'AprioriMart - Pengaturan & Tim Peneliti | Kelompok 4',
+    ];
+    if (index >= 0 && index < titles.length) {
+      SystemChrome.setApplicationSwitcherDescription(
+        ApplicationSwitcherDescription(
+          label: titles[index],
+          primaryColor: 0xFF581C87,
+        ),
+      );
+    }
+  }
+
+  void _switchTab(int index) {
+    if (_currentIndex != index) {
+      setState(() {
+        _currentIndex = index;
+      });
+      _updateWebTitle(index);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _updateWebTitle(0);
     _pages = [
       HomeScreen(
-        onNavigateToDataset: () {
-          setState(() {
-            _currentIndex = 2;
-          });
-        },
-        onNavigateToDiscover: () {
-          setState(() {
-            _currentIndex = 1;
-          });
-        },
+        onNavigateToDataset: () => _switchTab(2),
+        onNavigateToDiscover: () => _switchTab(1),
       ),
       DiscoverScreen(
-        onNavigateToDataset: () {
-          setState(() {
-            _currentIndex = 2;
-          });
-        },
+        onNavigateToDataset: () => _switchTab(2),
       ),
       const AprioriDashboardScreen(),
       const ProfileScreen(),
@@ -54,8 +70,31 @@ class _EntryPointState extends State<EntryPoint> {
     final screenWidth = MediaQuery.of(context).size.width;
     final bool isDesktop = screenWidth >= 820;
 
-    return Scaffold(
-      backgroundColor: lightBg,
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          final isEditingText = FocusManager.instance.primaryFocus?.context?.widget is EditableText;
+          if (!isEditingText) {
+            if (event.logicalKey == LogicalKeyboardKey.digit1 || event.logicalKey == LogicalKeyboardKey.numpad1) {
+              _switchTab(0);
+              return KeyEventResult.handled;
+            } else if (event.logicalKey == LogicalKeyboardKey.digit2 || event.logicalKey == LogicalKeyboardKey.numpad2) {
+              _switchTab(1);
+              return KeyEventResult.handled;
+            } else if (event.logicalKey == LogicalKeyboardKey.digit3 || event.logicalKey == LogicalKeyboardKey.numpad3) {
+              _switchTab(2);
+              return KeyEventResult.handled;
+            } else if (event.logicalKey == LogicalKeyboardKey.digit4 || event.logicalKey == LogicalKeyboardKey.numpad4) {
+              _switchTab(3);
+              return KeyEventResult.handled;
+            }
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+      child: Scaffold(
+        backgroundColor: lightBg,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(isDesktop ? 64 : 60),
         child: Container(
@@ -164,12 +203,11 @@ class _EntryPointState extends State<EntryPoint> {
                       ],
                       _buildHeaderButton(
                         icon: CupertinoIcons.search,
+                        tooltip: 'Pencarian Produk & Transaksi',
                         onPressed: () async {
                           final result = await Navigator.pushNamed(context, searchScreenRoute);
                           if (result == 'open_dataset' && mounted) {
-                            setState(() {
-                              _currentIndex = 2;
-                            });
+                            _switchTab(2);
                           }
                         },
                       ),
@@ -186,58 +224,57 @@ class _EntryPointState extends State<EntryPoint> {
         children: _pages,
       ),
       bottomNavigationBar: isDesktop ? null : _buildDockedNavigationBar(),
+      ),
     );
   }
 
   Widget _buildDesktopNavPill(int index, String title, IconData activeIcon, IconData inactiveIcon) {
     final bool isSelected = _currentIndex == index;
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: () {
-        if (_currentIndex != index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        }
-      },
-      child: Container(
-        height: 38,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isSelected ? primaryPurple.withValues(alpha: 0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isSelected ? primaryPurple.withValues(alpha: 0.25) : Colors.transparent,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              isSelected ? activeIcon : inactiveIcon,
-              size: 15,
-              color: isSelected ? primaryPurple : slateMuted,
+    return Tooltip(
+      message: 'Navigasi Cepat: Tekan [${index + 1}] pada keyboard',
+      waitDuration: const Duration(milliseconds: 300),
+      child: CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: () => _switchTab(index),
+        child: Container(
+          height: 38,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isSelected ? primaryPurple.withValues(alpha: 0.1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected ? primaryPurple.withValues(alpha: 0.25) : Colors.transparent,
+              width: 1,
             ),
-            const SizedBox(width: 7),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12.5,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                isSelected ? activeIcon : inactiveIcon,
+                size: 15,
                 color: isSelected ? primaryPurple : slateMuted,
               ),
-            ),
-          ],
+              const SizedBox(width: 7),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? primaryPurple : slateMuted,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeaderButton({required IconData icon, required VoidCallback onPressed}) {
-    return CupertinoButton(
+  Widget _buildHeaderButton({required IconData icon, required VoidCallback onPressed, String? tooltip}) {
+    final button = CupertinoButton(
       padding: EdgeInsets.zero,
       minimumSize: const Size(38, 38),
       onPressed: onPressed,
@@ -259,6 +296,14 @@ class _EntryPointState extends State<EntryPoint> {
         ),
       ),
     );
+    if (tooltip != null) {
+      return Tooltip(
+        message: tooltip,
+        waitDuration: const Duration(milliseconds: 250),
+        child: button,
+      );
+    }
+    return button;
   }
 
   Widget _buildDockedNavigationBar() {
@@ -316,13 +361,7 @@ class _EntryPointState extends State<EntryPoint> {
     final IconData? iconData = isSelected ? activeIcon : inactiveIcon;
     return Expanded(
       child: GestureDetector(
-        onTap: () {
-          if (_currentIndex != index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          }
-        },
+        onTap: () => _switchTab(index),
         behavior: HitTestBehavior.opaque,
         child: Container(
           color: Colors.transparent,

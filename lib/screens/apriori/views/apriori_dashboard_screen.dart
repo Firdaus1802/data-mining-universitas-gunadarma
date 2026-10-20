@@ -2567,53 +2567,71 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 ),
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'ANTECEDENT (X)',
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  child: Tooltip(
+                    message: 'Antecedent (X): Produk yang dibeli dalam transaksi',
+                    child: Text(
+                      'ANTECEDENT (X)',
+                      style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'CONSEQUENT (Y)',
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  child: Tooltip(
+                    message: 'Consequent (Y): Produk yang direkomendasikan jika X dibeli',
+                    child: Text(
+                      'CONSEQUENT (Y)',
+                      style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'SUPPORT',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  child: Tooltip(
+                    message: 'Support = P(X ∩ Y): Rasio frekuensi transaksi bersama',
+                    child: Text(
+                      'SUPPORT',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'CONFIDENCE',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  child: Tooltip(
+                    message: 'Confidence = P(Y|X): Rasio kepastian aturan asosiasi',
+                    child: Text(
+                      'CONFIDENCE',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'LIFT RATIO',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  child: Tooltip(
+                    message: 'Lift Ratio = Confidence / Support(Y): Nilai > 1.0 = Asosiasi Kuat',
+                    child: Text(
+                      'LIFT RATIO',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'KORELASI',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                  child: Tooltip(
+                    message: 'Korelasi: Sangat Kuat (Lift ≥ 1.0) menunjukkan sinergi penjualan produk',
+                    child: Text(
+                      'KORELASI',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: mutedText, letterSpacing: 0.5),
+                    ),
                   ),
                 ),
               ],
@@ -4379,82 +4397,100 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                 ),
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'ANTECEDENT (X)',
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: mutedText,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Antecedent (X): Produk yang dibeli dalam transaksi',
+                    child: Text(
+                      'ANTECEDENT (X)',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: mutedText,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    'CONSEQUENT (Y)',
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: mutedText,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Consequent (Y): Produk yang direkomendasikan jika X dibeli',
+                    child: Text(
+                      'CONSEQUENT (Y)',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: mutedText,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'SUPPORT',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: mutedText,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Support = P(X ∩ Y): Rasio frekuensi transaksi bersama',
+                    child: Text(
+                      'SUPPORT',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: mutedText,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'CONFIDENCE',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: mutedText,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Confidence = P(Y|X): Rasio kepastian aturan asosiasi',
+                    child: Text(
+                      'CONFIDENCE',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: mutedText,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'LIFT RATIO',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: mutedText,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Lift Ratio = Confidence / Support(Y): Nilai > 1.0 = Asosiasi Kuat',
+                    child: Text(
+                      'LIFT RATIO',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: mutedText,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    'KORELASI',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: mutedText,
-                      letterSpacing: 0.5,
+                  child: Tooltip(
+                    message: 'Korelasi: Sangat Kuat (Lift ≥ 1.0) menunjukkan sinergi penjualan produk',
+                    child: Text(
+                      'KORELASI',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: mutedText,
+                        letterSpacing: 0.5,
+                      ),
                     ),
                   ),
                 ),
