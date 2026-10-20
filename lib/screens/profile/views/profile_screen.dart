@@ -102,10 +102,18 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
                     _buildSettingsTile(
-                      icon: CupertinoIcons.book_circle_fill,
+                      icon: CupertinoIcons.doc_text_fill,
                       iconColor: const Color(0xFF5856D6),
-                      title: "Referensi Jurnal & Dataset",
-                      trailing: "Scopus Q1 • Kaggle",
+                      title: "Buka Berkas PDF Jurnal",
+                      trailing: "PDF Langsung",
+                      onTap: () => AcademicReferenceHelper.showPdfDirectPicker(context),
+                    ),
+                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
+                    _buildSettingsTile(
+                      icon: CupertinoIcons.book_circle_fill,
+                      iconColor: const Color(0xFF007AFF),
+                      title: "Rujukan Jurnal & Dataset Kaggle",
+                      trailing: "JUKTISI • CSV",
                       onTap: () => _showAcademicReferenceModal(context),
                     ),
                     const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
@@ -921,7 +929,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionHeader("RUJUKAN JURNAL INTERNASIONAL (SCOPUS Q1)"),
+                      _buildSectionHeader("RUJUKAN JURNAL NASIONAL & INTERNASIONAL"),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
@@ -943,7 +951,7 @@ class ProfileScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: const Text(
-                                    "Jurnal Internasional (Scopus Q1)",
+                                    "Jurnal Nasional & Internasional",
                                     style: TextStyle(
                                       fontSize: 10.5,
                                       fontWeight: FontWeight.w700,
@@ -952,14 +960,14 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const Text(
-                                  "ISSN 1548-7660",
+                                  "JUKTISI • IJIIS",
                                   style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              "arules — A Computational Environment for Mining Association Rules and Frequent Item Sets",
+                              "Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya",
                               style: TextStyle(
                                 fontFamily: "Plus Jakarta",
                                 fontSize: 14.5,
@@ -970,7 +978,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 6),
                             const Text(
-                              "Journal of Statistical Software (JSS) • Vol. 14, Issue 15 (Oktober 2005)\nPenulis: Michael Hahsler, Bettina Grün, Kurt Hornik (WU Vienna)",
+                              "Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI, 2026)\nPenulis: D. Nafisah et al. (UMK) • Pembanding: A. B. Prasetio et al. (IJIIS, 2025)",
                               style: TextStyle(fontSize: 11.5, color: textMuted, height: 1.35),
                             ),
                             const SizedBox(height: 14),
@@ -982,15 +990,15 @@ class ProfileScreen extends StatelessWidget {
                                     color: gunadarmaPurple,
                                     borderRadius: BorderRadius.circular(10),
                                     onPressed: () {
-                                      AcademicReferenceHelper.downloadJournalPdf(context);
+                                      AcademicReferenceHelper.showPdfDirectPicker(context);
                                     },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
+                                        Icon(CupertinoIcons.doc_text_fill, size: 15, color: Colors.white),
                                         SizedBox(width: 6),
                                         Text(
-                                          "Unduh PDF",
+                                          "Buka PDF",
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w700,
@@ -1008,15 +1016,15 @@ class ProfileScreen extends StatelessWidget {
                                     color: const Color(0xFFF3E8FF),
                                     borderRadius: BorderRadius.circular(10),
                                     onPressed: () {
-                                      AcademicReferenceHelper.showJournalModal(context);
+                                      AcademicReferenceHelper.downloadJournalPdf(context);
                                     },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(CupertinoIcons.doc_text_fill, size: 15, color: gunadarmaPurple),
+                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: gunadarmaPurple),
                                         SizedBox(width: 6),
                                         Text(
-                                          "Naskah & Info",
+                                          "Unduh PDF",
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w700,
@@ -1033,12 +1041,9 @@ class ProfileScreen extends StatelessWidget {
                                   color: const Color(0xFFF3F4F6),
                                   borderRadius: BorderRadius.circular(10),
                                   onPressed: () {
-                                    AcademicReferenceHelper.safeLaunchUrl(
-                                      context,
-                                      AcademicReferenceHelper.journalDoiUrl,
-                                    );
+                                    AcademicReferenceHelper.showJournalModal(context);
                                   },
-                                  child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF4B5563)),
+                                  child: const Icon(CupertinoIcons.info_circle_fill, size: 16, color: Color(0xFF4B5563)),
                                 ),
                               ],
                             ),
@@ -1132,15 +1137,18 @@ class ProfileScreen extends StatelessWidget {
                                     color: const Color(0xFFE0F2FE),
                                     borderRadius: BorderRadius.circular(10),
                                     onPressed: () {
-                                      AcademicReferenceHelper.showDatasetModal(context);
+                                      AcademicReferenceHelper.safeLaunchUrl(
+                                        context,
+                                        AcademicReferenceHelper.kaggleDatasetUrl,
+                                      );
                                     },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(CupertinoIcons.eye_fill, size: 15, color: Color(0xFF007AFF)),
+                                        Icon(CupertinoIcons.link, size: 15, color: Color(0xFF007AFF)),
                                         SizedBox(width: 6),
                                         Text(
-                                          "Pratinjau",
+                                          "Link Kaggle",
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w700,
@@ -1157,12 +1165,9 @@ class ProfileScreen extends StatelessWidget {
                                   color: const Color(0xFFF3F4F6),
                                   borderRadius: BorderRadius.circular(10),
                                   onPressed: () {
-                                    AcademicReferenceHelper.safeLaunchUrl(
-                                      context,
-                                      AcademicReferenceHelper.kaggleDatasetUrl,
-                                    );
+                                    AcademicReferenceHelper.showDatasetModal(context);
                                   },
-                                  child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF4B5563)),
+                                  child: const Icon(CupertinoIcons.eye_fill, size: 16, color: Color(0xFF4B5563)),
                                 ),
                               ],
                             ),

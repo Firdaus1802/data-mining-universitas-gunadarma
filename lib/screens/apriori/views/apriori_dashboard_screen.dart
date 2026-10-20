@@ -796,7 +796,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       children: [
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => _showAcademicReferenceModal(context),
+                          onTap: () => AcademicReferenceHelper.showPdfDirectPicker(context),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                             decoration: BoxDecoration(
@@ -806,12 +806,39 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(CupertinoIcons.book_fill, size: 12, color: gunadarmaPurple),
+                                Icon(CupertinoIcons.doc_text_fill, size: 12, color: gunadarmaPurple),
                                 SizedBox(width: 4),
                                 Text(
-                                  'Jurnal',
+                                  'PDF Jurnal',
                                   style: TextStyle(
                                     color: gunadarmaPurple,
+                                    fontSize: 11.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _showAcademicReferenceModal(context),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF007AFF).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(CupertinoIcons.arrow_down_doc_fill, size: 12, color: Color(0xFF007AFF)),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Dataset & Rujukan',
+                                  style: TextStyle(
+                                    color: Color(0xFF007AFF),
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -2530,24 +2557,24 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: const Text(
-                                    'Jurnal Internasional (Scopus Q1)',
+                                    'Jurnal Nasional & Internasional',
                                     style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
                                   ),
                                 ),
                                 const Text(
-                                  'ISSN 1548-7660',
+                                  'JUKTISI • IJIIS',
                                   style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'arules — A Computational Environment for Mining Association Rules and Frequent Item Sets',
+                              'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
                             ),
                             const SizedBox(height: 6),
                             const Text(
-                              'Journal of Statistical Software (JSS) • Vol. 14, Issue 15 (Oktober 2005)\nPenulis: Michael Hahsler, Bettina Grün, Kurt Hornik (WU Vienna)',
+                              'Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI, 2026)\nPenulis: D. Nafisah et al. (UMK) • Pembanding: A. B. Prasetio et al. (IJIIS, 2025)',
                               style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
                             ),
                             const SizedBox(height: 14),
@@ -2559,15 +2586,15 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                     color: gunadarmaPurple,
                                     borderRadius: BorderRadius.circular(10),
                                     onPressed: () {
-                                      AcademicReferenceHelper.downloadJournalPdf(context);
+                                      AcademicReferenceHelper.showPdfDirectPicker(context);
                                     },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
+                                        Icon(CupertinoIcons.doc_text_fill, size: 15, color: Colors.white),
                                         SizedBox(width: 6),
                                         Text(
-                                          'Unduh PDF',
+                                          'Buka PDF',
                                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
                                         ),
                                       ],
@@ -2581,15 +2608,15 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                     color: const Color(0xFFF3E8FF),
                                     borderRadius: BorderRadius.circular(10),
                                     onPressed: () {
-                                      AcademicReferenceHelper.showJournalModal(context);
+                                      AcademicReferenceHelper.downloadJournalPdf(context);
                                     },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(CupertinoIcons.doc_text_fill, size: 15, color: gunadarmaPurple),
+                                        Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: gunadarmaPurple),
                                         SizedBox(width: 6),
                                         Text(
-                                          'Naskah & Info',
+                                          'Unduh PDF',
                                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: gunadarmaPurple),
                                         ),
                                       ],
@@ -2602,12 +2629,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                   color: const Color(0xFFF3F4F6),
                                   borderRadius: BorderRadius.circular(10),
                                   onPressed: () {
-                                    AcademicReferenceHelper.safeLaunchUrl(
-                                      context,
-                                      AcademicReferenceHelper.journalDoiUrl,
-                                    );
+                                    AcademicReferenceHelper.showJournalModal(context);
                                   },
-                                  child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF4B5563)),
+                                  child: const Icon(CupertinoIcons.info_circle_fill, size: 16, color: Color(0xFF4B5563)),
                                 ),
                               ],
                             ),
@@ -2687,15 +2711,18 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                     color: const Color(0xFFE0F2FE),
                                     borderRadius: BorderRadius.circular(10),
                                     onPressed: () {
-                                      AcademicReferenceHelper.showDatasetModal(context);
+                                      AcademicReferenceHelper.safeLaunchUrl(
+                                        context,
+                                        AcademicReferenceHelper.kaggleDatasetUrl,
+                                      );
                                     },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(CupertinoIcons.eye_fill, size: 15, color: Color(0xFF007AFF)),
+                                        Icon(CupertinoIcons.link, size: 15, color: Color(0xFF007AFF)),
                                         SizedBox(width: 6),
                                         Text(
-                                          'Pratinjau',
+                                          'Link Kaggle',
                                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
                                         ),
                                       ],
@@ -2708,12 +2735,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                   color: const Color(0xFFF3F4F6),
                                   borderRadius: BorderRadius.circular(10),
                                   onPressed: () {
-                                    AcademicReferenceHelper.safeLaunchUrl(
-                                      context,
-                                      AcademicReferenceHelper.kaggleDatasetUrl,
-                                    );
+                                    AcademicReferenceHelper.showDatasetModal(context);
                                   },
-                                  child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF4B5563)),
+                                  child: const Icon(CupertinoIcons.eye_fill, size: 16, color: Color(0xFF4B5563)),
                                 ),
                               ],
                             ),

@@ -12,19 +12,29 @@ class AcademicReferenceHelper {
   static const Color mutedText = Color(0xFF8E8E93);
   static const Color cardBorder = Color(0xFFE5E5EA);
 
-  static const String internationalJournalDoiUrl = 'https://doi.org/10.18637/jss.v014.i15';
-  static const String ieeeJournalDoiUrl = 'https://doi.org/10.1109/ICCIT48885.2019.9038197';
-  static const String journalDoiUrl = internationalJournalDoiUrl;
-  static const String journalScholarUrl = 'https://scholar.google.com/scholar?q=arules+A+Computational+Environment+for+Mining+Association+Rules+Groceries';
+  static const String nationalJournalUrl =
+      'https://ejurnal.lkpkaryaprima.id/index.php/juktisi/article/view/1033/830';
+  static const String nationalJournalDirectPdfUrl =
+      'https://ejurnal.lkpkaryaprima.id/index.php/juktisi/article/download/1033/830';
+  static const String nationalJournalDoiUrl = 'https://doi.org/10.62712/juktisi.v5i1.1033';
+
+  static const String internationalJournalUrl = 'https://ijiis.org/index.php/IJIIS/article/view/252';
+  static const String internationalJournalDirectPdfUrl =
+      'https://ijiis.org/index.php/IJIIS/article/download/252/160';
+  static const String internationalJournalDoiUrl = 'https://doi.org/10.47738/ijiis.v8i2.252';
+
+  static const String journalDoiUrl = nationalJournalDoiUrl;
+  static const String journalScholarUrl =
+      'https://scholar.google.com/scholar?q=Implementasi+Algoritma+Apriori+Warung+Kelontong+Maju+Jaya+JUKTISI';
   static const String kaggleDatasetUrl = 'https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset';
 
+  static const String nationalApaCitation =
+      'Nafisah, D., Asriningati, D., Maulia, S. D., Bintang P, M. A., & Arifin, M. (2026). Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya. Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI), 5(1), 1146–1151. https://doi.org/10.62712/juktisi.v5i1.1033';
+
   static const String internationalApaCitation =
-      'Hahsler, M., Grün, B., & Hornik, K. (2005). arules — A Computational Environment for Mining Association Rules and Frequent Item Sets. Journal of Statistical Software, 14(15), 1–25. https://doi.org/10.18637/jss.v014.i15';
+      'Prasetio, A. B., Aboobaider, B. M., & Ahmad, A. (2025). Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data. International Journal of Informatics and Information Systems, 8(2), 67–74. https://doi.org/10.47738/ijiis.v8i2.252';
 
-  static const String ieeeCitation =
-      'M. Hossain, A. H. M. S. Sattar and M. K. Paul, "Market Basket Analysis Using Apriori and FP Growth Algorithm," 2019 22nd International Conference on Computer and Information Technology (ICCIT), Dhaka, Bangladesh, 2019, pp. 1-6, doi: 10.1109/ICCIT48885.2019.9038197.';
-
-  static const String apaCitation = internationalApaCitation;
+  static const String apaCitation = nationalApaCitation;
 
   static Future<void> safeLaunchUrl(BuildContext context, String urlString) async {
     try {
@@ -86,7 +96,84 @@ class AcademicReferenceHelper {
     );
   }
 
-  static Future<void> downloadJournalPdf(BuildContext context) async {
+  static void showPdfDirectPicker(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (ctx) => CupertinoActionSheet(
+        title: const Text('Buka Langsung Berkas PDF Jurnal'),
+        message: const Text(
+          'Pilih naskah ilmiah untuk langsung dibuka dan dibaca dalam format dokumen PDF:',
+        ),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              directOpenNationalPdf(context);
+            },
+            child: const Text('1. Buka PDF Jurnal Nasional: Warung Kelontong (310 KB)'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              directOpenInternationalPdf(context);
+            },
+            child: const Text('2. Buka PDF Jurnal Pembanding: IJIIS Retail (381 KB)'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              downloadJournalPdf(context);
+            },
+            child: const Text('Unduh / Simpan Berkas PDF ke Perangkat'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              showJournalModal(context);
+            },
+            child: const Text('Lihat Informasi Naskah & Sitasi'),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDestructiveAction: true,
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: const Text('Tutup'),
+        ),
+      ),
+    );
+  }
+
+  static Future<void> directOpenNationalPdf(BuildContext context) async {
+    try {
+      if (kIsWeb) {
+        final ok = await launchUrl(
+          Uri.parse('jurnal_nasional.pdf'),
+          mode: LaunchMode.externalApplication,
+        );
+        if (!ok) {
+          await launchUrl(
+            Uri.parse(nationalJournalDirectPdfUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        }
+        return;
+      }
+
+      final ok = await launchUrl(
+        Uri.parse(nationalJournalDirectPdfUrl),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!ok && context.mounted) {
+        await downloadNationalJournalPdf(context);
+      }
+    } catch (_) {
+      if (context.mounted) {
+        await downloadNationalJournalPdf(context);
+      }
+    }
+  }
+
+  static Future<void> directOpenInternationalPdf(BuildContext context) async {
     try {
       if (kIsWeb) {
         final ok = await launchUrl(
@@ -95,14 +182,75 @@ class AcademicReferenceHelper {
         );
         if (!ok) {
           await launchUrl(
-            Uri.parse('jurnal.pdf'),
+            Uri.parse(internationalJournalDirectPdfUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        }
+        return;
+      }
+
+      final ok = await launchUrl(
+        Uri.parse(internationalJournalDirectPdfUrl),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!ok && context.mounted) {
+        await downloadInternationalJournalPdf(context);
+      }
+    } catch (_) {
+      if (context.mounted) {
+        await downloadInternationalJournalPdf(context);
+      }
+    }
+  }
+
+  static void downloadJournalPdf(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (ctx) => CupertinoActionSheet(
+        title: const Text('Unduh Berkas Naskah PDF'),
+        message: const Text('Pilih berkas PDF yang ingin disimpan ke perangkat:'),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              downloadNationalJournalPdf(context);
+            },
+            child: const Text('Jurnal Nasional: Warung Kelontong (310 KB)'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              downloadInternationalJournalPdf(context);
+            },
+            child: const Text('Jurnal Pembanding Internasional: IJIIS (381 KB)'),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDestructiveAction: true,
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: const Text('Batal'),
+        ),
+      ),
+    );
+  }
+
+  static Future<void> downloadNationalJournalPdf(BuildContext context) async {
+    try {
+      if (kIsWeb) {
+        final ok = await launchUrl(
+          Uri.parse('jurnal_nasional.pdf'),
+          mode: LaunchMode.externalApplication,
+        );
+        if (!ok) {
+          await launchUrl(
+            Uri.parse(nationalJournalDirectPdfUrl),
             mode: LaunchMode.externalApplication,
           );
         }
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Berkas PDF Jurnal Internasional berhasil diunduh!'),
+              content: Text('Berkas PDF Jurnal Nasional berhasil dibuka!'),
               backgroundColor: Color(0xFF2E7D32),
               duration: Duration(seconds: 3),
             ),
@@ -111,10 +259,76 @@ class AcademicReferenceHelper {
         return;
       }
 
-      final byteData = await rootBundle.load('assets/documents/jurnal_internasional_groceries_arules.pdf');
+      final byteData = await rootBundle.load('assets/documents/jurnal_nasional_warung_maju_jaya.pdf');
       final bytes = byteData.buffer.asUint8List();
       final uri = await FilePicker.saveFile(
-        fileName: 'Jurnal_Internasional_Groceries_arules.pdf',
+        fileName: 'Jurnal_Nasional_Warung_Maju_Jaya.pdf',
+        bytes: bytes,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        mimeType: 'application/pdf',
+        dialogTitle: 'Simpan Naskah PDF Jurnal Nasional',
+      );
+
+      if (context.mounted) {
+        if (uri != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Naskah PDF Jurnal Nasional berhasil disimpan!'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Penyimpanan berkas PDF dibatalkan.'),
+              backgroundColor: Color(0xFF757575),
+            ),
+          );
+        }
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal menyimpan berkas PDF. Silakan periksa izin penyimpanan.'),
+            backgroundColor: Color(0xFFFF3B30),
+          ),
+        );
+      }
+    }
+  }
+
+  static Future<void> downloadInternationalJournalPdf(BuildContext context) async {
+    try {
+      if (kIsWeb) {
+        final ok = await launchUrl(
+          Uri.parse('jurnal_internasional.pdf'),
+          mode: LaunchMode.externalApplication,
+        );
+        if (!ok) {
+          await launchUrl(
+            Uri.parse(internationalJournalDirectPdfUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Berkas PDF Jurnal Internasional berhasil dibuka!'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+        return;
+      }
+
+      final byteData = await rootBundle.load('assets/documents/jurnal_internasional_interpretable_retail.pdf');
+      final bytes = byteData.buffer.asUint8List();
+      final uri = await FilePicker.saveFile(
+        fileName: 'Jurnal_Internasional_Interpretable_Retail.pdf',
         bytes: bytes,
         type: FileType.custom,
         allowedExtensions: ['pdf'],
@@ -279,7 +493,7 @@ class AcademicReferenceHelper {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Naskah & Publikasi Jurnal Internasional',
+                              'Naskah & Publikasi Jurnal Ilmiah',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -288,7 +502,7 @@ class AcademicReferenceHelper {
                             ),
                             SizedBox(height: 2),
                             Text(
-                              'Landasan Teori Association Rules (Scopus Q1 & IEEE)',
+                              'Jurnal Nasional & Jurnal Pembanding Internasional',
                               style: TextStyle(fontSize: 12, color: mutedText),
                             ),
                           ],
@@ -325,7 +539,7 @@ class AcademicReferenceHelper {
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Text(
-                                      'SCOPUS Q1 • OPEN ACCESS',
+                                      'JURNAL NASIONAL (UTAMA)',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w800,
@@ -336,14 +550,14 @@ class AcademicReferenceHelper {
                                   ),
                                   const SizedBox(width: 8),
                                   const Text(
-                                    'ISSN: 1548-7660',
+                                    'e-ISSN: 2963-7104',
                                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: mutedText),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 10),
                               const Text(
-                                'arules — A Computational Environment for Mining Association Rules and Frequent Item Sets',
+                                'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
@@ -353,8 +567,52 @@ class AcademicReferenceHelper {
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Penulis: Michael Hahsler, Bettina Grün, Kurt Hornik\nAfiliasi: WU Wirtschaftsuniversität Wien, Vienna, Austria\nPublikasi: Journal of Statistical Software (JSS)\nVolume & Terbitan: Vol. 14, Issue 15, hlm. 1–25, Oktober 2005\nDOI: 10.18637/jss.v014.i15\n\nNaskah rujukan internasional utama yang mempublikasikan dataset Groceries (9.835 transaksi) dan implementasi benchmark komputasi association rule mining.',
+                                'Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P, Muhammad Arifin\nAfiliasi: Program Studi Sistem Informasi, Universitas Muria Kudus\nPublikasi: Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nVolume & Terbitan: Vol. 5, No. 1, Juni 2026, Hal. 1146–1151\nDOI: 10.62712/juktisi.v5i1.1033\n\nPenelitian empiris analisis keranjang belanja (Market Basket Analysis) toko kelontong ritel untuk menentukan aturan asosiasi (Support, Confidence, Lift Ratio) dan penataan tata letak barang dagangan.',
                                 style: TextStyle(fontSize: 11.5, color: Color(0xFF4A4A4A), height: 1.45),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(vertical: 9),
+                                      color: gunadarmaPurple,
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () => directOpenNationalPdf(context),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons.eye_fill, size: 14, color: Colors.white),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            'Buka PDF Langsung',
+                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(vertical: 9),
+                                      color: const Color(0xFFF3E8FF),
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () => downloadNationalJournalPdf(context),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: gunadarmaPurple),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            'Unduh PDF',
+                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -379,7 +637,7 @@ class AcademicReferenceHelper {
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Text(
-                                      'IEEE XPLORE • SCOPUS INDEXED',
+                                      'JURNAL PEMBANDING (INTERNASIONAL)',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w800,
@@ -390,14 +648,14 @@ class AcademicReferenceHelper {
                                   ),
                                   const SizedBox(width: 8),
                                   const Text(
-                                    'IEEE ICCIT 2019',
+                                    'ISSN: 2579-7069',
                                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: mutedText),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 10),
                               const Text(
-                                'Market Basket Analysis Using Apriori and FP Growth Algorithm',
+                                'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
@@ -407,8 +665,52 @@ class AcademicReferenceHelper {
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Penulis: Maliha Hossain, A. H. M. Sarowar Sattar, Mahit Kumar Paul\nAfiliasi: Dept. of Computer Science & Engineering, United International University\nPublikasi: 2019 22nd International Conference on Computer and Information Technology (ICCIT)\nHalaman: 1–6, Dhaka, Bangladesh\nDOI: 10.1109/ICCIT48885.2019.9038197',
+                                'Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad\nAfiliasi: Institut Teknologi Tangerang Selatan & Universiti Teknikal Malaysia Melaka (UTeM)\nPublikasi: International Journal of Informatics and Information Systems (IJIIS)\nVolume & Halaman: Vol. 8, No. 2, March 2025, pp. 67–74\nDOI: 10.47738/ijiis.v8i2.252\n\nStudi komparasi internasional mengenai sistem rekomendasi produk retail berbasis algoritma Apriori dengan fokus interpretabilitas pola asosiasi belanja konsumen.',
                                 style: TextStyle(fontSize: 11.5, color: Color(0xFF4A4A4A), height: 1.45),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(vertical: 9),
+                                      color: const Color(0xFF166534),
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () => directOpenInternationalPdf(context),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons.eye_fill, size: 14, color: Colors.white),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            'Buka PDF Langsung',
+                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(vertical: 9),
+                                      color: const Color(0xFFDCFCE7),
+                                      borderRadius: BorderRadius.circular(8),
+                                      onPressed: () => downloadInternationalJournalPdf(context),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: Color(0xFF166534)),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            'Unduh PDF',
+                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF166534)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -420,68 +722,86 @@ class AcademicReferenceHelper {
                         ),
                         const SizedBox(height: 10),
                         _buildActionTile(
-                          icon: CupertinoIcons.arrow_down_doc_fill,
+                          icon: CupertinoIcons.doc_text_fill,
                           iconColor: Colors.white,
                           bgColor: gunadarmaPurple,
-                          title: 'Unduh Berkas PDF Jurnal Internasional (.pdf)',
-                          subtitle: 'Simpan naskah resmi Scopus Q1 JSS (413 KB) langsung ke perangkat',
-                          onTap: () => downloadJournalPdf(context),
+                          title: 'Buka PDF Jurnal Nasional (310 KB)',
+                          subtitle: 'Buka naskah Warung Kelontong Maju Jaya (JUKTISI)',
+                          onTap: () => directOpenNationalPdf(context),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildActionTile(
+                          icon: CupertinoIcons.doc_text_fill,
+                          iconColor: Colors.white,
+                          bgColor: const Color(0xFF166534),
+                          title: 'Buka PDF Jurnal Pembanding Internasional (381 KB)',
+                          subtitle: 'Buka naskah Retail Recommendation Analysis (IJIIS)',
+                          onTap: () => directOpenInternationalPdf(context),
                         ),
                         const SizedBox(height: 8),
                         _buildActionTile(
                           icon: CupertinoIcons.link,
                           iconColor: gunadarmaPurple,
                           bgColor: const Color(0xFFF3E8FF),
-                          title: 'Buka Laman Resmi JSS (DOI: 10.18637/jss.v014.i15)',
-                          subtitle: 'Publikasi Journal of Statistical Software (Scopus Q1)',
-                          onTap: () => safeLaunchUrl(context, internationalJournalDoiUrl),
+                          title: 'Laman Resmi Jurnal Nasional (JUKTISI)',
+                          subtitle: 'https://ejurnal.lkpkaryaprima.id/index.php/juktisi/article/view/1033/830',
+                          onTap: () => safeLaunchUrl(context, nationalJournalUrl),
                         ),
                         const SizedBox(height: 8),
                         _buildActionTile(
-                          icon: CupertinoIcons.doc_text_fill,
+                          icon: CupertinoIcons.globe,
                           iconColor: const Color(0xFF007AFF),
                           bgColor: const Color(0xFFE0F2FE),
-                          title: 'Buka Publikasi di IEEE Xplore',
-                          subtitle: 'Naskah komparasi Apriori & FP-Growth (DOI: 10.1109/ICCIT48885.2019.9038197)',
-                          onTap: () => safeLaunchUrl(context, ieeeJournalDoiUrl),
+                          title: 'Laman Resmi Jurnal Pembanding (IJIIS)',
+                          subtitle: 'https://ijiis.org/index.php/IJIIS/article/view/252',
+                          onTap: () => safeLaunchUrl(context, internationalJournalUrl),
                         ),
                         const SizedBox(height: 8),
                         _buildActionTile(
-                          icon: CupertinoIcons.search,
-                          iconColor: const Color(0xFF2E7D32),
-                          bgColor: const Color(0xFFDCFCE7),
-                          title: 'Cari Sitasi di Google Scholar',
-                          subtitle: '1.500+ sitasi riset arules dan benchmark keranjang belanja',
-                          onTap: () => safeLaunchUrl(context, journalScholarUrl),
+                          icon: CupertinoIcons.arrow_up_right_square,
+                          iconColor: const Color(0xFFD97706),
+                          bgColor: const Color(0xFFFEF3C7),
+                          title: 'Buka Link Dataset di Kaggle',
+                          subtitle: 'https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset',
+                          onTap: () => safeLaunchUrl(context, kaggleDatasetUrl),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildActionTile(
+                          icon: CupertinoIcons.arrow_down_doc_fill,
+                          iconColor: const Color(0xFF007AFF),
+                          bgColor: const Color(0xFFE0F2FE),
+                          title: 'Unduh Berkas Dataset (.csv)',
+                          subtitle: 'Simpan file CSV 1.000 transaksi ke perangkat',
+                          onTap: () => downloadDatasetCsv(context),
                         ),
                         const SizedBox(height: 18),
                         const Text(
-                          'RINGKASAN & METODOLOGI PENELITIAN INTERNASIONAL',
+                          'RINGKASAN & METODOLOGI PENELITIAN',
                           style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: mutedText, letterSpacing: 0.5),
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '1. Latar Belakang & Pembentukan Dataset Groceries',
+                          title: '1. Latar Belakang & Urgensi Warung Kelontong & Ritel',
                           content:
-                              'Dataset Groceries yang digunakan dalam aplikasi ini bersumber dari penelitian riset Michael Hahsler dkk. yang menghimpun 9.835 transaksi riil dari jaringan ritel swalayan selama 30 hari dengan cakupan 169 kategori produk pangan dan kebutuhan harian.',
+                              'Pertumbuhan transaksi harian pada usaha ritel dan warung kelontong menghasilkan volume data belanja yang melimpah. Analisis pola asosiasi (Market Basket Analysis) diperlukan untuk menemukan kombinasi produk yang paling sering dibeli bersamaan guna optimalisasi penataan tata letak barang dagangan dan promosi bundling.',
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
                           title: '2. Formulasi Metrik Evaluasi Asosiasi',
                           content:
-                              'Kaidah asosiasi dievaluasi dengan tiga metrik baku internasional:\n• Support: Frekuensi kemunculan kombinasi item terhadap total populasi transaksi (P(A ∪ B)).\n• Confidence: Tingkat kepastian bahwa jika item A dibeli, item B juga akan dibeli (P(B|A)).\n• Lift Ratio: Rasio kekuatan keterkaitan relatif terhadap frekuensi acak independen. Nilai Lift > 1 membuktikan adanya dependensi positif yang valid.',
+                              'Kaidah asosiasi diuji melalui tiga metrik baku:\n• Support: Frekuensi kemunculan kombinasi item dari total keseluruhan transaksi (P(A ∪ B)).\n• Confidence: Tingkat kepastian bahwa jika item A dibeli, item B juga akan dibeli (P(B|A)).\n• Lift Ratio: Ukuran kevalidan asosiasi terhadap probabilitas acak independen. Nilai Lift > 1 menandakan aturan asosiasi positif yang kuat dan signifikan.',
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '3. Kaidah Asosiasi Retail Teruji',
+                          title: '3. Kaidah Asosiasi & Rekomendasi Penataan Produk',
                           content:
-                              'Pengujian empiris pada transaksi retail menghasilkan aturan asosiasi signifikan, di antaranya:\n• {yogurt, sausage} => {whole milk} (Support: 0,0147, Confidence: 25,58%, Lift: 1,62)\n• {sausage, rolls/buns} => {whole milk} (Support: 0,0113, Confidence: 21,25%, Lift: 1,35)\n\nKonsumen yang membeli kombinasi produk sarapan/olahan daging menunjukkan tendensi kuat melengkapi belanjaannya dengan susu segar murni (whole milk).',
+                              'Penerapan algoritma Apriori menghasilkan aturan asosiasi nyata pada transaksi kelontong dan ritel, memungkinkan penempatan produk komplementer pada etalase yang berdekatan untuk meningkatkan basket size dan efisiensi belanja konsumen.',
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '4. Komparasi Algoritma Apriori & FP-Growth',
+                          title: '4. Sintesis Riset Nasional & Internasional',
                           content:
-                              'Penelitian Hossain et al. (IEEE ICCIT) menggarisbawahi:\n• Apriori: Menawarkan transparansi tinggi dalam pembentukan kandidat k-itemset secara terstruktur bertahap, menjadikannya fondasi teoretis utama data mining.\n• FP-Growth: Mengeliminasi proses candidate generation berulang dengan memanfaatkan pohon ringkas FP-Tree untuk efisiensi komputasi optimal pada data bervolume besar.',
+                              'Penelitian JUKTISI (2026) dan IJIIS (2025) saling menguatkan bahwa algoritma Apriori menghasilkan rekomendasi produk yang transparan, mudah diinterpretasikan oleh pemilik toko/manajemen ritel, serta terbukti efektif untuk dataset transaksi skala nyata.',
                         ),
                         const SizedBox(height: 18),
                         Row(
@@ -492,11 +812,11 @@ class AcademicReferenceHelper {
                                 color: const Color(0xFFF3E8FF),
                                 borderRadius: BorderRadius.circular(12),
                                 onPressed: () async {
-                                  await Clipboard.setData(const ClipboardData(text: internationalApaCitation));
+                                  await Clipboard.setData(const ClipboardData(text: nationalApaCitation));
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Sitasi APA (Scopus Q1) berhasil disalin!'),
+                                        content: Text('Sitasi Jurnal Nasional (JUKTISI) berhasil disalin!'),
                                         backgroundColor: gunadarmaPurple,
                                       ),
                                     );
@@ -508,7 +828,7 @@ class AcademicReferenceHelper {
                                     Icon(CupertinoIcons.doc_on_clipboard, size: 16, color: gunadarmaPurple),
                                     SizedBox(width: 6),
                                     Text(
-                                      'Sitasi APA (JSS)',
+                                      'Sitasi Nasional',
                                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: gunadarmaPurple),
                                     ),
                                   ],
@@ -522,11 +842,11 @@ class AcademicReferenceHelper {
                                 color: const Color(0xFFE0F2FE),
                                 borderRadius: BorderRadius.circular(12),
                                 onPressed: () async {
-                                  await Clipboard.setData(const ClipboardData(text: ieeeCitation));
+                                  await Clipboard.setData(const ClipboardData(text: internationalApaCitation));
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Sitasi format IEEE berhasil disalin!'),
+                                        content: Text('Sitasi Jurnal Pembanding (IJIIS) berhasil disalin!'),
                                         backgroundColor: Color(0xFF007AFF),
                                       ),
                                     );
@@ -538,7 +858,7 @@ class AcademicReferenceHelper {
                                     Icon(CupertinoIcons.doc_on_clipboard, size: 16, color: Color(0xFF007AFF)),
                                     SizedBox(width: 6),
                                     Text(
-                                      'Sitasi IEEE',
+                                      'Sitasi Internasional',
                                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF007AFF)),
                                     ),
                                   ],
@@ -552,14 +872,14 @@ class AcademicReferenceHelper {
                           padding: const EdgeInsets.symmetric(vertical: 13),
                           color: gunadarmaPurple,
                           borderRadius: BorderRadius.circular(12),
-                          onPressed: () => downloadJournalPdf(context),
+                          onPressed: () => showPdfDirectPicker(context),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(CupertinoIcons.arrow_down_doc_fill, size: 16, color: Colors.white),
+                              Icon(CupertinoIcons.doc_text_fill, size: 16, color: Colors.white),
                               SizedBox(width: 8),
                               Text(
-                                'Unduh Naskah PDF Jurnal Internasional (413 KB)',
+                                'Buka Berkas PDF Jurnal',
                                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white),
                               ),
                             ],
