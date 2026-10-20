@@ -102,17 +102,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
                     _buildSettingsTile(
-                      icon: CupertinoIcons.doc_text_fill,
-                      iconColor: const Color(0xFF5856D6),
-                      title: "Buka Berkas PDF Jurnal",
-                      trailing: "PDF Langsung",
-                      onTap: () => AcademicReferenceHelper.showPdfDirectPicker(context),
-                    ),
-                    const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-                    _buildSettingsTile(
                       icon: CupertinoIcons.book_circle_fill,
-                      iconColor: const Color(0xFF007AFF),
-                      title: "Rujukan Jurnal & Dataset Kaggle",
+                      iconColor: gunadarmaPurple,
+                      title: "Rujukan Jurnal & Dataset",
                       trailing: "JUKTISI • CSV",
                       onTap: () => _showAcademicReferenceModal(context),
                     ),
@@ -884,7 +876,7 @@ class ProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Referensi Riset & Dataset",
+                              "Rujukan Ilmiah & Dataset",
                               style: TextStyle(
                                 fontFamily: "Plus Jakarta",
                                 fontSize: 17,
@@ -895,7 +887,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 2),
                             Text(
-                              "Dasar Teori Ilmiah & Sumber Data Transaksi",
+                              "Publikasi algoritma Apriori dan data transaksi",
                               style: TextStyle(
                                 fontFamily: "Plus Jakarta",
                                 fontSize: 12,
@@ -953,7 +945,7 @@ class ProfileScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        "JURNAL NASIONAL (UTAMA)",
+                                        "JURNAL NASIONAL",
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w800,
@@ -981,7 +973,7 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  "Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nPenulis: Durrotun Nafisah et al. (UMK) • 310 KB",
+                                  "Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P., Muhammad Arifin (Universitas Muria Kudus)\nJurnal: JUKTISI, Vol. 5, No. 1, 2026 • 310 KB",
                                   style: TextStyle(fontSize: 11, color: textMuted, height: 1.3),
                                 ),
                                 const SizedBox(height: 12),
@@ -1021,7 +1013,7 @@ class ProfileScreen extends StatelessWidget {
                                             Icon(CupertinoIcons.globe, size: 13, color: gunadarmaPurple),
                                             SizedBox(width: 4),
                                             Text(
-                                              "Laman OJS",
+                                              "Laman Jurnal",
                                               style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
                                             ),
                                           ],
@@ -1063,7 +1055,7 @@ class ProfileScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        "JURNAL PEMBANDING (INTERNASIONAL)",
+                                        "JURNAL PEMBANDING",
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w800,
@@ -1091,7 +1083,7 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  "International Journal of Informatics and Information Systems (IJIIS)\nPenulis: Agung Budi Prasetio et al. • 381 KB",
+                                  "Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad (ITTS & Universiti Teknikal Malaysia Melaka)\nJurnal: IJIIS, Vol. 8, No. 2, 2025 • 381 KB",
                                   style: TextStyle(fontSize: 11, color: textMuted, height: 1.3),
                                 ),
                                 const SizedBox(height: 12),
@@ -1131,7 +1123,7 @@ class ProfileScreen extends StatelessWidget {
                                             Icon(CupertinoIcons.globe, size: 13, color: Color(0xFF166534)),
                                             SizedBox(width: 4),
                                             Text(
-                                              "Laman OJS",
+                                              "Laman Jurnal",
                                               style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF166534)),
                                             ),
                                           ],
@@ -1173,7 +1165,7 @@ class ProfileScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        "DATASET KAGGLE • 1.000 TRANSAKSI",
+                                        "DATASET TRANSAKSI",
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w800,
@@ -1183,7 +1175,7 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const Text(
-                                      "Kaggle CSV",
+                                      "Kaggle Groceries",
                                       style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w600),
                                     ),
                                   ],
@@ -1200,7 +1192,7 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  "Dataset riil transaksi pasar swalayan yang merekam kombinasi belanja konsumen untuk pengujian association rules mining.",
+                                  "Data transaksi riil pasar swalayan yang mencakup 1.000 riwayat belanja produk untuk pengujian kaidah asosiasi.",
                                   style: TextStyle(fontSize: 11, color: textMuted, height: 1.3),
                                 ),
                                 const SizedBox(height: 12),

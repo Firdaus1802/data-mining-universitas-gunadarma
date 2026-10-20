@@ -778,7 +778,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                           ),
                           SizedBox(height: 2),
                           Text(
-                            'Pusat Manajemen Transaksi & Aturan Asosiasi',
+                            'Pengolahan Data Transaksi & Kaidah Asosiasi',
                             style: TextStyle(
                               fontSize: 11.5,
                               color: mutedText,
@@ -796,9 +796,9 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                       children: [
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => AcademicReferenceHelper.showPdfDirectPicker(context),
+                          onTap: () => _showAcademicReferenceModal(context),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
                               color: gunadarmaPurple.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
@@ -806,39 +806,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(CupertinoIcons.doc_text_fill, size: 12, color: gunadarmaPurple),
-                                SizedBox(width: 4),
+                                Icon(CupertinoIcons.book_fill, size: 12, color: gunadarmaPurple),
+                                SizedBox(width: 5),
                                 Text(
-                                  'PDF Jurnal',
+                                  'Rujukan & Dataset',
                                   style: TextStyle(
                                     color: gunadarmaPurple,
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () => _showAcademicReferenceModal(context),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF007AFF).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(CupertinoIcons.arrow_down_doc_fill, size: 12, color: Color(0xFF007AFF)),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Dataset & Rujukan',
-                                  style: TextStyle(
-                                    color: Color(0xFF007AFF),
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -2493,7 +2466,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Referensi Riset & Dataset',
+                              'Rujukan Ilmiah & Dataset',
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w700,
@@ -2503,7 +2476,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                             ),
                             SizedBox(height: 2),
                             Text(
-                              'Dasar Teori Ilmiah & Sumber Data Transaksi',
+                              'Publikasi algoritma Apriori dan data transaksi',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
@@ -2560,7 +2533,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        'JURNAL NASIONAL (UTAMA)',
+                                        'JURNAL NASIONAL',
                                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: gunadarmaPurple, letterSpacing: 0.4),
                                       ),
                                     ),
@@ -2577,7 +2550,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  'Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nPenulis: Durrotun Nafisah et al. (UMK) • 310 KB',
+                                  'Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P., Muhammad Arifin (Universitas Muria Kudus)\nJurnal: JUKTISI, Vol. 5, No. 1, 2026 • 310 KB',
                                   style: TextStyle(fontSize: 11, color: mutedText, height: 1.3),
                                 ),
                                 const SizedBox(height: 12),
@@ -2617,7 +2590,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                             Icon(CupertinoIcons.globe, size: 13, color: gunadarmaPurple),
                                             SizedBox(width: 4),
                                             Text(
-                                              'Laman OJS',
+                                              'Laman Jurnal',
                                               style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
                                             ),
                                           ],
@@ -2659,7 +2632,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        'JURNAL PEMBANDING (INTERNASIONAL)',
+                                        'JURNAL PEMBANDING',
                                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF166534), letterSpacing: 0.4),
                                       ),
                                     ),
@@ -2676,7 +2649,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  'International Journal of Informatics and Information Systems (IJIIS)\nPenulis: Agung Budi Prasetio et al. • 381 KB',
+                                  'Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad (ITTS & Universiti Teknikal Malaysia Melaka)\nJurnal: IJIIS, Vol. 8, No. 2, 2025 • 381 KB',
                                   style: TextStyle(fontSize: 11, color: mutedText, height: 1.3),
                                 ),
                                 const SizedBox(height: 12),
@@ -2716,7 +2689,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                             Icon(CupertinoIcons.globe, size: 13, color: Color(0xFF166534)),
                                             SizedBox(width: 4),
                                             Text(
-                                              'Laman OJS',
+                                              'Laman Jurnal',
                                               style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF166534)),
                                             ),
                                           ],
@@ -2758,12 +2731,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: const Text(
-                                        'DATASET KAGGLE • 1.000 TRANSAKSI',
+                                        'DATASET TRANSAKSI',
                                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF007AFF), letterSpacing: 0.4),
                                       ),
                                     ),
                                     const Text(
-                                      'Kaggle CSV',
+                                      'Kaggle Groceries',
                                       style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w600),
                                     ),
                                   ],
@@ -2775,7 +2748,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  'Dataset riil transaksi pasar swalayan yang merekam kombinasi belanja konsumen untuk pengujian association rules mining.',
+                                  'Data transaksi riil pasar swalayan yang mencakup 1.000 riwayat belanja produk untuk pengujian kaidah asosiasi.',
                                   style: TextStyle(fontSize: 11, color: mutedText, height: 1.3),
                                 ),
                                 const SizedBox(height: 12),

@@ -139,7 +139,7 @@ class AcademicReferenceHelper {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Naskah & Jurnal Ilmiah',
+                                'Rujukan Ilmiah & Jurnal',
                                 style: TextStyle(
                                   fontSize: 16.5,
                                   fontWeight: FontWeight.w700,
@@ -149,7 +149,7 @@ class AcademicReferenceHelper {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                'Akses dokumen PDF atau kunjungi laman OJS',
+                                'Akses naskah PDF atau kunjungi laman jurnal',
                                 style: TextStyle(
                                   fontSize: 11.5,
                                   color: mutedText,
@@ -722,16 +722,17 @@ class AcademicReferenceHelper {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Naskah & Publikasi Jurnal Ilmiah',
+                              'Rujukan Ilmiah & Dataset',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 17,
                                 fontWeight: FontWeight.w700,
                                 color: darkText,
+                                letterSpacing: -0.3,
                               ),
                             ),
                             SizedBox(height: 2),
                             Text(
-                              'Jurnal Nasional & Jurnal Pembanding Internasional',
+                              'Publikasi ilmiah algoritma Apriori dan data transaksi',
                               style: TextStyle(fontSize: 12, color: mutedText),
                             ),
                           ],
@@ -768,7 +769,7 @@ class AcademicReferenceHelper {
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Text(
-                                      'JURNAL NASIONAL (UTAMA)',
+                                      'JURNAL NASIONAL',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w800,
@@ -796,7 +797,7 @@ class AcademicReferenceHelper {
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P, Muhammad Arifin\nAfiliasi: Program Studi Sistem Informasi, Universitas Muria Kudus\nPublikasi: Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nVolume & Terbitan: Vol. 5, No. 1, Juni 2026, Hal. 1146–1151\nDOI: 10.62712/juktisi.v5i1.1033\n\nPenelitian empiris analisis keranjang belanja (Market Basket Analysis) toko kelontong ritel untuk menentukan aturan asosiasi (Support, Confidence, Lift Ratio) dan penataan tata letak barang dagangan.',
+                                'Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P, Muhammad Arifin\nAfiliasi: Program Studi Sistem Informasi, Universitas Muria Kudus\nPublikasi: Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nVolume & Terbitan: Vol. 5, No. 1, Juni 2026, Hal. 1146–1151\nDOI: 10.62712/juktisi.v5i1.1033\n\nPenelitian empiris analisis keranjang belanja toko kelontong untuk menentukan kaidah asosiasi (Support, Confidence, Lift Ratio) serta rekomendasi tata letak produk dagang.',
                                 style: TextStyle(fontSize: 11.5, color: Color(0xFF4A4A4A), height: 1.45),
                               ),
                               const SizedBox(height: 12),
@@ -866,7 +867,7 @@ class AcademicReferenceHelper {
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Text(
-                                      'JURNAL PEMBANDING (INTERNASIONAL)',
+                                      'JURNAL PEMBANDING',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w800,
@@ -894,7 +895,7 @@ class AcademicReferenceHelper {
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad\nAfiliasi: Institut Teknologi Tangerang Selatan & Universiti Teknikal Malaysia Melaka (UTeM)\nPublikasi: International Journal of Informatics and Information Systems (IJIIS)\nVolume & Halaman: Vol. 8, No. 2, March 2025, pp. 67–74\nDOI: 10.47738/ijiis.v8i2.252\n\nStudi komparasi internasional mengenai sistem rekomendasi produk retail berbasis algoritma Apriori dengan fokus interpretabilitas pola asosiasi belanja konsumen.',
+                                'Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad\nAfiliasi: Institut Teknologi Tangerang Selatan & Universiti Teknikal Malaysia Melaka (UTeM)\nPublikasi: International Journal of Informatics and Information Systems (IJIIS)\nVolume & Halaman: Vol. 8, No. 2, March 2025, pp. 67–74\nDOI: 10.47738/ijiis.v8i2.252\n\nStudi komparasi internasional sistem rekomendasi produk retail berbasis algoritma Apriori dengan fokus interpretabilitas kaidah asosiasi transaksi belanja.',
                                 style: TextStyle(fontSize: 11.5, color: Color(0xFF4A4A4A), height: 1.45),
                               ),
                               const SizedBox(height: 12),
@@ -946,7 +947,7 @@ class AcademicReferenceHelper {
                         ),
                         const SizedBox(height: 16),
                         const Text(
-                          'PILIHAN AKSES NASKAH & DOKUMEN PDF',
+                          'AKSES DOKUMEN ILMIAH & DATASET',
                           style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: mutedText, letterSpacing: 0.5),
                         ),
                         const SizedBox(height: 10),
@@ -954,8 +955,8 @@ class AcademicReferenceHelper {
                           icon: CupertinoIcons.doc_text_fill,
                           iconColor: Colors.white,
                           bgColor: gunadarmaPurple,
-                          title: 'Buka PDF Jurnal Nasional (310 KB)',
-                          subtitle: 'Buka naskah Warung Kelontong Maju Jaya (JUKTISI)',
+                          title: 'Naskah Jurnal Nasional (310 KB)',
+                          subtitle: 'Warung Kelontong Maju Jaya (JUKTISI 2026)',
                           onTap: () => directOpenNationalPdf(context),
                         ),
                         const SizedBox(height: 8),
@@ -963,8 +964,8 @@ class AcademicReferenceHelper {
                           icon: CupertinoIcons.doc_text_fill,
                           iconColor: Colors.white,
                           bgColor: const Color(0xFF166534),
-                          title: 'Buka PDF Jurnal Pembanding Internasional (381 KB)',
-                          subtitle: 'Buka naskah Retail Recommendation Analysis (IJIIS)',
+                          title: 'Naskah Jurnal Pembanding (381 KB)',
+                          subtitle: 'Retail Transaction Analysis (IJIIS 2025)',
                           onTap: () => directOpenInternationalPdf(context),
                         ),
                         const SizedBox(height: 8),
@@ -972,7 +973,7 @@ class AcademicReferenceHelper {
                           icon: CupertinoIcons.link,
                           iconColor: gunadarmaPurple,
                           bgColor: const Color(0xFFF3E8FF),
-                          title: 'Laman Resmi Jurnal Nasional (JUKTISI)',
+                          title: 'Laman Jurnal Nasional (JUKTISI)',
                           subtitle: 'https://ejurnal.lkpkaryaprima.id/index.php/juktisi/article/view/1033/830',
                           onTap: () => safeLaunchUrl(context, nationalJournalUrl),
                         ),
@@ -981,7 +982,7 @@ class AcademicReferenceHelper {
                           icon: CupertinoIcons.globe,
                           iconColor: const Color(0xFF007AFF),
                           bgColor: const Color(0xFFE0F2FE),
-                          title: 'Laman Resmi Jurnal Pembanding (IJIIS)',
+                          title: 'Laman Jurnal Pembanding (IJIIS)',
                           subtitle: 'https://ijiis.org/index.php/IJIIS/article/view/252',
                           onTap: () => safeLaunchUrl(context, internationalJournalUrl),
                         ),
@@ -990,7 +991,7 @@ class AcademicReferenceHelper {
                           icon: CupertinoIcons.arrow_up_right_square,
                           iconColor: const Color(0xFFD97706),
                           bgColor: const Color(0xFFFEF3C7),
-                          title: 'Buka Link Dataset di Kaggle',
+                          title: 'Dataset Groceries di Kaggle',
                           subtitle: 'https://www.kaggle.com/datasets/heeraldedhia/groceries-dataset',
                           onTap: () => safeLaunchUrl(context, kaggleDatasetUrl),
                         ),
@@ -1000,37 +1001,37 @@ class AcademicReferenceHelper {
                           iconColor: const Color(0xFF007AFF),
                           bgColor: const Color(0xFFE0F2FE),
                           title: 'Unduh Berkas Dataset (.csv)',
-                          subtitle: 'Simpan file CSV 1.000 transaksi ke perangkat',
+                          subtitle: '1.000 riwayat transaksi format CSV (29.3 KB)',
                           onTap: () => downloadDatasetCsv(context),
                         ),
                         const SizedBox(height: 18),
                         const Text(
-                          'RINGKASAN & METODOLOGI PENELITIAN',
+                          'DASAR TEORI & PARAMETER EVALUASI',
                           style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: mutedText, letterSpacing: 0.5),
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '1. Latar Belakang & Urgensi Warung Kelontong & Ritel',
+                          title: '1. Konsep Algoritma Apriori',
                           content:
-                              'Pertumbuhan transaksi harian pada usaha ritel dan warung kelontong menghasilkan volume data belanja yang melimpah. Analisis pola asosiasi (Market Basket Analysis) diperlukan untuk menemukan kombinasi produk yang paling sering dibeli bersamaan guna optimalisasi penataan tata letak barang dagangan dan promosi bundling.',
+                              'Algoritma Apriori merupakan metode data mining untuk menemukan pola kombinasi antar-item dalam data transaksi melalui pemindaian frequent itemset secara bertahap berdasarkan prinsip apriori (apriori property).',
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '2. Formulasi Metrik Evaluasi Asosiasi',
+                          title: '2. Parameter Evaluasi Kaidah Asosiasi',
                           content:
-                              'Kaidah asosiasi diuji melalui tiga metrik baku:\n• Support: Frekuensi kemunculan kombinasi item dari total keseluruhan transaksi (P(A ∪ B)).\n• Confidence: Tingkat kepastian bahwa jika item A dibeli, item B juga akan dibeli (P(B|A)).\n• Lift Ratio: Ukuran kevalidan asosiasi terhadap probabilitas acak independen. Nilai Lift > 1 menandakan aturan asosiasi positif yang kuat dan signifikan.',
+                              'Kaidah asosiasi dievaluasi berdasarkan tiga metrik baku:\n• Support: Frekuensi kemunculan kombinasi item terhadap keseluruhan transaksi (P(A ∪ B)).\n• Confidence: Tingkat kepastian terjadinya pembelian item konsekuen saat item anteseden dibeli (P(B|A)).\n• Lift Ratio: Rasio kekuatan keterikatan asosiasi terhadap probabilitas acak. Nilai Lift > 1 menandakan aturan yang valid dan saling berpengaruh positif.',
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '3. Kaidah Asosiasi & Rekomendasi Penataan Produk',
+                          title: '3. Penerapan pada Penataan Produk',
                           content:
-                              'Penerapan algoritma Apriori menghasilkan aturan asosiasi nyata pada transaksi kelontong dan ritel, memungkinkan penempatan produk komplementer pada etalase yang berdekatan untuk meningkatkan basket size dan efisiensi belanja konsumen.',
+                              'Aturan asosiasi yang memenuhi ambang batas minimum digunakan sebagai dasar penataan etalase toko dan penyusunan strategi paket promosi (bundling) produk komplementer guna meningkatkan efisiensi operasional dan kepuasan pelanggan.',
                         ),
                         const SizedBox(height: 10),
                         _buildTextCard(
-                          title: '4. Sintesis Riset Nasional & Internasional',
+                          title: '4. Landasan Rujukan Penelitian',
                           content:
-                              'Penelitian JUKTISI (2026) dan IJIIS (2025) saling menguatkan bahwa algoritma Apriori menghasilkan rekomendasi produk yang transparan, mudah diinterpretasikan oleh pemilik toko/manajemen ritel, serta terbukti efektif untuk dataset transaksi skala nyata.',
+                              'Penelitian JUKTISI (2026) dan IJIIS (2025) membuktikan bahwa algoritma Apriori efektif dan mudah diinterpretasikan untuk analisis pola transaksi retail pada skala toko kelontong maupun supermarket.',
                         ),
                         const SizedBox(height: 18),
                         Row(
@@ -1095,24 +1096,6 @@ class AcademicReferenceHelper {
                               ),
                             ),
                           ],
-                        ),
-                        const SizedBox(height: 10),
-                        CupertinoButton(
-                          padding: const EdgeInsets.symmetric(vertical: 13),
-                          color: gunadarmaPurple,
-                          borderRadius: BorderRadius.circular(12),
-                          onPressed: () => showPdfDirectPicker(context),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(CupertinoIcons.doc_text_fill, size: 16, color: Colors.white),
-                              SizedBox(width: 8),
-                              Text(
-                                'Buka Berkas PDF Jurnal',
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white),
-                              ),
-                            ],
-                          ),
                         ),
                       ],
                     ),
@@ -1238,7 +1221,7 @@ class AcademicReferenceHelper {
                       Icon(CupertinoIcons.globe, size: 13, color: tagColor),
                       const SizedBox(width: 4),
                       Text(
-                        'Laman OJS',
+                        'Laman Jurnal',
                         style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: tagColor),
                       ),
                     ],
