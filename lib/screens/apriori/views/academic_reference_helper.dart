@@ -7,10 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AcademicReferenceHelper {
-  static const Color gunadarmaPurple = Color(0xFF4A148C);
-  static const Color darkText = Color(0xFF1C1C1E);
-  static const Color mutedText = Color(0xFF8E8E93);
-  static const Color cardBorder = Color(0xFFE5E5EA);
+  static const Color gunadarmaPurple = Color(0xFF581C87);
+  static const Color accentPurple = Color(0xFF7E22CE);
+  static const Color darkText = Color(0xFF1E1B4B);
+  static const Color mutedText = Color(0xFF6B7280);
+  static const Color cardBorder = Color(0xFFEDE9FE);
 
   static const String nationalJournalUrl =
       'https://ejurnal.lkpkaryaprima.id/index.php/juktisi/article/view/1033/830';
@@ -163,7 +164,7 @@ class AcademicReferenceHelper {
           tagBg: const Color(0xFFF3E8FF),
           title:
               'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
-          meta: 'JUKTISI (2026) • Durrotun Nafisah et al. • 310 KB',
+          meta: 'JUKTISI (2026) • Durrotun Nafisah et al. • 1.8 MB (6 Hal)',
           onOpenPdf: () {
             Navigator.of(sheetContext).pop();
             directOpenNationalPdf(context);
@@ -175,11 +176,11 @@ class AcademicReferenceHelper {
         _buildJournalCard(
           context: context,
           tag: 'JURNAL PEMBANDING (INTERNASIONAL)',
-          tagColor: const Color(0xFF166534),
-          tagBg: const Color(0xFFDCFCE7),
+          tagColor: const Color(0xFF4C1D95),
+          tagBg: const Color(0xFFEDE9FE),
           title:
               'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
-          meta: 'IJIIS (2025) • Agung Budi Prasetio et al. • 381 KB',
+          meta: 'IJIIS (2025) • Agung Budi Prasetio et al. • 2.5 MB (8 Hal)',
           onOpenPdf: () {
             Navigator.of(sheetContext).pop();
             directOpenInternationalPdf(context);
@@ -440,7 +441,7 @@ class AcademicReferenceHelper {
           iconColor: gunadarmaPurple,
           bgColor: const Color(0xFFF3E8FF),
           title: 'PDF Jurnal Nasional (JUKTISI)',
-          subtitle: 'Warung Kelontong Maju Jaya • 310 KB',
+          subtitle: 'Warung Kelontong Maju Jaya • 1.8 MB (6 Hal)',
           onTap: () {
             Navigator.of(sheetContext).pop();
             downloadNationalJournalPdf(context);
@@ -449,10 +450,10 @@ class AcademicReferenceHelper {
         const SizedBox(height: 8),
         _buildDownloadTile(
           icon: CupertinoIcons.doc_text_fill,
-          iconColor: const Color(0xFF166534),
-          bgColor: const Color(0xFFDCFCE7),
+          iconColor: const Color(0xFF4C1D95),
+          bgColor: const Color(0xFFEDE9FE),
           title: 'PDF Jurnal Pembanding (IJIIS)',
-          subtitle: 'Retail Transaction Analysis • 381 KB',
+          subtitle: 'Retail Transaction Analysis • 2.5 MB (8 Hal)',
           onTap: () {
             Navigator.of(sheetContext).pop();
             downloadInternationalJournalPdf(context);
@@ -849,6 +850,80 @@ class AcademicReferenceHelper {
     );
   }
 
+  static Widget _buildAcademicMetadataRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    bool isLink = false,
+    VoidCallback? onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            margin: const EdgeInsets.only(top: 1.5),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3E8FF),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Icon(icon, size: 11, color: gunadarmaPurple),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 78,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontFamily: "Plus Jakarta",
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: mutedText,
+              ),
+            ),
+          ),
+          const Text(
+            ": ",
+            style: TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: mutedText,
+            ),
+          ),
+          Expanded(
+            child: isLink
+                ? GestureDetector(
+                    onTap: onTap,
+                    child: Text(
+                      value,
+                      style: const TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: gunadarmaPurple,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  )
+                : Text(
+                    value,
+                    style: const TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      color: darkText,
+                      height: 1.35,
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
   static Widget _buildJournalModalContent(
     BuildContext context,
     VoidCallback onClose, {
@@ -894,26 +969,37 @@ class AcademicReferenceHelper {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
             children: [
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFAF5FF),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFE9D5FF)),
+                            border: Border.all(color: cardBorder, width: 1.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x06581C87),
+                                blurRadius: 16,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 6,
+                                crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                                     decoration: BoxDecoration(
                                       color: gunadarmaPurple,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Text(
-                                      'JURNAL NASIONAL',
+                                      'JURNAL NASIONAL (UTAMA)',
                                       style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
                                         fontSize: 10,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.white,
@@ -921,45 +1007,134 @@ class AcademicReferenceHelper {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'e-ISSN: 2963-7104',
-                                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: mutedText),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFAF5FF),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: cardBorder),
+                                    ),
+                                    child: const Text(
+                                      'p-ISSN: 2962-3022 • e-ISSN: 2963-7104',
+                                      style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: gunadarmaPurple,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3E8FF),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Text(
+                                      'JUKTISI Vol. 5 No. 1 (2026)',
+                                      style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: gunadarmaPurple,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 12),
                               const Text(
                                 'Implementasi Algoritma Apriori Untuk Analisis Pola Pembelian Pada Data Transaksi Warung Kelontong Maju Jaya',
                                 style: TextStyle(
+                                  fontFamily: "Plus Jakarta",
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   color: darkText,
                                   height: 1.35,
                                 ),
                               ),
+                              const SizedBox(height: 10),
+                              const Divider(height: 1, thickness: 0.5, color: cardBorder),
                               const SizedBox(height: 8),
-                              const Text(
-                                'Penulis: Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P, Muhammad Arifin\nAfiliasi: Program Studi Sistem Informasi, Universitas Muria Kudus\nPublikasi: Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)\nVolume & Terbitan: Vol. 5, No. 1, Juni 2026, Hal. 1146–1151\nDOI: 10.62712/juktisi.v5i1.1033\n\nPenelitian empiris analisis keranjang belanja toko kelontong untuk menentukan kaidah asosiasi (Support, Confidence, Lift Ratio) serta rekomendasi tata letak produk dagang.',
-                                style: TextStyle(fontSize: 11.5, color: Color(0xFF4A4A4A), height: 1.45),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.person_2_fill,
+                                label: 'Penulis',
+                                value: 'Durrotun Nafisah, Dian Asriningati, Seila Desy Maulia, M. Alvino Bintang P., Muhammad Arifin',
                               ),
-                              const SizedBox(height: 12),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.building_2_fill,
+                                label: 'Afiliasi',
+                                value: 'Program Studi Sistem Informasi, Universitas Muria Kudus',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.book_fill,
+                                label: 'Publikasi',
+                                value: 'Jurnal Komputer Teknologi Informasi Sistem Komputer (JUKTISI)',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.calendar,
+                                label: 'Edisi & Hal',
+                                value: 'Volume 5, No. 1, Juni 2026, Hal. 1146–1151',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.link,
+                                label: 'DOI',
+                                value: '10.62712/juktisi.v5i1.1033',
+                                isLink: true,
+                                onTap: () => safeLaunchUrl(context, nationalJournalDoiUrl),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFAF5FF),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: cardBorder),
+                                ),
+                                child: const Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(CupertinoIcons.quote_bubble_fill, size: 14, color: gunadarmaPurple),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Penelitian empiris analisis keranjang belanja (Market Basket Analysis) warung kelontong untuk menentukan kaidah asosiasi pola pembelian (Support, Confidence, Lift Ratio) serta rekomendasi tata letak produk dagang.',
+                                        style: TextStyle(
+                                          fontFamily: "Plus Jakarta",
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w500,
+                                          color: darkText,
+                                          height: 1.45,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 14),
                               Row(
                                 children: [
                                   Expanded(
+                                    flex: 6,
                                     child: CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(vertical: 9),
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
                                       color: gunadarmaPurple,
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(9),
                                       onPressed: () => directOpenNationalPdf(context),
                                       child: const Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Icon(CupertinoIcons.eye_fill, size: 14, color: Colors.white),
+                                          Icon(CupertinoIcons.doc_text_fill, size: 14, color: Colors.white),
                                           SizedBox(width: 6),
                                           Text(
-                                            'Buka PDF Langsung',
-                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                                            'Buka PDF Langsung (1.8 MB)',
+                                            style: TextStyle(
+                                              fontFamily: "Plus Jakarta",
+                                              fontSize: 11.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -967,117 +1142,25 @@ class AcademicReferenceHelper {
                                   ),
                                   const SizedBox(width: 8),
                                   Expanded(
+                                    flex: 4,
                                     child: CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(vertical: 9),
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
                                       color: const Color(0xFFF3E8FF),
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(9),
                                       onPressed: () => downloadNationalJournalPdf(context),
                                       child: const Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: gunadarmaPurple),
-                                          SizedBox(width: 6),
+                                          Icon(CupertinoIcons.arrow_down_to_line, size: 14, color: gunadarmaPurple),
+                                          SizedBox(width: 5),
                                           Text(
                                             'Unduh PDF',
-                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF0FDF4),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFBBF7D0)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF166534),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: const Text(
-                                      'JURNAL PEMBANDING',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'ISSN: 2579-7069',
-                                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: mutedText),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: darkText,
-                                  height: 1.35,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                'Penulis: Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad\nAfiliasi: Institut Teknologi Tangerang Selatan & Universiti Teknikal Malaysia Melaka (UTeM)\nPublikasi: International Journal of Informatics and Information Systems (IJIIS)\nVolume & Halaman: Vol. 8, No. 2, March 2025, pp. 67–74\nDOI: 10.47738/ijiis.v8i2.252\n\nStudi komparasi internasional sistem rekomendasi produk retail berbasis algoritma Apriori dengan fokus interpretabilitas kaidah asosiasi transaksi belanja.',
-                                style: TextStyle(fontSize: 11.5, color: Color(0xFF4A4A4A), height: 1.45),
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(vertical: 9),
-                                      color: const Color(0xFF166534),
-                                      borderRadius: BorderRadius.circular(8),
-                                      onPressed: () => directOpenInternationalPdf(context),
-                                      child: const Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(CupertinoIcons.eye_fill, size: 14, color: Colors.white),
-                                          SizedBox(width: 6),
-                                          Text(
-                                            'Buka PDF Langsung',
-                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(vertical: 9),
-                                      color: const Color(0xFFDCFCE7),
-                                      borderRadius: BorderRadius.circular(8),
-                                      onPressed: () => downloadInternationalJournalPdf(context),
-                                      child: const Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: Color(0xFF166534)),
-                                          SizedBox(width: 6),
-                                          Text(
-                                            'Unduh PDF',
-                                            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Color(0xFF166534)),
+                                            style: TextStyle(
+                                              fontFamily: "Plus Jakarta",
+                                              fontSize: 11.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: gunadarmaPurple,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -1089,16 +1172,226 @@ class AcademicReferenceHelper {
                           ),
                         ),
                         const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: cardBorder, width: 1.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x06581C87),
+                                blurRadius: 16,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 6,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF4C1D95),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Text(
+                                      'JURNAL PEMBANDING (INTERNASIONAL)',
+                                      style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFAF5FF),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: cardBorder),
+                                    ),
+                                    child: const Text(
+                                      'ISSN: 2579-7069',
+                                      style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF4C1D95),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3E8FF),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Text(
+                                      'IJIIS Vol. 8 No. 2 (2025)',
+                                      style: TextStyle(
+                                        fontFamily: "Plus Jakarta",
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF4C1D95),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Interpretable Product Recommendation through Association Rule Mining: An Apriori-Based Analysis on Retail Transaction Data',
+                                style: TextStyle(
+                                  fontFamily: "Plus Jakarta",
+                                  fontSize: 14.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: darkText,
+                                  height: 1.35,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              const Divider(height: 1, thickness: 0.5, color: cardBorder),
+                              const SizedBox(height: 8),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.person_2_fill,
+                                label: 'Authors',
+                                value: 'Agung Budi Prasetio, Burhanuddin bin Mohd Aboobaider, Asmala bin Ahmad',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.building_2_fill,
+                                label: 'Affiliation',
+                                value: 'Institut Teknologi Tangerang Selatan & Universiti Teknikal Malaysia Melaka (UTeM)',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.book_fill,
+                                label: 'Publication',
+                                value: 'International Journal of Informatics and Information Systems (IJIIS)',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.calendar,
+                                label: 'Issue / Hal',
+                                value: 'Vol. 8, No. 2, March 2025, pp. 67–74',
+                              ),
+                              _buildAcademicMetadataRow(
+                                icon: CupertinoIcons.link,
+                                label: 'DOI',
+                                value: '10.47738/ijiis.v8i2.252',
+                                isLink: true,
+                                onTap: () => safeLaunchUrl(context, internationalJournalDoiUrl),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFAF5FF),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: cardBorder),
+                                ),
+                                child: const Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(CupertinoIcons.quote_bubble_fill, size: 14, color: Color(0xFF4C1D95)),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Studi komparasi internasional sistem rekomendasi produk retail berbasis algoritma Apriori dengan fokus interpretabilitas kaidah asosiasi transaksi belanja (Groceries Dataset 38.765 transaksi).',
+                                        style: TextStyle(
+                                          fontFamily: "Plus Jakarta",
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w500,
+                                          color: darkText,
+                                          height: 1.45,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      color: const Color(0xFF4C1D95),
+                                      borderRadius: BorderRadius.circular(9),
+                                      onPressed: () => directOpenInternationalPdf(context),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons.doc_text_fill, size: 14, color: Colors.white),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            'Buka PDF Langsung (2.5 MB)',
+                                            style: TextStyle(
+                                              fontFamily: "Plus Jakarta",
+                                              fontSize: 11.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 4,
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      color: const Color(0xFFF3E8FF),
+                                      borderRadius: BorderRadius.circular(9),
+                                      onPressed: () => downloadInternationalJournalPdf(context),
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons.arrow_down_to_line, size: 14, color: Color(0xFF4C1D95)),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            'Unduh PDF',
+                                            style: TextStyle(
+                                              fontFamily: "Plus Jakarta",
+                                              fontSize: 11.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF4C1D95),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 18),
                         const Text(
                           'AKSES DOKUMEN ILMIAH & DATASET',
-                          style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: mutedText, letterSpacing: 0.5),
+                          style: TextStyle(
+                            fontFamily: "Plus Jakarta",
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w800,
+                            color: gunadarmaPurple,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                         const SizedBox(height: 10),
                         _buildActionTile(
                           icon: CupertinoIcons.doc_text_fill,
                           iconColor: Colors.white,
                           bgColor: gunadarmaPurple,
-                          title: 'Naskah Jurnal Nasional (310 KB)',
+                          title: 'Naskah Jurnal Nasional (PDF 1.8 MB)',
                           subtitle: 'Warung Kelontong Maju Jaya (JUKTISI 2026)',
                           onTap: () => directOpenNationalPdf(context),
                         ),
@@ -1106,8 +1399,8 @@ class AcademicReferenceHelper {
                         _buildActionTile(
                           icon: CupertinoIcons.doc_text_fill,
                           iconColor: Colors.white,
-                          bgColor: const Color(0xFF166534),
-                          title: 'Naskah Jurnal Pembanding (381 KB)',
+                          bgColor: const Color(0xFF4C1D95),
+                          title: 'Naskah Jurnal Pembanding (PDF 2.5 MB)',
                           subtitle: 'Retail Transaction Analysis (IJIIS 2025)',
                           onTap: () => directOpenInternationalPdf(context),
                         ),
