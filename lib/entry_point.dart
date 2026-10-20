@@ -14,12 +14,12 @@ class _EntryPointState extends State<EntryPoint> {
   int _currentIndex = 0;
   late final List<Widget> _pages;
 
-  static const Color primaryPurple = Color(0xFF4A148C);
-  static const Color darkText = Color(0xFF0F172A);
-  static const Color slateMuted = Color(0xFF64748B);
-  static const Color slateSubtle = Color(0xFF94A3B8);
-  static const Color lightBg = Color(0xFFF8FAFC);
-  static const Color borderSubtle = Color(0xFFE2E8F0);
+  static const Color primaryPurple = Color(0xFF581C87);
+  static const Color darkText = Color(0xFF1E1B4B);
+  static const Color slateMuted = Color(0xFF6B7280);
+  static const Color slateSubtle = Color(0xFF9CA3AF);
+  static const Color lightBg = Color(0xFFFBFBFE);
+  static const Color borderSubtle = Color(0xFFEDE9FE);
 
   @override
   void initState() {

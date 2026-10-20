@@ -14,15 +14,15 @@ class HomeScreen extends StatelessWidget {
     this.userName,
   });
 
-  static const Color gunadarmaPurple = Color(0xFF2E1065);
-  static const Color accentPurple = Color(0xFF5856D6);
-  static const Color darkText = Color(0xFF1C1C1E);
-  static const Color textBody = Color(0xFF3A3A3C);
-  static const Color textMuted = Color(0xFF8E8E93);
-  static const Color textSubtle = Color(0xFFAEB2B7);
-  static const Color borderLine = Color(0xFFE5E5EA);
+  static const Color gunadarmaPurple = Color(0xFF581C87);
+  static const Color accentPurple = Color(0xFF7E22CE);
+  static const Color darkText = Color(0xFF1E1B4B);
+  static const Color textBody = Color(0xFF334155);
+  static const Color textMuted = Color(0xFF6B7280);
+  static const Color textSubtle = Color(0xFF9CA3AF);
+  static const Color borderLine = Color(0xFFEDE9FE);
   static const Color cardBg = Color(0xFFFFFFFF);
-  static const Color pageBg = Color(0xFFF2F2F7);
+  static const Color pageBg = Color(0xFFFBFBFE);
 
   @override
   Widget build(BuildContext context) {

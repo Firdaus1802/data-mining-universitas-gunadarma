@@ -8,12 +8,15 @@ import 'package:shop/screens/apriori/views/academic_reference_helper.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  static const Color darkText = Color(0xFF1C1C1E);
-  static const Color textMuted = Color(0xFF8E8E93);
-  static const Color borderLine = Color(0xFFE5E5EA);
+  static const Color gunadarmaPurple = Color(0xFF581C87);
+  static const Color accentPurple = Color(0xFF7E22CE);
+  static const Color darkText = Color(0xFF1E1B4B);
+  static const Color textMuted = Color(0xFF6B7280);
+  static const Color borderLine = Color(0xFFEDE9FE);
   static const Color cardBg = Color(0xFFFFFFFF);
-  static const Color pageBg = Color(0xFFF2F2F7);
-  static const Color gunadarmaPurple = Color(0xFF4A148C);
+  static const Color pageBg = Color(0xFFFBFBFE);
+  static const Color purpleTint = Color(0xFFF3E8FF);
+  static const Color purpleLightPill = Color(0xFFFAF5FF);
   static const Color destructiveRed = Color(0xFFFF3B30);
 
   @override
@@ -39,62 +42,66 @@ class ProfileScreen extends StatelessWidget {
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: isDesktop ? 1140 : 820),
-                  child: isDesktop
-                      ? Column(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildPageHeader(context, isDesktop),
+                      const SizedBox(height: 18),
+                      if (isDesktop)
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 5,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _buildAppleIdHeaderCard(context, state, displayName, email),
-                                      const SizedBox(height: 22),
-                                      _buildTeamSection(context, state),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 24),
-                                Expanded(
-                                  flex: 7,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _buildDatabaseSection(context, state),
-                                      const SizedBox(height: 22),
-                                      _buildAprioriConfigSection(state),
-                                      const SizedBox(height: 22),
-                                      _buildSystemSection(context, state),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            Expanded(
+                              flex: 6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildAppleIdHeaderCard(context, state, displayName, email),
+                                  const SizedBox(height: 20),
+                                  _buildTeamMembersCard(context, state),
+                                  const SizedBox(height: 20),
+                                  _buildAcademicInfoCard(),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 32),
-                            _buildFooter(),
-                            const SizedBox(height: 10),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildDatabaseSection(context, state),
+                                  const SizedBox(height: 20),
+                                  _buildAprioriConfigSection(state),
+                                  const SizedBox(height: 20),
+                                  _buildSystemSection(context, state),
+                                ],
+                              ),
+                            ),
                           ],
                         )
-                      : Column(
+                      else
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildAppleIdHeaderCard(context, state, displayName, email),
-                            const SizedBox(height: 22),
-                            _buildTeamSection(context, state),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 20),
+                            _buildTeamMembersCard(context, state),
+                            const SizedBox(height: 20),
+                            _buildAcademicInfoCard(),
+                            const SizedBox(height: 20),
                             _buildDatabaseSection(context, state),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 20),
                             _buildAprioriConfigSection(state),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 20),
                             _buildSystemSection(context, state),
-                            const SizedBox(height: 28),
-                            _buildFooter(),
-                            const SizedBox(height: 10),
                           ],
                         ),
+                      const SizedBox(height: 32),
+                      _buildFooter(),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -104,23 +111,405 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTeamSection(BuildContext context, AprioriStateManager state) {
+  Widget _buildPageHeader(BuildContext context, bool isDesktop) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderLine, width: 0.8),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x06581C87),
+            blurRadius: 16,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: purpleTint,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: borderLine),
+            ),
+            padding: const EdgeInsets.all(6),
+            child: Image.asset(
+              "assets/logo/gunadarma.png",
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => const Icon(
+                CupertinoIcons.gear_alt_fill,
+                color: gunadarmaPurple,
+                size: 22,
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Pengaturan & Profil Akademik",
+                  style: TextStyle(
+                    fontFamily: "Plus Jakarta",
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: darkText,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  "Universitas Gunadarma • S1 Sistem Informasi • 3KA31",
+                  style: TextStyle(
+                    fontFamily: "Plus Jakarta",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: textMuted,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          if (isDesktop)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: purpleLightPill,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: borderLine),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    CupertinoIcons.checkmark_seal_fill,
+                    size: 13,
+                    color: gunadarmaPurple,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    "Sistem Aktif",
+                    style: TextStyle(
+                      fontFamily: "Plus Jakarta",
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                      color: gunadarmaPurple,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppleIdHeaderCard(
+    BuildContext context,
+    AprioriStateManager state,
+    String displayName,
+    String email,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderLine, width: 0.8),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x06581C87),
+            blurRadius: 16,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [gunadarmaPurple, accentPurple],
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: gunadarmaPurple.withValues(alpha: 0.25),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                _getInitials(displayName),
+                style: const TextStyle(
+                  fontFamily: "Plus Jakarta",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  displayName,
+                  style: const TextStyle(
+                    fontFamily: "Plus Jakarta",
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w700,
+                    color: darkText,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 3),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: purpleLightPill,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: borderLine),
+                      ),
+                      child: const Text(
+                        "10124497",
+                        style: TextStyle(
+                          fontFamily: "Plus Jakarta",
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: gunadarmaPurple,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      "Ketua Kelompok 4",
+                      style: TextStyle(
+                        fontFamily: "Plus Jakarta",
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: gunadarmaPurple,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 3),
+                const Text(
+                  "S1 Sistem Informasi • Kelas 3KA31",
+                  style: TextStyle(
+                    fontFamily: "Plus Jakarta",
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w400,
+                    color: textMuted,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          CupertinoButton(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            color: purpleLightPill,
+            borderRadius: BorderRadius.circular(8),
+            onPressed: () => _showEditUserNameDialog(context, state, displayName),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  CupertinoIcons.pencil,
+                  size: 13,
+                  color: gunadarmaPurple,
+                ),
+                SizedBox(width: 4),
+                Text(
+                  "Ubah",
+                  style: TextStyle(
+                    fontFamily: "Plus Jakarta",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: gunadarmaPurple,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getInitials(String name) {
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.isEmpty || parts[0].isEmpty) return "FD";
+    if (parts.length == 1) return parts[0].substring(0, 1).toUpperCase();
+    return "${parts[0].substring(0, 1)}${parts[1].substring(0, 1)}".toUpperCase();
+  }
+
+  void _showEditUserNameDialog(BuildContext context, AprioriStateManager state, String currentName) {
+    final controller = TextEditingController(text: currentName);
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text("Ubah Nama Profil"),
+        content: Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: CupertinoTextField(
+            controller: controller,
+            placeholder: "Nama Lengkap",
+            autofocus: true,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            style: const TextStyle(fontSize: 14),
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text("Batal"),
+            onPressed: () => Navigator.pop(ctx),
+          ),
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty) {
+                state.setUserName(newName);
+              }
+              Navigator.pop(ctx);
+            },
+            child: const Text("Simpan"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTeamMembersCard(BuildContext context, AprioriStateManager state) {
+    final members = state.teamMembers;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader("TIM PENELITI & AKADEMIK"),
+        _buildSectionHeader("ANGGOTA KELOMPOK 4 (3KA31)"),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: cardBg,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: borderLine, width: 0.8),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x06581C87),
+                blurRadius: 16,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: List.generate(members.length, (index) {
+              final member = members[index];
+              final isLead = index == 0;
+              final isLast = index == members.length - 1;
+
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 26,
+                          height: 26,
+                          decoration: BoxDecoration(
+                            color: isLead ? gunadarmaPurple : purpleTint,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "${index + 1}",
+                              style: TextStyle(
+                                fontFamily: "Plus Jakarta",
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w700,
+                                color: isLead ? Colors.white : gunadarmaPurple,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            member.name,
+                            style: TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 13.5,
+                              fontWeight: isLead ? FontWeight.w700 : FontWeight.w600,
+                              color: darkText,
+                              letterSpacing: -0.2,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: isLead ? purpleTint : purpleLightPill,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: borderLine),
+                          ),
+                          child: Text(
+                            member.npm,
+                            style: const TextStyle(
+                              fontFamily: "Plus Jakarta",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: gunadarmaPurple,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isLast)
+                    const Divider(height: 0.5, thickness: 0.5, indent: 52, color: borderLine),
+                ],
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAcademicInfoCard() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader("INFORMASI AKADEMIK & KURIKULUM"),
         _buildGroupCard([
           _buildSettingsTile(
-            icon: CupertinoIcons.person_2_fill,
-            iconColor: const Color(0xFF1C1C1E),
-            title: "Anggota Tim",
-            trailing: "${state.teamMembers.length} Profil",
-            onTap: () => _showTeamMembersModal(context, state),
-          ),
-          const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
-          _buildSettingsTile(
             icon: CupertinoIcons.person_crop_circle_badge_checkmark,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Dosen Pengampu",
             trailing: "Dr. Dina Anggraini, S.Kom., M.M.S.I.",
             showChevron: false,
@@ -128,7 +517,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.book_fill,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Mata Kuliah",
             trailing: "Konsep Data Mining",
             showChevron: false,
@@ -136,7 +524,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.number,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Kelas",
             trailing: "3KA31",
             showChevron: false,
@@ -144,7 +531,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.square_grid_2x2_fill,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Jurusan / Prodi",
             trailing: "S1 Sistem Informasi",
             showChevron: false,
@@ -152,9 +538,8 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.building_2_fill,
-            iconColor: const Color(0xFF1C1C1E),
-            title: "Institusi",
-            trailing: "Universitas Gunadarma",
+            title: "Fakultas & Institusi",
+            trailing: "FIKTI • Univ. Gunadarma",
             showChevron: false,
           ),
         ]),
@@ -170,17 +555,15 @@ class ProfileScreen extends StatelessWidget {
         _buildGroupCard([
           _buildSettingsTile(
             icon: CupertinoIcons.archivebox_fill,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Status Penyimpanan",
             trailing: state.transactions.isNotEmpty
-                ? "${state.totalTransactions} Transaksi"
-                : "Kosong (0 Struk)",
+                ? "${state.totalTransactions} Transaksi Aktif"
+                : "Kosong (0 Transaksi)",
             showChevron: false,
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.book_circle_fill,
-            iconColor: gunadarmaPurple,
             title: "Rujukan Jurnal & Dataset",
             trailing: "JUKTISI • CSV",
             onTap: () => _showAcademicReferenceModal(context),
@@ -188,7 +571,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.doc_text_fill,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Format Berkas",
             trailing: "CSV, TSV, TXT, Excel",
             showChevron: false,
@@ -196,7 +578,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.arrow_clockwise_circle_fill,
-            iconColor: gunadarmaPurple,
             title: "Muat Dataset Contoh",
             trailing: "Pulihkan",
             onTap: () => _showResetDatasetConfirm(context, state),
@@ -223,7 +604,6 @@ class ProfileScreen extends StatelessWidget {
         _buildGroupCard([
           _buildSettingsTile(
             icon: CupertinoIcons.slider_horizontal_3,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Minimum Support",
             trailing: "${state.minSupport.toStringAsFixed(1)}%",
             showChevron: false,
@@ -231,7 +611,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.percent,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Minimum Confidence",
             trailing: "${state.minConfidence.toStringAsFixed(1)}%",
             showChevron: false,
@@ -239,7 +618,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.chart_bar_fill,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Metrik Evaluasi",
             trailing: "Support, Conf, Lift",
             showChevron: false,
@@ -247,7 +625,6 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.scissors,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Pruning Engine",
             trailing: "Anti-monotonicity",
             showChevron: false,
@@ -265,7 +642,6 @@ class ProfileScreen extends StatelessWidget {
         _buildGroupCard([
           _buildSettingsTile(
             icon: CupertinoIcons.info_circle_fill,
-            iconColor: const Color(0xFF1C1C1E),
             title: "Versi Aplikasi",
             trailing: "1.0.0 (Release)",
             showChevron: false,
@@ -273,15 +649,13 @@ class ProfileScreen extends StatelessWidget {
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: _getDetectedDesignSystemIcon(),
-            iconColor: const Color(0xFF1C1C1E),
-            title: "Device Platform",
+            title: "Platform Runtime",
             trailing: _getDetectedPlatformName(),
             showChevron: false,
           ),
           const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
           _buildSettingsTile(
             icon: CupertinoIcons.sparkles,
-            iconColor: gunadarmaPurple,
             title: "Mode Akses",
             trailing: "Demo Akademik",
             showChevron: false,
@@ -302,117 +676,28 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildFooter() {
-    return Center(
+    return const Center(
       child: Column(
         children: [
-          const Text(
+          Text(
             "UNIVERSITAS GUNADARMA",
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 11.5,
               fontWeight: FontWeight.w700,
-              color: textMuted,
+              color: gunadarmaPurple,
               letterSpacing: 0.8,
             ),
           ),
-          const SizedBox(height: 3),
+          SizedBox(height: 3),
           Text(
             "S1 Sistem Informasi • Kelas 3KA31 • Kelompok 4 © 2026",
             style: TextStyle(
-              fontSize: 10,
-              color: textMuted.withValues(alpha: 0.8),
+              fontSize: 10.5,
+              fontWeight: FontWeight.w500,
+              color: textMuted,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAppleIdHeaderCard(BuildContext context, AprioriStateManager state, String displayName, String email) {
-    return CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: () => _showTeamMembersModal(context, state),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: cardBg,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: borderLine, width: 0.6),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x04000000),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF2F2F7),
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Icon(
-                  CupertinoIcons.person_crop_circle_fill,
-                  size: 34,
-                  color: gunadarmaPurple,
-                ),
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    displayName,
-                    style: const TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 16.5,
-                      fontWeight: FontWeight.w600,
-                      color: darkText,
-                      letterSpacing: -0.3,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  const Text(
-                    "10124497 • S1 Sistem Informasi",
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w400,
-                      color: textMuted,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 3),
-                  const Text(
-                    "Ketua Kelompok 4 • Kelas 3KA31",
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w500,
-                      color: gunadarmaPurple,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(
-              CupertinoIcons.chevron_right,
-              size: 15,
-              color: Color(0xFFC7C7CC),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -423,9 +708,10 @@ class ProfileScreen extends StatelessWidget {
       child: Text(
         title,
         style: const TextStyle(
+          fontFamily: "Plus Jakarta",
           fontSize: 11.5,
-          fontWeight: FontWeight.w600,
-          color: textMuted,
+          fontWeight: FontWeight.w700,
+          color: gunadarmaPurple,
           letterSpacing: 0.6,
         ),
       ),
@@ -437,13 +723,13 @@ class ProfileScreen extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: borderLine, width: 0.8),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x04000000),
-            blurRadius: 8,
-            offset: Offset(0, 2),
+            color: Color(0x06581C87),
+            blurRadius: 16,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -455,14 +741,16 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildSettingsTile({
     required IconData icon,
-    required Color iconColor,
+    Color? iconColor,
     required String title,
     required String trailing,
-    String? subtitle,
     Color? titleColor,
     VoidCallback? onTap,
     bool showChevron = true,
   }) {
+    final effectiveIconColor = iconColor ?? gunadarmaPurple;
+    final isDestructive = iconColor == destructiveRed;
+
     final tileContent = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
@@ -472,54 +760,26 @@ class ProfileScreen extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: const Color(0xFFF2F2F7),
-              borderRadius: BorderRadius.circular(7),
+              color: isDestructive ? const Color(0xFFFFEBEB) : purpleTint,
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
-              size: 16,
-              color: iconColor,
+              size: 15,
+              color: effectiveIconColor,
             ),
           ),
           const SizedBox(width: 12),
-          if (subtitle != null && subtitle.isNotEmpty)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontFamily: "Plus Jakarta",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: titleColor ?? darkText,
-                    letterSpacing: -0.2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontFamily: "Plus Jakarta",
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: textMuted,
-                  ),
-                ),
-              ],
-            )
-          else
-            Text(
-              title,
-              style: TextStyle(
-                fontFamily: "Plus Jakarta",
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: titleColor ?? darkText,
-                letterSpacing: -0.2,
-              ),
+          Text(
+            title,
+            style: TextStyle(
+              fontFamily: "Plus Jakarta",
+              fontSize: 13.5,
+              fontWeight: FontWeight.w600,
+              color: titleColor ?? darkText,
+              letterSpacing: -0.2,
             ),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Row(
@@ -532,8 +792,8 @@ class ProfileScreen extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: "Plus Jakarta",
                       fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: titleColor ?? textMuted,
+                      fontWeight: FontWeight.w600,
+                      color: titleColor ?? (onTap != null ? gunadarmaPurple : textMuted),
                     ),
                     textAlign: TextAlign.end,
                     maxLines: 2,
@@ -544,8 +804,8 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(width: 4),
                   const Icon(
                     CupertinoIcons.chevron_right,
-                    size: 14,
-                    color: textMuted,
+                    size: 13,
+                    color: gunadarmaPurple,
                   ),
                 ],
               ],
@@ -566,11 +826,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-
-
-
-
-
   String _getDetectedPlatformName() {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -584,7 +839,7 @@ class ProfileScreen extends StatelessWidget {
       case TargetPlatform.linux:
         return "Linux";
       default:
-        return "Multiplatform";
+        return "Web Browser";
     }
   }
 
@@ -599,263 +854,9 @@ class ProfileScreen extends StatelessWidget {
       case TargetPlatform.windows:
         return CupertinoIcons.desktopcomputer;
       default:
-        return CupertinoIcons.device_phone_portrait;
+        return CupertinoIcons.globe;
     }
   }
-
-  Widget _buildTeamMembersModalContent(
-    BuildContext context,
-    AprioriStateManager state,
-    VoidCallback onClose,
-  ) {
-    final members = state.teamMembers;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Anggota Kelompok 4",
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: darkText,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    "S1 Sistem Informasi • Kelas 3KA31",
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w400,
-                      color: textMuted,
-                    ),
-                  ),
-                ],
-              ),
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: onClose,
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE5E5EA),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    CupertinoIcons.xmark,
-                    size: 13,
-                    color: Color(0xFF3C3C43),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 0.5, thickness: 0.5, color: borderLine),
-        Expanded(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 12, bottom: 8),
-                  child: Text(
-                    "DAFTAR ANGGOTA",
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w600,
-                      color: textMuted,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: cardBg,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: borderLine, width: 0.6),
-                  ),
-                  child: Column(
-                    children: List.generate(members.length, (index) {
-                      final member = members[index];
-                      final isLead = index == 0;
-                      final isLast = index == members.length - 1;
-
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 26,
-                                  height: 26,
-                                  decoration: BoxDecoration(
-                                    color: isLead ? gunadarmaPurple.withValues(alpha: 0.1) : const Color(0xFFF2F2F7),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "${index + 1}",
-                                      style: TextStyle(
-                                        fontFamily: "Plus Jakarta",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: isLead ? gunadarmaPurple : const Color(0xFF8E8E93),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        member.name,
-                                        style: const TextStyle(
-                                          fontFamily: "Plus Jakarta",
-                                          fontSize: 14.5,
-                                          fontWeight: FontWeight.w600,
-                                          color: darkText,
-                                          letterSpacing: -0.2,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        member.npm,
-                                        style: const TextStyle(
-                                          fontFamily: "Plus Jakarta",
-                                          fontSize: 12.5,
-                                          fontWeight: FontWeight.w400,
-                                          color: textMuted,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (!isLast)
-                            const Divider(height: 0.5, thickness: 0.5, indent: 52, color: borderLine),
-                        ],
-                      );
-                    }),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Center(
-                  child: Text(
-                    "Universitas Gunadarma • Konsep Data Mining",
-                    style: TextStyle(
-                      fontFamily: "Plus Jakarta",
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w400,
-                      color: textMuted,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _showTeamMembersModal(BuildContext context, AprioriStateManager state) {
-    final isDesktop = MediaQuery.of(context).size.width >= 850;
-    if (isDesktop) {
-      showDialog(
-        context: context,
-        builder: (dialogCtx) => Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 520, maxHeight: 680),
-            child: Container(
-              decoration: BoxDecoration(
-                color: pageBg,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x26000000),
-                    blurRadius: 30,
-                    offset: Offset(0, 10),
-                  ),
-                ],
-              ),
-              clipBehavior: Clip.antiAlias,
-              padding: const EdgeInsets.only(top: 18),
-              child: _buildTeamMembersModalContent(
-                context,
-                state,
-                () => Navigator.pop(dialogCtx),
-              ),
-            ),
-          ),
-        ),
-      );
-      return;
-    }
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (bottomSheetContext) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.72,
-          decoration: const BoxDecoration(
-            color: pageBg,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8, bottom: 8),
-                  width: 36,
-                  height: 4.5,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1D1D6),
-                    borderRadius: BorderRadius.circular(2.5),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: _buildTeamMembersModalContent(
-                  context,
-                  state,
-                  () => Navigator.pop(bottomSheetContext),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-
-
-
-
 
   void _showClearDatasetConfirm(BuildContext context, AprioriStateManager state) {
     showCupertinoDialog(

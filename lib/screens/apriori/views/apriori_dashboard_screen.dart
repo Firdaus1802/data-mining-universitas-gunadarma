@@ -47,12 +47,12 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
   late final AnimationController _animCtrl;
   late final Animation<double> _fadeAnim;
 
-  static const Color gunadarmaPurple = Color(0xFF2E1065);
-  static const Color accentPurple = Color(0xFF5856D6);
-  static const Color cardBorder = Color(0xFFE5E5EA);
-  static const Color iosBg = Color(0xFFF2F2F7);
-  static const Color darkText = Color(0xFF1C1C1E);
-  static const Color mutedText = Color(0xFF8E8E93);
+  static const Color gunadarmaPurple = Color(0xFF581C87);
+  static const Color accentPurple = Color(0xFF7E22CE);
+  static const Color cardBorder = Color(0xFFEDE9FE);
+  static const Color iosBg = Color(0xFFFBFBFE);
+  static const Color darkText = Color(0xFF1E1B4B);
+  static const Color mutedText = Color(0xFF6B7280);
 
   @override
   void initState() {

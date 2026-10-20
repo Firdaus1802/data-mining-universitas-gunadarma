@@ -3,24 +3,41 @@
 <head>
   <base href="/">
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let r of registrations) { r.unregister(); }
-      });
-    }
-    if ('caches' in window) {
-      caches.keys().then(function(names) {
-        for (let name of names) { caches.delete(name); }
-      });
-    }
-    if (window.location.hash) {
-      window.history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
-    window.addEventListener('hashchange', function() {
+    (function() {
+      var BUILD_TAG = '20261020_2115';
+      var currentVer = localStorage.getItem('ug_build_ver');
+      var hasVersionParam = window.location.search.indexOf('v=' + BUILD_TAG) !== -1;
+
+      if (currentVer !== BUILD_TAG || !hasVersionParam) {
+        localStorage.setItem('ug_build_ver', BUILD_TAG);
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (var i = 0; i < registrations.length; i++) {
+              registrations[i].unregister();
+            }
+          });
+        }
+        if ('caches' in window) {
+          caches.keys().then(function(names) {
+            for (var i = 0; i < names.length; i++) {
+              caches.delete(names[i]);
+            }
+          });
+        }
+        if (!hasVersionParam) {
+          var targetUrl = window.location.origin + window.location.pathname + '?v=' + BUILD_TAG;
+          window.location.replace(targetUrl);
+        }
+      }
       if (window.location.hash) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
-    });
+      window.addEventListener('hashchange', function() {
+        if (window.location.hash) {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+      });
+    })();
   </script>
 
   <meta charset="UTF-8">
@@ -45,7 +62,7 @@
 
   <title>AprioriMart - Data Mining Kelompok 4 (Universitas Gunadarma)</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="preload" href="main.dart.js?v=20261020_2025" as="script">
+  <link rel="preload" href="main.dart.js?v=20261020_2115" as="script">
   <link rel="preload" href="gunadarma_logo.png" as="image">
 
   <style>
@@ -173,6 +190,6 @@
     </div>
   </div>
 
-  <script src="flutter_bootstrap.js?v=20261020_2025" async></script>
+  <script src="flutter_bootstrap.js?v=20261020_2115" async></script>
 </body>
 </html>
