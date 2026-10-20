@@ -2530,24 +2530,24 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: const Text(
-                                    'Terakreditasi SINTA 3',
+                                    'Jurnal Internasional (Scopus Q1)',
                                     style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: gunadarmaPurple),
                                   ),
                                 ),
                                 const Text(
-                                  'ISSN 2614-5278',
+                                  'ISSN 1548-7660',
                                   style: TextStyle(fontSize: 10.5, color: mutedText, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'Market Basket Analysis Menggunakan Algoritma Apriori dan FP Growth untuk Menentukan Pola Pembelian Konsumen',
+                              'arules — A Computational Environment for Mining Association Rules and Frequent Item Sets',
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: darkText, height: 1.3),
                             ),
                             const SizedBox(height: 6),
                             const Text(
-                              'Jurnal Media Informatika Budidarma (JMIB) • Vol. 7, No. 3 (Juli 2023)\nPenulis: Reski Noviana, Arief Hermawan, Donny Avianto (UTY)',
+                              'Journal of Statistical Software (JSS) • Vol. 14, Issue 15 (Oktober 2005)\nPenulis: Michael Hahsler, Bettina Grün, Kurt Hornik (WU Vienna)',
                               style: TextStyle(fontSize: 11.5, color: mutedText, height: 1.35),
                             ),
                             const SizedBox(height: 14),

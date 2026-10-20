@@ -105,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
                       icon: CupertinoIcons.book_circle_fill,
                       iconColor: const Color(0xFF5856D6),
                       title: "Referensi Jurnal & Dataset",
-                      trailing: "SINTA 3 • Kaggle",
+                      trailing: "Scopus Q1 • Kaggle",
                       onTap: () => _showAcademicReferenceModal(context),
                     ),
                     const Divider(height: 0.5, thickness: 0.5, indent: 54, color: borderLine),
@@ -921,7 +921,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionHeader("RUJUKAN JURNAL ILMIAH (SINTA 3)"),
+                      _buildSectionHeader("RUJUKAN JURNAL INTERNASIONAL (SCOPUS Q1)"),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
@@ -943,7 +943,7 @@ class ProfileScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: const Text(
-                                    "Terakreditasi SINTA 3",
+                                    "Jurnal Internasional (Scopus Q1)",
                                     style: TextStyle(
                                       fontSize: 10.5,
                                       fontWeight: FontWeight.w700,
@@ -952,14 +952,14 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const Text(
-                                  "ISSN 2614-5278",
+                                  "ISSN 1548-7660",
                                   style: TextStyle(fontSize: 10.5, color: textMuted, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              "Market Basket Analysis Menggunakan Algoritma Apriori dan FP Growth untuk Menentukan Pola Pembelian Konsumen",
+                              "arules — A Computational Environment for Mining Association Rules and Frequent Item Sets",
                               style: TextStyle(
                                 fontFamily: "Plus Jakarta",
                                 fontSize: 14.5,
@@ -970,7 +970,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 6),
                             const Text(
-                              "Jurnal Media Informatika Budidarma (JMIB) • Vol. 7, No. 3 (Juli 2023)\nPenulis: Reski Noviana, Arief Hermawan, Donny Avianto (UTY)",
+                              "Journal of Statistical Software (JSS) • Vol. 14, Issue 15 (Oktober 2005)\nPenulis: Michael Hahsler, Bettina Grün, Kurt Hornik (WU Vienna)",
                               style: TextStyle(fontSize: 11.5, color: textMuted, height: 1.35),
                             ),
                             const SizedBox(height: 14),
