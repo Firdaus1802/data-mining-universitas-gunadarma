@@ -10,34 +10,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings: settings,
         builder: (context) => const OnBordingScreen(),
       );
-    case logInScreenRoute:
-      return CupertinoPageRoute(
-        settings: settings,
-        builder: (context) => const LoginScreen(),
-      );
-    case signUpScreenRoute:
-      return CupertinoPageRoute(
-        settings: settings,
-        builder: (context) => const SignUpScreen(),
-      );
-    case passwordRecoveryScreenRoute:
-      return CupertinoPageRoute(
-        settings: settings,
-        builder: (context) => const PasswordRecoveryScreen(),
-      );
-    case otpScreenRoute:
-    case signUpVerificationScreenRoute:
-      return CupertinoPageRoute(
-        settings: settings,
-        builder: (context) {
-          final args = settings.arguments as Map<String, dynamic>? ?? {};
-          return EmailVerificationScreen(
-            email: args['email'] as String? ?? 'user@gunadarma.ac.id',
-            expectedOtp: args['expectedOtp'] as String? ?? '',
-            userName: args['userName'] as String?,
-          );
-        },
-      );
     case homeScreenRoute:
       return CupertinoPageRoute(
         settings: settings,

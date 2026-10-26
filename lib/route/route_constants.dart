@@ -1,9 +1,4 @@
 const String onbordingScreenRoute = "/";
-const String logInScreenRoute = "login";
-const String signUpScreenRoute = "signup";
-const String signUpVerificationScreenRoute = "signup_verification";
-const String passwordRecoveryScreenRoute = "password_recovery";
-const String otpScreenRoute = "otp";
 const String homeScreenRoute = "home";
 const String discoverScreenRoute = "discover";
 const String searchScreenRoute = "search";
