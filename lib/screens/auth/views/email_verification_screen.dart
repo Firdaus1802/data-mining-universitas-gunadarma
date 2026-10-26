@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shop/models/apriori_state_manager.dart';
 import 'package:shop/route/route_constants.dart';
-import 'package:shop/services/email_service.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   final String email;
@@ -46,22 +45,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   void initState() {
     super.initState();
     _currentOtp = widget.expectedOtp.isNotEmpty ? widget.expectedOtp : _generateRandomOtp();
-    _sendActualEmailIfConfigured();
     _startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_focusNodes.isNotEmpty) {
         _focusNodes[0].requestFocus();
       }
     });
-  }
-
-  void _sendActualEmailIfConfigured() {
-    final name = widget.userName ?? "Pengguna";
-    EmailService.sendOtpEmail(
-      toEmail: widget.email,
-      toName: name,
-      otpCode: _currentOtp,
-    );
   }
 
   @override
@@ -105,7 +94,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         c.clear();
       }
     });
-    _sendActualEmailIfConfigured();
     _startTimer();
     _focusNodes[0].requestFocus();
   }
