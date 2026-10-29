@@ -471,6 +471,18 @@ class AcademicReferenceHelper {
             downloadDatasetCsv(context);
           },
         ),
+        const SizedBox(height: 8),
+        _buildDownloadTile(
+          icon: CupertinoIcons.cube_box_fill,
+          iconColor: const Color(0xFF7C3AED),
+          bgColor: const Color(0xFFF3E8FF),
+          title: 'Dataset Format WEKA (.arff)',
+          subtitle: 'Kompatibel Penuh Weka 3.8 Explorer • 138 Atribut',
+          onTap: () {
+            Navigator.of(sheetContext).pop();
+            downloadDatasetArff(context);
+          },
+        ),
       ],
     );
   }
@@ -741,6 +753,81 @@ class AcademicReferenceHelper {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Dataset 1.000 transaksi berhasil disalin ke papan klip.'),
+              backgroundColor: gunadarmaPurple,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      } catch (_) {}
+    }
+  }
+
+  static Future<String> loadDatasetArffString() async {
+    return await rootBundle.loadString('assets/data/dataset_groceries_1000.arff');
+  }
+
+  static Future<void> downloadDatasetArff(BuildContext context) async {
+    try {
+      if (kIsWeb) {
+        final ok = await launchUrl(
+          Uri.parse('dataset_groceries_1000.arff'),
+          mode: LaunchMode.externalApplication,
+        );
+        if (!ok) {
+          await launchUrl(
+            Uri.parse('assets/assets/data/dataset_groceries_1000.arff'),
+            mode: LaunchMode.externalApplication,
+          );
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Dataset WEKA (.arff) berhasil dibuka / diunduh!'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+        return;
+      }
+
+      final rawArff = await loadDatasetArffString();
+      final bytes = Uint8List.fromList(utf8.encode(rawArff));
+      final uri = await FilePicker.saveFile(
+        fileName: 'dataset_groceries_1000.arff',
+        bytes: bytes,
+        type: FileType.custom,
+        allowedExtensions: ['arff'],
+        mimeType: 'text/plain',
+        dialogTitle: 'Simpan Dataset WEKA Groceries (.arff)',
+      );
+
+      if (context.mounted) {
+        if (uri != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Dataset format WEKA (.arff) berhasil disimpan.'),
+              backgroundColor: Color(0xFF2E7D32),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Penyimpanan berkas dibatalkan oleh pengguna.'),
+              backgroundColor: Color(0xFF757575),
+            ),
+          );
+        }
+      }
+    } catch (_) {
+      try {
+        final rawArff = await loadDatasetArffString();
+        await Clipboard.setData(ClipboardData(text: rawArff));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Dataset format WEKA disalin ke papan klip.'),
               backgroundColor: gunadarmaPurple,
               duration: Duration(seconds: 3),
             ),
@@ -1944,50 +2031,54 @@ class _DatasetViewerSheetState extends State<_DatasetViewerSheet> {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(CupertinoIcons.arrow_down_doc_fill, size: 15, color: Colors.white),
-                      SizedBox(width: 6),
+                      Icon(CupertinoIcons.arrow_down_doc_fill, size: 14, color: Colors.white),
+                      SizedBox(width: 4),
                       Text(
-                        'Unduh File CSV',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                        'Unduh CSV',
+                        style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Expanded(
                 child: CupertinoButton(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  color: const Color(0xFFF3E8FF),
+                  color: const Color(0xFF6B21A8),
                   borderRadius: BorderRadius.circular(10),
-                  onPressed: () => AcademicReferenceHelper.copyDatasetCsv(context),
+                  onPressed: () => AcademicReferenceHelper.downloadDatasetArff(context),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(CupertinoIcons.doc_on_clipboard, size: 15, color: AcademicReferenceHelper.gunadarmaPurple),
-                      SizedBox(width: 6),
+                      Icon(CupertinoIcons.cube_box_fill, size: 14, color: Colors.white),
+                      SizedBox(width: 4),
                       Text(
-                        'Salin Semua Baris',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: AcademicReferenceHelper.gunadarmaPurple,
-                        ),
+                        'Format WEKA (.arff)',
+                        style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               CupertinoButton(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                color: const Color(0xFFF3E8FF),
+                borderRadius: BorderRadius.circular(10),
+                onPressed: () => AcademicReferenceHelper.copyDatasetCsv(context),
+                child: const Icon(CupertinoIcons.doc_on_clipboard, size: 15, color: AcademicReferenceHelper.gunadarmaPurple),
+              ),
+              const SizedBox(width: 6),
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 color: const Color(0xFFE0F2FE),
                 borderRadius: BorderRadius.circular(10),
                 onPressed: () => AcademicReferenceHelper.safeLaunchUrl(
                   context,
                   AcademicReferenceHelper.kaggleDatasetUrl,
                 ),
-                child: const Icon(CupertinoIcons.arrow_up_right_square, size: 16, color: Color(0xFF007AFF)),
+                child: const Icon(CupertinoIcons.arrow_up_right_square, size: 15, color: Color(0xFF007AFF)),
               ),
             ],
           ),
