@@ -154,10 +154,11 @@ class AprioriStateManager extends ChangeNotifier {
 
       if (_masterTransactions.length < 10) {
         _masterTransactions.clear();
-        final csvString = await rootBundle.loadString('assets/data/dataset_groceries_1000.csv');
+        final csvString = await rootBundle.loadString('assets/data/market_basket_dataset.csv');
         final lines = csvString.split(RegExp(r'\r?\n'));
-        for (final line in lines) {
-          final clean = line.trim();
+        final startIdx = (lines.isNotEmpty && lines.first.contains('Milk') && lines.first.contains('Bread')) ? 1 : 0;
+        for (int i = startIdx; i < lines.length; i++) {
+          final clean = lines[i].trim();
           if (clean.isEmpty) continue;
           final parts = clean.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
           if (parts.isNotEmpty) {
@@ -452,6 +453,36 @@ class AprioriStateManager extends ChangeNotifier {
       _testTransactions.clear();
       _scenarioIndex = 0;
       await init();
+    } catch (_) {}
+  }
+
+  Future<void> loadKaggleDataset() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('saved_transactions_v1');
+      await prefs.remove('saved_transactions_v2');
+      await prefs.remove('saved_min_support');
+      await prefs.remove('saved_min_confidence');
+      await prefs.remove('saved_scenario_index');
+      _masterTransactions.clear();
+      _transactions.clear();
+      _testTransactions.clear();
+      _scenarioIndex = 0;
+      final csvString = await rootBundle.loadString('assets/data/Market_Basket_Optimisation.csv');
+      final lines = csvString.split(RegExp(r'\r?\n'));
+      for (final line in lines) {
+        final clean = line.trim();
+        if (clean.isEmpty) continue;
+        final parts = clean.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+        if (parts.isNotEmpty) {
+          _masterTransactions.add(parts);
+        }
+      }
+      _minSupport = 1.0;
+      _minConfidence = 16.0;
+      _applyScenarioSplit();
+      _saveToPrefs();
+      notifyListeners();
     } catch (_) {}
   }
 }

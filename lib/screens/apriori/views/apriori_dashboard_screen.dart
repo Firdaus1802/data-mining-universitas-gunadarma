@@ -124,11 +124,16 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       _applyScenarioSplitLocal();
     });
     _syncState();
+    final total = _masterTransactions.length;
+    final train80 = (total * 0.8).round();
+    final test80 = total - train80;
+    final train70 = (total * 0.7).round();
+    final test70 = total - train70;
     final String scenarioName = newIndex == 1
-        ? 'Rasio 80:20 aktif (800 latih, 200 uji)'
+        ? 'Rasio 80:20 aktif ($train80 latih, $test80 uji)'
         : newIndex == 2
-            ? 'Rasio 70:30 aktif (700 latih, 300 uji)'
-            : 'Data penuh (1.000 transaksi)';
+            ? 'Rasio 70:30 aktif ($train70 latih, $test70 uji)'
+            : 'Data penuh ($total transaksi)';
     _showIOSNotification(scenarioName);
   }
 
@@ -274,7 +279,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
         title: const Text('Kelola Dataset'),
-        content: const Text('Pilih aksi untuk mereset dataset transaksi Anda:'),
+        content: const Text('Pilih aksi untuk memuat atau mereset dataset transaksi Anda:'),
         actions: [
           CupertinoDialogAction(
             isDefaultAction: true,
@@ -285,9 +290,17 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
             onPressed: () async {
               Navigator.pop(ctx);
               await AprioriStateManager.instance.resetToDefaultDataset();
-              _showIOSNotification('Dataset 1.000 data bawaan berhasil dimuat.');
+              _showIOSNotification('Dataset Utama (1.500 Data Dosen) berhasil dimuat.');
             },
-            child: const Text('Muat Ulang 1.000 Data'),
+            child: const Text('Muat Dataset Utama (1.500 Data)'),
+          ),
+          CupertinoDialogAction(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await AprioriStateManager.instance.loadKaggleDataset();
+              _showIOSNotification('Dataset Cadangan (7.501 Data Kaggle) berhasil dimuat.');
+            },
+            child: const Text('Muat Dataset Kaggle (7.501 Data)'),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
@@ -2408,7 +2421,7 @@ class _AprioriDashboardScreenState extends State<AprioriDashboardScreen>
                   Icon(CupertinoIcons.arrow_clockwise, size: 13, color: gunadarmaPurple),
                   SizedBox(width: 6),
                   Text(
-                    'Muat Ulang Dataset 1.000 Transaksi',
+                    'Muat Ulang Dataset Utama (1.500 Transaksi)',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
